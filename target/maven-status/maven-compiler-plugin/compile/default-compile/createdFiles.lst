@@ -1,0 +1,12 @@
+me\karltroid\beanpass\gui\GUI.class
+me\karltroid\beanpass\command\OpenBeanPassGUI.class
+me\karltroid\beanpass\data\Hats.class
+me\karltroid\beanpass\data\Seasons$1.class
+me\karltroid\beanpass\data\Hats$Hat.class
+me\karltroid\beanpass\data\Seasons.class
+me\karltroid\beanpass\data\Level.class
+me\karltroid\beanpass\BeanPass.class
+me\karltroid\beanpass\command\AddXP.class
+me\karltroid\beanpass\data\SeasonPlayer.class
+me\karltroid\beanpass\data\Seasons$Season.class
+me\karltroid\beanpass\gui\BeanPassGUI.class

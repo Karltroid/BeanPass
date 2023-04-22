@@ -1,0 +1,17 @@
+name: BeanPass
+version: '${project.version}'
+main: me.karltroid.beanpass.BeanPass
+api-version: 1.19
+
+commands:
+  beanpass:
+    description: Main command for BeanPass plugin
+    usage: /beanpass
+    permission: BeanPass.user
+    executor: me.karltroid.beanpass.command.OpenBeanPassGUI
+
+  addxp:
+    description: Sub-command for adding XP to a player's BeanPass
+    usage: /beanpass addxp <player> <xp>
+    permission: BeanPass.admin
+    executor: me.karltroid.beanpass.command.AddXP
