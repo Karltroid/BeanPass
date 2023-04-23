@@ -1,30 +1,38 @@
 package me.karltroid.beanpass.gui;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public class BeanPassGUI implements InventoryHolder, GUI
+public class BeanPassGUI implements GUI, InventoryHolder, Listener
 {
-    private final Inventory gui;
+    private final Inventory GUI_INVENTORY;
 
     public BeanPassGUI()
     {
-        // Create the inventory with 54 slots (double chest)
-        this.gui = Bukkit.createInventory(this, 54, "Beanpass GUI"); // You can customize the title as you like
+        GUI_INVENTORY = Bukkit.createInventory(null, 54, ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Beanpass GUI"); // You can customize the title as you like
+        GUI_INVENTORY.setItem(0, createGuiItem(Material.DIAMOND, "BEANPASS GUI ITEM TEST"));
+    }
 
-        // Populate the inventory with items
-        // Replace this with your actual GUI content
-        ItemStack exampleItem = new ItemStack(Material.DIAMOND);
-        this.gui.setItem(0, exampleItem);
+    @EventHandler
+    public void onGUIClick(InventoryClickEvent event)
+    {
+        Inventory clickedInventory = event.getClickedInventory();
+        if (clickedInventory == null) return;
+        if(event.getWhoClicked().getOpenInventory().getTopInventory().equals(this.getInventory())) event.setCancelled(true);
     }
 
     @Override
     public @NotNull Inventory getInventory() {
-        return this.gui;
+        return this.GUI_INVENTORY;
     }
 }

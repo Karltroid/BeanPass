@@ -5,13 +5,13 @@ api-version: 1.19
 
 commands:
   beanpass:
-    description: Main command for BeanPass plugin
+    description: Open the BeanPass GUI
     usage: /beanpass
-    permission: BeanPass.user
+    permission: beanpass.user
+    aliases: [ bp ]
     executor: me.karltroid.beanpass.command.OpenBeanPassGUI
-
-  addxp:
-    description: Sub-command for adding XP to a player's BeanPass
+  beanpass-addxp:
+    description: Add XP to a player's BeanPass
     usage: /beanpass addxp <player> <xp>
-    permission: BeanPass.admin
+    permission: beanpass.admin
     executor: me.karltroid.beanpass.command.AddXP

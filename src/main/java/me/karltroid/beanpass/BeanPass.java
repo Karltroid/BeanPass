@@ -27,18 +27,13 @@ public final class BeanPass extends JavaPlugin implements Listener
         main = this; // set singleton instance of the plugin
 
         // register event listeners to the plugin instance
-        //PluginManager pluginManager = getServer().getPluginManager();
-        //pluginManager.registerEvents(gui, this);
+        PluginManager pluginManager = getServer().getPluginManager();
+        pluginManager.registerEvents(beanPassGUI, this);
 
         // register the commands for the plugin instance
-        PluginCommand commandBeanPass = main.getCommand("beanpass");
-        if (commandBeanPass != null)
-        {
-            commandBeanPass.setExecutor(new OpenBeanPassGUI());
-            commandBeanPass.setExecutor(new AddXP());
-        }
-        else main.getLogger().warning("Error getting /beanpass command.");
 
+        main.getCommand("beanpass").setExecutor(new OpenBeanPassGUI());
+        main.getCommand("beanpass-addxp").setExecutor(new AddXP());
     }
 
     @Override
