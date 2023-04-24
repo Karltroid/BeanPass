@@ -6,20 +6,27 @@ import me.karltroid.beanpass.data.Hats;
 import me.karltroid.beanpass.data.Seasons;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+
 public final class BeanPass extends JavaPlugin implements Listener
 {
     public static BeanPass main;
+    public PluginManager pluginManager = getServer().getPluginManager();
     public int activeSeason = 1;
 
     Hats hats = new Hats();
     Seasons seasons = new Seasons();
-    public BeanPassGUI beanPassGUI = new BeanPassGUI();
+
+
 
     public Seasons.Season getActiveSeason() { return seasons.getSeason(activeSeason); }
+
+    public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
 
     @Override
     public void onEnable()
@@ -27,8 +34,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         main = this; // set singleton instance of the plugin
 
         // register event listeners to the plugin instance
-        PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvents(beanPassGUI, this);
+
 
         // register the commands for the plugin instance
 

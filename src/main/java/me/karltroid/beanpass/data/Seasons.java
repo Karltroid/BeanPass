@@ -27,6 +27,14 @@ public final class Seasons
             this.title = title;
             this.levels = levels;
         }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public HashMap<Integer, Level> getLevels() {
+            return levels;
+        }
     }
 
     public Season getSeason(int id) { return database.get(id); }

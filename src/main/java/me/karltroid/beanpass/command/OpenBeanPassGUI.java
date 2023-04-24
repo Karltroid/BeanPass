@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.command;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.gui.BeanPassGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -28,7 +29,7 @@ public class OpenBeanPassGUI implements CommandExecutor
             return false;
         }
 
-        BeanPass.main.beanPassGUI.open(senderPlayer);
+        new BeanPassGUI(senderPlayer);
 
         return true;
     }
