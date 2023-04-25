@@ -25,16 +25,25 @@ public class BeanPassGUI implements Listener
 {
     ArmorStand textTitle;
     private List<ButtonElement> allButtonElements = new ArrayList<>();
+    private List<TextElement> allTextElements = new ArrayList<>();
     ButtonElement selectedButtonElement;
     ButtonElement previousButtonElement;
+    Buttons buttons;
 
     public BeanPassGUI(Player player)
     {
+        buttons = new Buttons();
+
         Season season = BeanPass.main.getActiveSeason();
 
         //allButtonElements.add(new ButtonElement(Hologram.createHolographicText(this, player, 0, 0, 45, season.getTitle())));
 
-        guiSphereTest(player, 45, 0);
+        //guiSphereTest(player, 45, 0);
+
+        allTextElements.add(new TextElement(player, 0, 0, 15, ChatColor.BOLD + "BEANPASS"));
+        allButtonElements.add(new ButtonElement(player, 0, 0, -10, buttons.get(10000)));
+        allButtonElements.add(new ButtonElement(player, 0, 45, -10, buttons.get(10000)));
+        allButtonElements.add(new ButtonElement(player, 0, -45, -10, buttons.get(10000)));
 
         BeanPass.main.pluginManager.registerEvents(this, BeanPass.main);
 
@@ -43,6 +52,26 @@ public class BeanPassGUI implements Listener
         new BukkitRunnable() {
             public void run()
             {
+                Location playerLocation = player.getLocation();
+                playerLocation.add(0, player.getEyeHeight() - Hologram.ARMOR_STAND_HEIGHT, 0);
+
+                Location firstElementLocation = allButtonElements.get(0).originalLocation;
+                double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
+                if (distance > 5)
+                {
+                    for (ButtonElement element : allButtonElements)
+                    {
+                        element.armorStand.remove();
+                    }
+                    for (TextElement element : allTextElements)
+                    {
+                        element.armorStand.remove();
+                    }
+
+                    cancel();
+                    BeanPass.main.activeGUIs.remove(player);
+                }
+
                 ButtonElement newSelectedElement = null;
 
                 for (ButtonElement element : allButtonElements)
@@ -60,8 +89,7 @@ public class BeanPassGUI implements Listener
                 if (previousButtonElement != null) previousButtonElement.armorStand.teleport(previousButtonElement.originalLocation);
                 if (selectedButtonElement != null)
                 {
-                    Location eyeLocation = player.getEyeLocation();
-                    Vector direction = eyeLocation.getDirection().normalize();
+                    Vector direction = playerLocation.getDirection().normalize();
                     Location newLocation = selectedButtonElement.armorStand.getLocation().subtract(direction.divide(new Vector(2,2,2)));
                     selectedButtonElement.armorStand.teleport(newLocation);
                 }
@@ -91,7 +119,7 @@ public class BeanPassGUI implements Listener
             for (double anglePitch = 0.0; anglePitch < 360; anglePitch += angleIncrement)
             {
                 // Call createHolographicText with the angle offsets for X and Y positioning on the sphere
-                allButtonElements.add(new ButtonElement(Hologram.createHolographicText(this, player, radiusOffset, angleYaw, anglePitch, ChatColor.BOLD + "" + angleYaw + "/" + anglePitch)));
+                allButtonElements.add(new ButtonElement(player, radiusOffset, angleYaw, anglePitch, buttons.get(10000)));
             }
         }
     }

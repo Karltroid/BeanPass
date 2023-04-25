@@ -5,6 +5,7 @@ import me.karltroid.beanpass.command.OpenBeanPassGUI;
 import me.karltroid.beanpass.data.Hats;
 import me.karltroid.beanpass.data.Seasons;
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.Buttons;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

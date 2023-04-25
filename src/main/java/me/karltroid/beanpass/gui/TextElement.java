@@ -9,14 +9,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import java.awt.*;
-
-public class ButtonElement
+public class TextElement
 {
     ArmorStand armorStand;
     Location originalLocation;
 
-    public ButtonElement(Player player, double radiusOffset, double angleOffsetX, double angleOffsetY, Buttons.Button button)
+    public TextElement(Player player, double radiusOffset, double angleOffsetX, double angleOffsetY, String text)
     {
         // Get the player's eye location
         Location playerLocation = player.getLocation();
@@ -38,7 +36,8 @@ public class ButtonElement
         hologram.setInvulnerable(true);
         hologram.setSmall(true);
         hologram.setMarker(true);
-        hologram.getEquipment().setHelmet(button.itemStack);
+        hologram.setCustomNameVisible(true);
+        hologram.setCustomName(text);
 
         // Set the entire armor stand to face the player
         Vector facingDirection = playerLocation.toVector().subtract(armorStandLocation.toVector()).normalize();
