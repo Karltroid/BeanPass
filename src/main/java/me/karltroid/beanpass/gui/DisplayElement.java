@@ -1,22 +1,18 @@
 package me.karltroid.beanpass.gui;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import java.awt.*;
-
-public class ButtonElement
+public class DisplayElement
 {
     ArmorStand armorStand;
     Location originalLocation;
 
-    public ButtonElement(Player player, double radiusOffset, double angleOffsetX, double angleOffsetY, Buttons.Button button)
+    public DisplayElement(Player player, double radiusOffset, double angleOffsetX, double angleOffsetY, Buttons.Button button)
     {
         // Get the player's eye location
         Location playerLocation = player.getLocation();
@@ -37,7 +33,6 @@ public class ButtonElement
         hologram.setBasePlate(false);
         hologram.setInvulnerable(true);
         hologram.setSmall(true);
-        hologram.setMarker(true);
         hologram.setFireTicks(72000);
         hologram.getEquipment().setHelmet(button.itemStack);
 

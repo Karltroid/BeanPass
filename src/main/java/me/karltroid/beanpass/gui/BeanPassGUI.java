@@ -23,7 +23,7 @@ import java.util.List;
 
 public class BeanPassGUI implements Listener
 {
-    ArmorStand textTitle;
+    private List<DisplayElement> allDisplayElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
     private List<TextElement> allTextElements = new ArrayList<>();
     ButtonElement selectedButtonElement;
@@ -40,10 +40,15 @@ public class BeanPassGUI implements Listener
 
         //guiSphereTest(player, 45, 0);
 
-        allTextElements.add(new TextElement(player, 0, 0, 15, ChatColor.BOLD + "BEANPASS"));
-        allButtonElements.add(new ButtonElement(player, 0, 0, -10, buttons.get(10000)));
-        allButtonElements.add(new ButtonElement(player, 0, 45, -10, buttons.get(10000)));
-        allButtonElements.add(new ButtonElement(player, 0, -45, -10, buttons.get(10000)));
+        //allTextElements.add(new TextElement(player, 0, 0, 15, ChatColor.BOLD + "BEANPASS"));
+        allDisplayElements.add(new DisplayElement(player, 0, 0, 22, buttons.get(10006)));
+        allDisplayElements.add(new DisplayElement(player, 0, 0, 0, buttons.get(10000)));
+        allButtonElements.add(new ButtonElement(player, 0, -40, 0, buttons.get(10001)));
+        allButtonElements.add(new ButtonElement(player, 0, 40, 0, buttons.get(10002)));
+        allButtonElements.add(new ButtonElement(player, -1, -28, -25, buttons.get(10003)));
+        allButtonElements.add(new ButtonElement(player, -1, 0, -25, buttons.get(10005)));
+        allButtonElements.add(new ButtonElement(player, -1, 28, -25, buttons.get(10004)));
+
 
         BeanPass.main.pluginManager.registerEvents(this, BeanPass.main);
 
@@ -59,6 +64,10 @@ public class BeanPassGUI implements Listener
                 double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
                 if (distance > 5)
                 {
+                    for (DisplayElement element : allDisplayElements)
+                    {
+                        element.armorStand.remove();
+                    }
                     for (ButtonElement element : allButtonElements)
                     {
                         element.armorStand.remove();

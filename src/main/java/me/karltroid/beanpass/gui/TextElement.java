@@ -36,6 +36,7 @@ public class TextElement
         hologram.setInvulnerable(true);
         hologram.setSmall(true);
         hologram.setMarker(true);
+        hologram.setFireTicks(72000);
         hologram.setCustomNameVisible(true);
         hologram.setCustomName(text);
 
