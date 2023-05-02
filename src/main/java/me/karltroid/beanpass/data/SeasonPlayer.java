@@ -2,21 +2,21 @@ package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class SeasonPlayer
 {
     double xp = 0;
-    Boolean premiumPass = false;
-    List<Integer> hats;
+    Boolean premium = false;
+    List<Integer> hats = new ArrayList<>();
 
 
-    public SeasonPlayer(int xp, Boolean premiumPass, List<Integer> hats)
+    public SeasonPlayer(double xp, Boolean premiumPass)
     {
         setXp(xp);
-        this.premiumPass = premiumPass;
-        this.hats = hats;
+        this.premium = premiumPass;
     }
 
 
@@ -35,7 +35,7 @@ public class SeasonPlayer
     public double getXp() { return this.xp; }
     public void setXp(double xp) { this.xp = xp; }
     public void addXp(double xp) { setXp(this.xp + xp); }
-    public void setPremiumPass(boolean hasPass) { this.premiumPass = hasPass; }
+    public void setPremiumPass(boolean hasPass) { this.premium = hasPass; }
     public void giveHat(int hatID) { if (this.hats.contains(hatID)) return; this.hats.add(hatID); }
     public void removeHat(int hatID) { this.hats.removeIf( hat -> hat.equals(hatID)); }
     public boolean hasHat(int id) { return hats.contains(id); }

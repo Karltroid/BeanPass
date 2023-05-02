@@ -1,4 +1,5 @@
 me\karltroid\beanpass\gui\TextElement.class
+me\karltroid\beanpass\data\DataManager.class
 me\karltroid\beanpass\gui\Buttons$Button.class
 me\karltroid\beanpass\gui\GUI.class
 me\karltroid\beanpass\gui\DisplayElement.class

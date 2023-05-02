@@ -1,8 +1,9 @@
 package me.karltroid.beanpass.gui;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.SeasonPlayer;
 import me.karltroid.beanpass.data.Seasons.Season;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
@@ -23,6 +24,8 @@ import java.util.List;
 
 public class BeanPassGUI implements Listener
 {
+    Player player;
+    SeasonPlayer seasonPlayer;
     private List<DisplayElement> allDisplayElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
     private List<TextElement> allTextElements = new ArrayList<>();
@@ -32,6 +35,8 @@ public class BeanPassGUI implements Listener
 
     public BeanPassGUI(Player player)
     {
+        this.player = player;
+        this.seasonPlayer = BeanPass.main.getActiveSeason().playerData.get(player.getUniqueId());
         buttons = new Buttons();
 
         Season season = BeanPass.main.getActiveSeason();
@@ -49,6 +54,8 @@ public class BeanPassGUI implements Listener
         allButtonElements.add(new ButtonElement(player, -1, 0, -25, buttons.get(10005)));
         allButtonElements.add(new ButtonElement(player, -1, 28, -25, buttons.get(10004)));
 
+        allTextElements.add(new TextElement(player, -2, 0, 0, ChatColor.GREEN + "XP: " + seasonPlayer.getXp()));
+
 
         BeanPass.main.pluginManager.registerEvents(this, BeanPass.main);
 
@@ -64,21 +71,8 @@ public class BeanPassGUI implements Listener
                 double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
                 if (distance > 5)
                 {
-                    for (DisplayElement element : allDisplayElements)
-                    {
-                        element.armorStand.remove();
-                    }
-                    for (ButtonElement element : allButtonElements)
-                    {
-                        element.armorStand.remove();
-                    }
-                    for (TextElement element : allTextElements)
-                    {
-                        element.armorStand.remove();
-                    }
-
                     cancel();
-                    BeanPass.main.activeGUIs.remove(player);
+                    close();
                 }
 
                 ButtonElement newSelectedElement = null;
@@ -99,11 +93,22 @@ public class BeanPassGUI implements Listener
                 if (selectedButtonElement != null)
                 {
                     Vector direction = playerLocation.getDirection().normalize();
-                    Location newLocation = selectedButtonElement.armorStand.getLocation().subtract(direction.divide(new Vector(2,2,2)));
+                    Location newLocation = selectedButtonElement.armorStand.getLocation().subtract(direction.divide(new Vector(3,3,3)));
                     selectedButtonElement.armorStand.teleport(newLocation);
                 }
             }
         }.runTaskTimer(BeanPass.main,0,0);
+    }
+
+    public void close()
+    {
+        for (DisplayElement element : allDisplayElements) element.armorStand.remove();
+
+        for (ButtonElement element : allButtonElements) element.armorStand.remove();
+
+        for (TextElement element : allTextElements) element.armorStand.remove();
+
+        BeanPass.main.activeGUIs.remove(player);
     }
 
     @EventHandler
