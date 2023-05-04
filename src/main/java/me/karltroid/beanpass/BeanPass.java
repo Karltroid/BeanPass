@@ -21,7 +21,7 @@ import java.util.HashMap;
 public final class BeanPass extends JavaPlugin implements Listener
 {
     public static BeanPass main;
-    public PluginManager pluginManager = getServer().getPluginManager();
+    PluginManager pluginManager = getServer().getPluginManager();
     public int activeSeason = 1;
 
     Hats hats = new Hats();
@@ -42,7 +42,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         dataManager = new DataManager();
 
         // register event listeners to the plugin instance
-        PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(dataManager, this);
 
         // register the commands for the plugin instance
@@ -62,6 +61,8 @@ public final class BeanPass extends JavaPlugin implements Listener
             activeGUIs.get(player).close();
         }
     }
+
+    public PluginManager getPluginManager(){ return pluginManager; }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event)

@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static me.karltroid.beanpass.data.Quests.*;
+
 public class SeasonPlayer
 {
     double xp = 0;
     Boolean premium = false;
     List<Integer> hats = new ArrayList<>();
+    List<Quest> quests = new ArrayList<>();
 
 
     public SeasonPlayer(double xp, Boolean premiumPass)

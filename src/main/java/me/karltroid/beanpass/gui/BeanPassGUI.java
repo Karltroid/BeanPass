@@ -57,7 +57,7 @@ public class BeanPassGUI implements Listener
         allTextElements.add(new TextElement(player, -2, 0, 0, ChatColor.GREEN + "XP: " + seasonPlayer.getXp()));
 
 
-        BeanPass.main.pluginManager.registerEvents(this, BeanPass.main);
+        BeanPass.main.getPluginManager().registerEvents(this, BeanPass.main);
 
         BeanPass.main.activeGUIs.put(player, this);
 
