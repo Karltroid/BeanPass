@@ -1,19 +1,22 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.enums.ServerGamemode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static me.karltroid.beanpass.data.Quests.*;
+import static me.karltroid.beanpass.data.Quests.Quest;
 
 public class SeasonPlayer
 {
     double xp = 0;
     Boolean premium = false;
     List<Integer> hats = new ArrayList<>();
-    List<Quest> quests = new ArrayList<>();
+    List<Quest> survivalQuests = new ArrayList<>();
+    List<Quest> skyblockQuests = new ArrayList<>();
+    List<Quest> hardcoreQuests = new ArrayList<>();
 
 
     public SeasonPlayer(double xp, Boolean premiumPass)
@@ -42,5 +45,45 @@ public class SeasonPlayer
     public void giveHat(int hatID) { if (this.hats.contains(hatID)) return; this.hats.add(hatID); }
     public void removeHat(int hatID) { this.hats.removeIf( hat -> hat.equals(hatID)); }
     public boolean hasHat(int id) { return hats.contains(id); }
+    public void giveQuest(Quest quest)
+    {
+        switch (quest.SERVER_GAMEMODE)
+        {
+            case SURVIVAL:
+                survivalQuests.add(quest);
+                break;
+            case SKYBLOCK:
+                skyblockQuests.add(quest);
+                break;
+            case HARDCORE:
+                hardcoreQuests.add(quest);
+                break;
+            default:
+                break;
+        }
+    }
+
+    public List<Quest> getQuests(ServerGamemode serverGamemode)
+    {
+        switch (serverGamemode)
+        {
+            case SURVIVAL:
+                return survivalQuests;
+            case SKYBLOCK:
+                return skyblockQuests;
+            case HARDCORE:
+                return hardcoreQuests;
+            case ALL:
+                List<Quest> allQuests = new ArrayList<>();
+                allQuests.addAll(survivalQuests);
+                allQuests.addAll(skyblockQuests);
+                allQuests.addAll(hardcoreQuests);
+                return allQuests;
+            default:
+                break;
+        }
+
+        return null;
+    }
 }
 

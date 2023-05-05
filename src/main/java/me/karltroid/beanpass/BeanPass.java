@@ -2,9 +2,12 @@ package me.karltroid.beanpass;
 
 import me.karltroid.beanpass.command.AddXP;
 import me.karltroid.beanpass.command.OpenBeanPassGUI;
+import me.karltroid.beanpass.command.ViewQuests;
 import me.karltroid.beanpass.data.DataManager;
 import me.karltroid.beanpass.data.Hats;
+import me.karltroid.beanpass.data.Quests;
 import me.karltroid.beanpass.data.Seasons;
+import me.karltroid.beanpass.enums.ServerGamemode;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.Buttons;
 import org.bukkit.Bukkit;
@@ -28,10 +31,13 @@ public final class BeanPass extends JavaPlugin implements Listener
     Seasons seasons = new Seasons();
 
     DataManager dataManager;
+    Quests quests = new Quests();
+    ServerGamemode serverGamemode = ServerGamemode.SURVIVAL; // later make this configurable via config
 
 
 
     public Seasons.Season getActiveSeason() { return seasons.getSeason(activeSeason); }
+    public ServerGamemode getServerGamemode() { return serverGamemode; }
 
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
 
@@ -43,11 +49,14 @@ public final class BeanPass extends JavaPlugin implements Listener
 
         // register event listeners to the plugin instance
         pluginManager.registerEvents(dataManager, this);
+        pluginManager.registerEvents(quests, this);
 
         // register the commands for the plugin instance
 
         main.getCommand("beanpass").setExecutor(new OpenBeanPassGUI());
         main.getCommand("beanpass-addxp").setExecutor(new AddXP());
+
+        main.getCommand("quests").setExecutor(new ViewQuests());
     }
 
     @Override

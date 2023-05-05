@@ -15,3 +15,9 @@ commands:
     usage: /beanpass addxp <player> <xp>
     permission: beanpass.admin
     executor: me.karltroid.beanpass.command.AddXP
+  quests:
+    description: View the player's active quests
+    usage: /quests
+    permission: beanpass.user
+    aliases: [ quest ]
+    executor: me.karltroid.beanpass.command.ViewQuests

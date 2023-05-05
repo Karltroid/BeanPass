@@ -111,7 +111,7 @@ public class BeanPassGUI implements Listener
         BeanPass.main.activeGUIs.remove(player);
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         Player player = event.getPlayer();
@@ -124,7 +124,7 @@ public class BeanPassGUI implements Listener
         if (hitEntity == null) return;
 
         player.sendMessage("Nearest entity: " + hitEntity.getType().toString());
-    }
+    }*/
 
     void guiSphereTest(Player player, double angleIncrement, double radiusOffset)
     {
