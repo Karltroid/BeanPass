@@ -4,10 +4,12 @@ me\karltroid\beanpass\command\OpenBeanPassGUI.class
 me\karltroid\beanpass\data\Quests.class
 me\karltroid\beanpass\gui\BeanPassGUI$1.class
 me\karltroid\beanpass\data\Seasons$1.class
+me\karltroid\beanpass\quests\QuestDifficulties$QuestDifficulty.class
 me\karltroid\beanpass\data\Hats$Hat.class
 me\karltroid\beanpass\data\Seasons.class
 me\karltroid\beanpass\data\Level.class
 me\karltroid\beanpass\command\AddXP.class
+me\karltroid\beanpass\quests\QuestDifficulties.class
 me\karltroid\beanpass\data\Seasons$Season.class
 me\karltroid\beanpass\gui\Hologram.class
 me\karltroid\beanpass\gui\BeanPassGUI.class
@@ -16,6 +18,7 @@ me\karltroid\beanpass\data\DataManager.class
 me\karltroid\beanpass\gui\Buttons$Button.class
 me\karltroid\beanpass\data\Quests$KillingQuest.class
 me\karltroid\beanpass\data\Quests$MiningQuest.class
+me\karltroid\beanpass\quests\QuestManager.class
 me\karltroid\beanpass\data\Quests$Quest.class
 me\karltroid\beanpass\data\SeasonPlayer$1.class
 me\karltroid\beanpass\data\Hats.class

@@ -1,0 +1,121 @@
+#  ____                       _____
+# |  _ \                     |  __ \
+# | |_) |  ___   __ _  _ __  | |__) |__ _  ___  ___
+# |  _ <  / _ \ / _` || '_ \ |  ___// _` |/ __|/ __|
+# | |_) ||  __/| (_| || | | || |   | (_| |\__ \\__ \
+# |____/  \___| \__,_||_| |_||_|    \__,_||___/|___/
+
+# SERVER GAMEMODE (SURVIVAL, SKYBLOCK, HARDCORE)
+ServerGamemode: NONE
+
+Difficulties:
+  SUPER_EASY:
+    base_units: 16
+    max_unit_multiplier: 32
+    xp_per_unit: 0.1
+  VERY_EASY:
+    base_units: 8
+    max_unit_multiplier: 16
+    xp_per_unit: 0.5
+  EASY:
+    base_units: 4
+    max_unit_multiplier: 8
+    xp_per_unit: 1
+  NORMAL:
+    base_units: 4
+    max_unit_multiplier: 8
+    xp_per_unit: 5
+  HARD:
+    base_units: 2
+    max_unit_multiplier: 8
+    xp_per_unit: 15
+  VERY_HARD:
+    base_units: 2
+    max_unit_multiplier: 4
+    xp_per_unit: 50
+  SUPER_HARD:
+    base_units: 1
+    max_unit_multiplier: 4
+    xp_per_unit: 100
+
+MiningQuestDifficulties:
+  STONE:
+    difficulty: SUPER_EASY
+  DEEPSLATE:
+    difficulty: SUPER_EASY
+  ANDESITE:
+    difficulty: VERY_EASY
+  DIORITE:
+    difficulty: VERY_EASY
+  GRANITE:
+    difficulty: VERY_EASY
+  TUFF:
+    difficulty: VERY_EASY
+  GRAVEL:
+    difficulty: VERY_EASY
+  OAK_LOG:
+    difficulty: VERY_EASY
+  SPRUCE_LOG:
+    difficulty: VERY_EASY
+  BIRCH_LOG:
+    difficulty: VERY_EASY
+  JUNGLE_LOG:
+    difficulty: VERY_EASY
+  ACACIA_LOG:
+    difficulty: VERY_EASY
+  DARK_OAK_LOG:
+    difficulty: VERY_EASY
+  MANGROVE_ROOTS:
+    difficulty: EASY
+  CRIMSON_STEM:
+    difficulty: EASY
+  WARPED_STEM:
+    difficulty: EASY
+  CLAY:
+    difficulty: EASY
+  COAL_ORE:
+    difficulty: EASY
+  DEEPSLATE_COAL_ORE:
+    difficulty: EASY
+  COPPER_ORE:
+    difficulty: NORMAL
+  DEEPSLATE_COPPER_ORE:
+    difficulty: NORMAL
+  IRON_ORE:
+    difficulty: NORMAL
+  DEEPSLATE_IRON_ORE:
+    difficulty: NORMAL
+  NETHER_GOLD_ORE:
+    difficulty: NORMAL
+  NETHER_QUARTZ_ORE:
+    difficulty: NORMAL
+  DRIPSTONE_BLOCK:
+    difficulty: NORMAL
+  SCULK:
+    difficulty: NORMAL
+  SCULK_SENSOR:
+    difficulty: HARD
+  MOSSY_COBBLESTONE:
+    difficulty: HARD
+  LAPIS_ORE:
+    difficulty: HARD
+  DEEPSLATE_LAPIS_ORE:
+    difficulty: HARD
+  REDSTONE_ORE:
+    difficulty: HARD
+  DEEPSLATE_REDSTONE_ORE:
+    difficulty: HARD
+  GOLD_ORE:
+    difficulty: HARD
+  DEEPSLATE_GOLD_ORE:
+    difficulty: HARD
+  EMERALD_ORE:
+    difficulty: VERY_HARD
+  DEEPSLATE_EMERALD_ORE:
+    difficulty: VERY_HARD
+  DIAMOND_ORE:
+    difficulty: VERY_HARD
+  DEEPSLATE_DIAMOND_ORE:
+    difficulty: VERY_HARD
+  ANCIENT_DEBRIS:
+    difficulty: SUPER_HARD

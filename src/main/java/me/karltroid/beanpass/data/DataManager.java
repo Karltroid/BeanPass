@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.Quests.MiningQuest;
 import me.karltroid.beanpass.enums.ServerGamemode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -104,7 +105,7 @@ public class DataManager implements Listener
                     }
                 }
             }
-
+            
             try (PreparedStatement playerMiningQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_MINING_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
                 playerMiningQuestStatement.setString(1, uuid.toString());
 
@@ -119,12 +120,20 @@ public class DataManager implements Listener
                         int goalBlockCount = Integer.parseInt(playerMiningQuestResult.getString("goal_count"));
                         int playerBlockCount = Integer.parseInt(playerMiningQuestResult.getString("player_count"));
 
-                        seasonPlayer.giveQuest(new Quests.MiningQuest(serverGamemode, uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount));
+                        seasonPlayer.giveQuest(new MiningQuest(serverGamemode, uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount));
                         hasQuest = true;
                     }
 
-                    if (!hasQuest) { seasonPlayer.giveQuest(new Quests.MiningQuest(ServerGamemode.SURVIVAL, uuid.toString(), 25, Material.DIAMOND_ORE, 5, 0)); }
+                    if (!hasQuest) { seasonPlayer.giveQuest(new MiningQuest(ServerGamemode.SURVIVAL, uuid.toString(), -1, null, -1, 0)); }
                 }
+                catch (SQLException e)
+                {
+                    getLogger().severe(e.getMessage());
+                }
+            }
+            catch (SQLException e)
+            {
+                getLogger().severe(e.getMessage());
             }
 
             BeanPass.main.getActiveSeason().playerData.put(uuid, seasonPlayer);
@@ -174,12 +183,12 @@ public class DataManager implements Listener
 
             for (Quests.Quest quest : seasonPlayer.getQuests(ServerGamemode.ALL))
             {
-                if (!(quest instanceof Quests.MiningQuest)) continue;
-                Quests.MiningQuest miningQuest = (Quests.MiningQuest) quest;
+                if (!(quest instanceof MiningQuest)) continue;
+                MiningQuest miningQuest = (MiningQuest) quest;
                 insertPlayerMiningQuestsStatement.setString(1, miningQuest.getServerGamemode().name());
                 insertPlayerMiningQuestsStatement.setString(2, miningQuest.PLAYER_UUID);
-                insertPlayerMiningQuestsStatement.setDouble(3, miningQuest.XP_REWARD);
-                insertPlayerMiningQuestsStatement.setInt(4, miningQuest.GOAL_COUNT);
+                insertPlayerMiningQuestsStatement.setDouble(3, miningQuest.xpReward);
+                insertPlayerMiningQuestsStatement.setInt(4, miningQuest.goalCount);
                 insertPlayerMiningQuestsStatement.setInt(5, miningQuest.playerCount);
                 insertPlayerMiningQuestsStatement.setString(6, miningQuest.getGoalBlockType().name());
                 insertPlayerMiningQuestsStatement.addBatch();
