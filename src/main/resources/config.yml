@@ -7,6 +7,7 @@
 
 # SERVER GAMEMODE (SURVIVAL, SKYBLOCK, HARDCORE)
 ServerGamemode: NONE
+QuestsPerPlayer: 5
 
 Difficulties:
   SUPER_EASY:
@@ -119,3 +120,174 @@ MiningQuestDifficulties:
     difficulty: VERY_HARD
   ANCIENT_DEBRIS:
     difficulty: SUPER_HARD
+
+KillingQuestDifficulties:
+  BLAZE:
+    difficulty: HARD
+  CAVE_SPIDER:
+    difficulty: NORMAL
+  CHICKEN:
+    difficulty: EASY
+  COW:
+    difficulty: EASY
+  CREEPER:
+    difficulty: NORMAL
+  DROWNED:
+    difficulty: NORMAL
+  ELDER_GUARDIAN:
+    difficulty: SUPER_HARD
+  ENDER_DRAGON:
+    difficulty: SUPER_HARD
+  ENDERMAN:
+    difficulty: HARD
+  ENDERMITE:
+    difficulty: HARD
+  EVOKER:
+    difficulty: VERY_HARD
+  GHAST:
+    difficulty: HARD
+  GLOW_SQUID:
+    difficulty: NORMAL
+  GOAT:
+    difficulty: NORMAL
+  GUARDIAN:
+    difficulty: HARD
+  HOGLIN:
+    difficulty: HARD
+  HUSK:
+    difficulty: HARD
+  ILLUSIONER:
+    difficulty: VERY_HARD
+  MAGMA_CUBE:
+    difficulty: HARD
+  MUSHROOM_COW:
+    difficulty: HARD
+  PHANTOM:
+    difficulty: HARD
+  PIG:
+    difficulty: EASY
+  PIGLIN:
+    difficulty: NORMAL
+  PIGLIN_BRUTE:
+    difficulty: VERY_HARD
+  PILLAGER:
+    difficulty: HARD
+  PUFFERFISH:
+    difficulty: NORMAL
+  RABBIT:
+    difficulty: EASY
+  RAVAGER:
+    difficulty: VERY_HARD
+  SALMON:
+    difficulty: NORMAL
+  SHEEP:
+    difficulty: EASY
+  SHULKER:
+    difficulty: HARD
+  SILVERFISH:
+    difficulty: HARD
+  SKELETON:
+    difficulty: NORMAL
+  SLIME:
+    difficulty: NORMAL
+  SPIDER:
+    difficulty: NORMAL
+  SQUID:
+    difficulty: EASY
+  STRAY:
+    difficulty: HARD
+  TROPICAL_FISH:
+    difficulty: NORMAL
+  VEX:
+    difficulty: VERY_HARD
+  VINDICATOR:
+    difficulty: VERY_HARD
+  WARDEN:
+    difficulty: SUPER_HARD
+  WITCH:
+    difficulty: HARD
+  WITHER:
+    difficulty: SUPER_HARD
+  WITHER_SKELETON:
+    difficulty: VERY_HARD
+  ZOGLIN:
+    difficulty: HARD
+  ZOMBIE:
+    difficulty: NORMAL
+  ZOMBIFIED_PIGLIN:
+    difficulty: HARD
+
+ExplorationQuestDifficulties:
+  ANCIENT_CITY:
+    structures:
+      - ANCIENT_CITY
+    difficulty: VERY_HARD
+  BASTION_REMNANT:
+    structures:
+      - BASTION_REMNANT
+    difficulty: VERY_HARD
+  BURIED_TREASURE:
+    structures:
+      - BURIED_TREASURE
+    difficulty: NORMAL
+  DESERT_PYRAMID:
+    structures:
+      - DESERT_PYRAMID
+    difficulty: HARD
+  END_CITY:
+    structures:
+      - END_CITY
+    difficulty: VERY_HARD
+  NETHER_FORTRESS:
+    structures:
+      - FORTRESS
+    difficulty: HARD
+  IGLOO:
+    structures:
+      - IGLOO
+    difficulty: HARD
+  JUNGLE_PYRAMID:
+    structures:
+      - JUNGLE_PYRAMID
+    difficulty: HARD
+  MANSION:
+    structures:
+      - MANSION
+    difficulty: SUPER_HARD
+  MINESHAFT:
+    structures:
+      - MINESHAFT
+      - MINESHAFT_MESA
+    difficulty: HARD
+  OCEAN_RUIN:
+    structures:
+      - OCEAN_RUIN_COLD
+      - OCEAN_RUIN_WARM
+    difficulty: NORMAL
+  PILLAGER_OUTPOST:
+    structures:
+      - PILLAGER_OUTPOST
+    difficulty: NORMAL
+  RUINED_PORTAL:
+    structures:
+      - RUINED_PORTAL
+      - RUINED_PORTAL_DESERT
+      - RUINED_PORTAL_JUNGLE
+      - RUINED_PORTAL_MOUNTAIN
+      - RUINED_PORTAL_NETHER
+      - RUINED_PORTAL_OCEAN
+      - RUINED_PORTAL_SWAMP
+    difficulty: NORMAL
+  SHIPWRECK:
+    structures:
+      - SHIPWRECK
+      - SHIPWRECK_BEACHED
+    difficulty: NORMAL
+  VILLAGE:
+    structures:
+      - VILLAGE_DESERT
+      - VILLAGE_PLAINS
+      - VILLAGE_SAVANNA
+      - VILLAGE_SNOWY
+      - VILLAGE_TAIGA
+    difficulty: HARD

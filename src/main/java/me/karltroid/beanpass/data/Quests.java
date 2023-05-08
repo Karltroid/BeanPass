@@ -53,7 +53,7 @@ public class Quests
 
     public static class MiningQuest extends Quest
     {
-        Material goalBlockType = null;
+        Material goalBlockType;
 
         public MiningQuest(ServerGamemode gamemode, String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
         {
@@ -103,20 +103,53 @@ public class Quests
 
     public static class KillingQuest extends Quest
     {
-        final EntityType GOAL_ENTITY_TYPE;
+        EntityType goalEntityType;
 
         public KillingQuest(ServerGamemode gamemode, String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount)
         {
             super(gamemode, playerUUID, xpReward, goalKillCount, playerKillCount);
-            this.GOAL_ENTITY_TYPE = goalEntityType;
+            String questDifficultyKey = BeanPass.main.questDifficulties.getRandom();
+            QuestDifficulty questDifficulty = BeanPass.main.questDifficulties.get(questDifficultyKey);
+
+            this.goalCount = (goalKillCount == -1 ? questDifficulty.generateUnitAmount() : goalKillCount);
+            this.xpReward = (xpReward == -1 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
+
+
+            if (goalEntityType != null)
+            {
+                this.goalEntityType = goalEntityType;
+            }
+            else
+            {
+                HashMap<EntityType, String> killingQuestDifficulties = BeanPass.main.questManager.getKillingQuestDifficulties();
+                List<Map.Entry<EntityType, String>> matchingDifficultyEntity = new ArrayList<>();
+
+                for (Map.Entry<EntityType, String> entry : killingQuestDifficulties.entrySet()) {
+                    if (entry.getValue().equals(questDifficultyKey)) {
+                        matchingDifficultyEntity.add(entry);
+                    }
+                }
+
+                Random random = new Random();
+                int randomIndex = random.nextInt(matchingDifficultyEntity.size());
+
+                Map.Entry<EntityType, String> randomEntry = matchingDifficultyEntity.get(randomIndex);
+
+                this.goalEntityType = randomEntry.getKey();
+            }
         }
 
         public String getGoalDescription()
         {
-            return "Kill " + playerCount + "/" + goalCount + "x " + GOAL_ENTITY_TYPE.name().replace('_', ' ').toLowerCase() + (goalCount > 1 ? "s" : "");
+            String formattedGoalEntityTypeName = goalEntityType.name();
+            formattedGoalEntityTypeName = formattedGoalEntityTypeName.replace('_', ' ');
+            formattedGoalEntityTypeName = formattedGoalEntityTypeName.toLowerCase();
+            formattedGoalEntityTypeName += (goalCount > 1 && !formattedGoalEntityTypeName.endsWith("s") ? "s" : "");
+
+            return "Kill " + playerCount + "/" + goalCount + "x " + formattedGoalEntityTypeName;
         }
 
-        public EntityType getGoalEntityType() { return GOAL_ENTITY_TYPE; }
+        public EntityType getGoalEntityType() { return goalEntityType; }
     }
 
     public static class ExplorationQuest extends Quest
@@ -154,4 +187,8 @@ public class Quests
 
         public EntityType getGoalEntityType() { return GOAL_ENTITY_TYPE; }
     }
+
+    // fishing quest
+
+    // farming quest
 }

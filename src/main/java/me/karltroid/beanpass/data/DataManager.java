@@ -1,9 +1,11 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.Quests.KillingQuest;
 import me.karltroid.beanpass.data.Quests.MiningQuest;
 import me.karltroid.beanpass.enums.ServerGamemode;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -95,7 +97,8 @@ public class DataManager implements Listener
 
             SeasonPlayer seasonPlayer = new SeasonPlayer(xp, premium);
 
-            try (PreparedStatement playerHatsStatement = conn.prepareStatement("SELECT hat_id FROM player_hats WHERE uuid = ?")) {
+            try (PreparedStatement playerHatsStatement = conn.prepareStatement("SELECT hat_id FROM player_hats WHERE uuid = ?"))
+            {
                 playerHatsStatement.setString(1, uuid.toString());
 
                 try (ResultSet playerHatsResult = playerHatsStatement.executeQuery()) {
@@ -105,14 +108,13 @@ public class DataManager implements Listener
                     }
                 }
             }
-            
+
             try (PreparedStatement playerMiningQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_MINING_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
                 playerMiningQuestStatement.setString(1, uuid.toString());
 
                 try (ResultSet playerMiningQuestResult = playerMiningQuestStatement.executeQuery())
                 {
-                    boolean hasQuest = false;
-                    if (playerMiningQuestResult.next())
+                    while (playerMiningQuestResult.next())
                     {
                         ServerGamemode serverGamemode = ServerGamemode.valueOf(playerMiningQuestResult.getString("server_gamemode"));
                         double xpReward = playerMiningQuestResult.getDouble("xp_reward");
@@ -121,14 +123,47 @@ public class DataManager implements Listener
                         int playerBlockCount = Integer.parseInt(playerMiningQuestResult.getString("player_count"));
 
                         seasonPlayer.giveQuest(new MiningQuest(serverGamemode, uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount));
-                        hasQuest = true;
                     }
 
-                    if (!hasQuest) { seasonPlayer.giveQuest(new MiningQuest(ServerGamemode.SURVIVAL, uuid.toString(), -1, null, -1, 0)); }
+                    //if (!hasQuest) { seasonPlayer.giveQuest(new MiningQuest(ServerGamemode.SURVIVAL, uuid.toString(), -1, null, -1, 0)); }
                 }
-                catch (SQLException e)
+            }
+            catch (SQLException e)
+            {
+                getLogger().severe(e.getMessage());
+            }
+
+            try (PreparedStatement playerKillingQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_KILLING_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
+                playerKillingQuestStatement.setString(1, uuid.toString());
+
+                try (ResultSet playerKillingQuestResult = playerKillingQuestStatement.executeQuery())
                 {
-                    getLogger().severe(e.getMessage());
+                    while (playerKillingQuestResult.next())
+                    {
+                        ServerGamemode serverGamemode = ServerGamemode.valueOf(playerKillingQuestResult.getString("server_gamemode"));
+                        double xpReward = playerKillingQuestResult.getDouble("xp_reward");
+                        String goalEntityTypeName = playerKillingQuestResult.getString("goal_entity_type");
+                        EntityType goalEntityType = null;
+                        for (EntityType type : EntityType.values())
+                        {
+                            if (type.name().equalsIgnoreCase(goalEntityTypeName)) goalEntityType = type;
+                            break;
+                        }
+                        if (goalEntityType == null)
+                        {
+                            BeanPass.main.getLogger().warning("Entity type " + goalEntityTypeName + " does not exist. Skipping.");
+                            continue;
+                        }
+                        int goalKillCount = Integer.parseInt(playerKillingQuestResult.getString("goal_count"));
+                        int playerKillCount = Integer.parseInt(playerKillingQuestResult.getString("player_count"));
+
+                        seasonPlayer.giveQuest(new KillingQuest(serverGamemode, uuid.toString(), xpReward, goalEntityType, goalKillCount, playerKillCount));
+                    }
+                }
+
+                while (seasonPlayer.getQuests(BeanPass.main.getServerGamemode()).size() < BeanPass.main.questManager.getQuestsPerPlayer())
+                {
+                    seasonPlayer.giveQuest(null);
                 }
             }
             catch (SQLException e)

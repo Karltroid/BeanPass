@@ -71,7 +71,7 @@ public final class BeanPass extends JavaPlugin implements Listener
 
         dataManager = new DataManager();
         questDifficulties = new QuestDifficulties();
-        questManager = new QuestManager();
+        questManager = new QuestManager(config.getInt("QuestsPerPlayer", 5));
 
         // register event listeners to the plugin instance
         pluginManager.registerEvents(dataManager, this);
@@ -97,24 +97,8 @@ public final class BeanPass extends JavaPlugin implements Listener
 
         // save config settings
         config.set("ServerGamemode", serverGamemode.toString());
+        config.set("QuestsPerPlayer", questManager.getQuestsPerPlayer());
         saveConfig();
-    }
-
-    @Override
-    public void saveDefaultConfig() {
-        super.saveDefaultConfig();
-
-        // Add comments to the default configuration file
-        File configFile = new File(getDataFolder(), "config.yml");
-        if (!configFile.exists()) {
-            try {
-                FileWriter writer = new FileWriter(configFile);
-                writer.write("# SERVER GAMEMODES: SURVIVAL, SKYBLOCK, HARDCORE\n");
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     public PluginManager getPluginManager(){ return pluginManager; }

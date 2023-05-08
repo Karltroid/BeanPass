@@ -9,8 +9,5 @@
         <module name="BeanPass" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="BeanPass" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
