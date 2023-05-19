@@ -26,6 +26,9 @@ public class QuestManager implements Listener
 {
     HashMap<Material, String> miningQuestDifficulties = new HashMap<>();
     HashMap<EntityType, String> killingQuestDifficulties = new HashMap<>();
+    final String BOLD_GREEN = ChatColor.GREEN + " " + ChatColor.BOLD;
+    final String BOLD_GRAY = ChatColor.GRAY + " " + ChatColor.BOLD;
+    final String ITALIC_YELLOW = ChatColor.YELLOW + " " + ChatColor.ITALIC;
     int questsPerPlayer;
 
     public QuestManager(int questsPerPlayer)
@@ -92,16 +95,14 @@ public class QuestManager implements Listener
         }
     }
 
-    void completeQuest(SeasonPlayer seasonPlayer, Quest quest)
+    void completeQuest(Player player, SeasonPlayer seasonPlayer, Quest quest)
     {
-        Player player = Bukkit.getPlayer(seasonPlayer.getUUID());
-
         seasonPlayer.addXp(quest.getXPReward());
         seasonPlayer.getQuests().remove(quest);
-        player.sendMessage(ChatColor.GREEN + "COMPLETED: " + quest.getGoalDescription() + " " + ChatColor.YELLOW + quest.getRewardDescription());
+        player.sendMessage(BOLD_GREEN + "COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription() + " " + ITALIC_YELLOW + quest.getRewardDescription());
 
         Quest nextQuest = seasonPlayer.giveQuest(null);
-        player.sendMessage(ChatColor.GRAY + "NEW QUEST: " + nextQuest.getGoalDescription() + " " + ChatColor.YELLOW + nextQuest.getRewardDescription());
+        player.sendMessage(BOLD_GRAY + "NEW QUEST: " + ChatColor.GRAY + nextQuest.getGoalDescription() + " " + ITALIC_YELLOW + nextQuest.getRewardDescription());
     }
 
     @EventHandler
@@ -122,7 +123,7 @@ public class QuestManager implements Listener
         if (miningQuest == null) return;
 
         miningQuest.incrementPlayerCount();
-        if (miningQuest.isCompleted()) completeQuest(seasonPlayer, miningQuest);
+        if (miningQuest.isCompleted()) completeQuest(event.getPlayer(), seasonPlayer, miningQuest);
     }
 
     @EventHandler
@@ -144,7 +145,7 @@ public class QuestManager implements Listener
         if (killingQuest == null) return;
 
         killingQuest.incrementPlayerCount();
-        if (killingQuest.isCompleted()) completeQuest(seasonPlayer, killingQuest);
+        if (killingQuest.isCompleted()) completeQuest(player, seasonPlayer, killingQuest);
     }
 
     public HashMap<Material, String> getMiningQuestDifficulties()
