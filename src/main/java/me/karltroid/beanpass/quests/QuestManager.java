@@ -6,6 +6,7 @@ import me.karltroid.beanpass.data.Quests.KillingQuest;
 import me.karltroid.beanpass.data.Quests.MiningQuest;
 import me.karltroid.beanpass.data.Quests.Quest;
 import me.karltroid.beanpass.data.SeasonPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -91,13 +92,16 @@ public class QuestManager implements Listener
         }
     }
 
-    public HashMap<Material, String> getMiningQuestDifficulties()
+    void completeQuest(SeasonPlayer seasonPlayer, Quest quest)
     {
-        return miningQuestDifficulties;
-    }
-    public HashMap<EntityType, String> getKillingQuestDifficulties()
-    {
-        return killingQuestDifficulties;
+        Player player = Bukkit.getPlayer(seasonPlayer.getUUID());
+
+        seasonPlayer.addXp(quest.getXPReward());
+        seasonPlayer.getQuests().remove(quest);
+        player.sendMessage(ChatColor.GREEN + "COMPLETED: " + quest.getGoalDescription() + " " + ChatColor.YELLOW + quest.getRewardDescription());
+
+        Quest nextQuest = seasonPlayer.giveQuest(null);
+        player.sendMessage(ChatColor.GRAY + "NEW QUEST: " + nextQuest.getGoalDescription() + " " + ChatColor.YELLOW + nextQuest.getRewardDescription());
     }
 
     @EventHandler
@@ -118,16 +122,7 @@ public class QuestManager implements Listener
         if (miningQuest == null) return;
 
         miningQuest.incrementPlayerCount();
-        if (miningQuest.isCompleted())
-        {
-            seasonPlayer.addXp(miningQuest.getXPReward());
-            seasonPlayer.getQuests().remove(miningQuest);
-
-            event.getPlayer().sendMessage(ChatColor.GREEN + "COMPLETED: " + miningQuest.getGoalDescription());
-            event.getPlayer().sendMessage(ChatColor.YELLOW + miningQuest.getRewardDescription());
-            //seasonPlayer.getQuests(BeanPass.main.getServerGamemode()).add(new MiningQuest(ServerGamemode.SURVIVAL, playerUUID.toString(), -1, null, -1, 0));
-            seasonPlayer.giveQuest(null);
-        }
+        if (miningQuest.isCompleted()) completeQuest(seasonPlayer, miningQuest);
     }
 
     @EventHandler
@@ -149,14 +144,15 @@ public class QuestManager implements Listener
         if (killingQuest == null) return;
 
         killingQuest.incrementPlayerCount();
-        if (killingQuest.isCompleted())
-        {
-            seasonPlayer.addXp(killingQuest.getXPReward());
-            seasonPlayer.getQuests().remove(killingQuest);
+        if (killingQuest.isCompleted()) completeQuest(seasonPlayer, killingQuest);
+    }
 
-            player.sendMessage(ChatColor.GREEN + "COMPLETED: " + killingQuest.getGoalDescription());
-            player.sendMessage(ChatColor.YELLOW + killingQuest.getRewardDescription());
-            seasonPlayer.giveQuest(null);
-        }
+    public HashMap<Material, String> getMiningQuestDifficulties()
+    {
+        return miningQuestDifficulties;
+    }
+    public HashMap<EntityType, String> getKillingQuestDifficulties()
+    {
+        return killingQuestDifficulties;
     }
 }

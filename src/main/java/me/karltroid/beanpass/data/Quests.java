@@ -3,10 +3,11 @@ package me.karltroid.beanpass.data;
 import me.karltroid.beanpass.BeanPass;
 
 import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.generator.structure.Structure;
-
+import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 public class Quests
@@ -28,24 +29,36 @@ public class Quests
         double xpReward;
         int goalCount;
         int playerCount;
+        String questVerb = "";
+        String goalName = "";
 
-        Quest(String playerUUID, double xpReward, int goalCount, int playerCount)
+        Quest(String playerUUID, double xpReward, int goalCount, int playerCount, String questVerb)
         {
             this.playerUUID = playerUUID;
             this.goalCount = goalCount;
             this.xpReward = xpReward;
             this.playerCount = playerCount;
+            this.questVerb = questVerb;
         }
 
-        public void setPlayerUUID(String playerUUID)
+        public void setGoalName(String goalName)
         {
-            this.playerUUID = playerUUID;
+            this.goalName = goalName;
         }
 
         public String getRewardDescription()
         {
             return "+" + xpReward + "XP";
         }
+        public String getGoalDescription()
+        {
+            String formattedGoalName = goalName;
+            formattedGoalName = formattedGoalName.toLowerCase();
+            formattedGoalName = formattedGoalName.replace('_', ' ');
+            formattedGoalName += (goalCount > 1 && !formattedGoalName.endsWith("sh") && !formattedGoalName.endsWith("s") ? "s" : "");
+            return questVerb + " " + playerCount + "/" + goalCount + "x " + formattedGoalName;
+        }
+
         public boolean isCompleted() { return playerCount >= goalCount; }
         public void incrementPlayerCount() { playerCount++; }
         public double getXPReward() { return xpReward; }
@@ -57,7 +70,7 @@ public class Quests
 
         public MiningQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
         {
-            super(playerUUID, xpReward, goalBlockCount, playerBlockCount);
+            super(playerUUID, xpReward, goalBlockCount, playerBlockCount, "Mine");
             String questDifficultyKey = BeanPass.main.questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.main.questDifficulties.get(questDifficultyKey);
 
@@ -87,15 +100,8 @@ public class Quests
 
                 this.goalBlockType = randomEntry.getKey();
             }
-        }
 
-        public String getGoalDescription()
-        {
-            String formattedGoalBlockTypeName = goalBlockType.name();
-            formattedGoalBlockTypeName = formattedGoalBlockTypeName.replace('_', ' ');
-            formattedGoalBlockTypeName = formattedGoalBlockTypeName.toLowerCase();
-            formattedGoalBlockTypeName += (goalCount > 1 && !formattedGoalBlockTypeName.endsWith("s") ? "s" : "");
-            return "Mine " + playerCount + "/" + goalCount + "x natural " + formattedGoalBlockTypeName;
+            setGoalName(this.goalBlockType.name());
         }
 
         public Material getGoalBlockType() { return goalBlockType; }
@@ -107,7 +113,7 @@ public class Quests
 
         public KillingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount)
         {
-            super(playerUUID, xpReward, goalKillCount, playerKillCount);
+            super(playerUUID, xpReward, goalKillCount, playerKillCount, "Kill");
             String questDifficultyKey = null;
             for (int i = 0; i < 100; i++)
             {
@@ -141,16 +147,8 @@ public class Quests
 
                 this.goalEntityType = randomEntry.getKey();
             }
-        }
 
-        public String getGoalDescription()
-        {
-            String formattedGoalEntityTypeName = goalEntityType.name();
-            formattedGoalEntityTypeName = formattedGoalEntityTypeName.replace('_', ' ');
-            formattedGoalEntityTypeName = formattedGoalEntityTypeName.toLowerCase();
-            formattedGoalEntityTypeName += (goalCount > 1 && !formattedGoalEntityTypeName.endsWith("s") ? "s" : "");
-
-            return "Kill " + playerCount + "/" + goalCount + "x " + formattedGoalEntityTypeName;
+            setGoalName(this.goalEntityType.name());
         }
 
         public EntityType getGoalEntityType() { return goalEntityType; }
@@ -162,7 +160,7 @@ public class Quests
 
         public ExplorationQuest(String playerUUID, double xpReward, Structure goalStructureType, int goalChestCount, int playerChestCount)
         {
-            super(playerUUID, xpReward, goalChestCount, playerChestCount);
+            super(playerUUID, xpReward, goalChestCount, playerChestCount, "Loot");
             this.GOAL_STRUCTURE_TYPE = goalStructureType;
         }
 
@@ -174,25 +172,9 @@ public class Quests
         public Structure getGoalStructureType() { return GOAL_STRUCTURE_TYPE; }
     }
 
-    public static class BreedingQuest extends Quest
-    {
-        final EntityType GOAL_ENTITY_TYPE;
+    // Breeding Quest
 
-        public BreedingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalBabyCount, int playerBabyCount)
-        {
-            super(playerUUID, xpReward, goalBabyCount, playerBabyCount);
-            this.GOAL_ENTITY_TYPE = goalEntityType;
-        }
+    // Fishing Quest
 
-        public String getGoalDescription()
-        {
-            return "Breed " + playerCount + "/" + goalCount + "x baby " + GOAL_ENTITY_TYPE.name().replace('_', ' ').toLowerCase();
-        }
-
-        public EntityType getGoalEntityType() { return GOAL_ENTITY_TYPE; }
-    }
-
-    // fishing quest
-
-    // farming quest
+    // Farming Quest
 }

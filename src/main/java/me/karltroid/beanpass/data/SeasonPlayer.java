@@ -42,15 +42,17 @@ public class SeasonPlayer
     public double getXp() { return this.xp; }
     public void setXp(double xp) { this.xp = xp; }
     public void addXp(double xp) { setXp(this.xp + xp); }
+    public String getUUID() { return UUID; }
     public void setPremiumPass(boolean hasPass) { this.premium = hasPass; }
     public void giveHat(int hatID) { if (this.hats.contains(hatID)) return; this.hats.add(hatID); }
     public void removeHat(int hatID) { this.hats.removeIf( hat -> hat.equals(hatID)); }
     public boolean hasHat(int id) { return hats.contains(id); }
-    public void giveQuest(Quest quest)
+    public Quest giveQuest(Quest quest)
     {
         if (quest == null) quest = Quests.getRandomQuestType(UUID);
 
         quests.add(quest);
+        return quest;
     }
 
     public List<Quest> getQuests() { return quests; }

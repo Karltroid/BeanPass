@@ -29,9 +29,7 @@ public class ViewQuests implements CommandExecutor
 
         for (Quests.Quest quest : BeanPass.main.getActiveSeason().playerData.get(senderPlayer.getUniqueId()).getQuests())
         {
-            if (quest instanceof Quests.MiningQuest) senderPlayer.sendMessage(((Quests.MiningQuest)quest).getGoalDescription());
-            else if (quest instanceof Quests.KillingQuest) senderPlayer.sendMessage(((Quests.KillingQuest)quest).getGoalDescription());
-            else if (quest instanceof Quests.ExplorationQuest) senderPlayer.sendMessage(((Quests.ExplorationQuest)quest).getGoalDescription());
+            senderPlayer.sendMessage(quest.getGoalDescription());
         }
 
         return true;
