@@ -2,8 +2,6 @@ package me.karltroid.beanpass.command;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.Quests;
-import me.karltroid.beanpass.enums.ServerGamemode;
-import me.karltroid.beanpass.gui.BeanPassGUI;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,7 +27,7 @@ public class ViewQuests implements CommandExecutor
             return false;
         }
 
-        for (Quests.Quest quest : BeanPass.main.getActiveSeason().playerData.get(senderPlayer.getUniqueId()).getQuests(BeanPass.main.getServerGamemode()))
+        for (Quests.Quest quest : BeanPass.main.getActiveSeason().playerData.get(senderPlayer.getUniqueId()).getQuests())
         {
             if (quest instanceof Quests.MiningQuest) senderPlayer.sendMessage(((Quests.MiningQuest)quest).getGoalDescription());
             else if (quest instanceof Quests.KillingQuest) senderPlayer.sendMessage(((Quests.KillingQuest)quest).getGoalDescription());

@@ -1,51 +1,51 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.enums.ServerGamemode;
 
-import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
-import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.generator.structure.Structure;
 
 import java.util.*;
 
 public class Quests
 {
-    private final static Class<?>[] classTypes = { MiningQuest.class };
-
-    public static Class<?> getRandomQuestType()
+    public static Quest getRandomQuestType(String uuid)
     {
+        Quest[] quests = {
+                new MiningQuest(uuid, -1, null, -1, 0),
+                new KillingQuest(uuid, -1, null, -1, 0)
+        };
+
         Random random = new Random();
-        return classTypes[random.nextInt(classTypes.length)];
+        return quests[random.nextInt(quests.length)];
     }
 
     public static abstract class Quest
     {
-        final ServerGamemode SERVER_GAMEMODE;
-        final String PLAYER_UUID;
+        String playerUUID;
         double xpReward;
         int goalCount;
         int playerCount;
 
-        Quest(ServerGamemode serverGamemode, String playerUUID, double xpReward, int goalCount, int playerCount)
+        Quest(String playerUUID, double xpReward, int goalCount, int playerCount)
         {
-            this.SERVER_GAMEMODE = serverGamemode;
-            this.PLAYER_UUID = playerUUID;
+            this.playerUUID = playerUUID;
             this.goalCount = goalCount;
             this.xpReward = xpReward;
             this.playerCount = playerCount;
+        }
+
+        public void setPlayerUUID(String playerUUID)
+        {
+            this.playerUUID = playerUUID;
         }
 
         public String getRewardDescription()
         {
             return "+" + xpReward + "XP";
         }
-        public ServerGamemode getServerGamemode() { return SERVER_GAMEMODE; }
         public boolean isCompleted() { return playerCount >= goalCount; }
         public void incrementPlayerCount() { playerCount++; }
         public double getXPReward() { return xpReward; }
@@ -55,14 +55,14 @@ public class Quests
     {
         Material goalBlockType;
 
-        public MiningQuest(ServerGamemode gamemode, String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
+        public MiningQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
         {
-            super(gamemode, playerUUID, xpReward, goalBlockCount, playerBlockCount);
+            super(playerUUID, xpReward, goalBlockCount, playerBlockCount);
             String questDifficultyKey = BeanPass.main.questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.main.questDifficulties.get(questDifficultyKey);
 
-            this.goalCount = (goalBlockCount == -1 ? questDifficulty.generateUnitAmount() : goalBlockCount);
-            this.xpReward = (xpReward == -1 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
+            this.goalCount = (goalBlockCount <= 0 ? questDifficulty.generateUnitAmount() : goalBlockCount);
+            this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
 
             
             if (goalBlockType != null)
@@ -105,14 +105,19 @@ public class Quests
     {
         EntityType goalEntityType;
 
-        public KillingQuest(ServerGamemode gamemode, String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount)
+        public KillingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount)
         {
-            super(gamemode, playerUUID, xpReward, goalKillCount, playerKillCount);
-            String questDifficultyKey = BeanPass.main.questDifficulties.getRandom();
+            super(playerUUID, xpReward, goalKillCount, playerKillCount);
+            String questDifficultyKey = null;
+            for (int i = 0; i < 100; i++)
+            {
+                questDifficultyKey = BeanPass.main.questDifficulties.getRandom();
+                if (BeanPass.main.questManager.getKillingQuestDifficulties().containsValue(questDifficultyKey)) break;
+            }
             QuestDifficulty questDifficulty = BeanPass.main.questDifficulties.get(questDifficultyKey);
 
-            this.goalCount = (goalKillCount == -1 ? questDifficulty.generateUnitAmount() : goalKillCount);
-            this.xpReward = (xpReward == -1 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
+            this.goalCount = (goalKillCount <= 0 ? questDifficulty.generateUnitAmount() : goalKillCount);
+            this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
 
 
             if (goalEntityType != null)
@@ -121,10 +126,9 @@ public class Quests
             }
             else
             {
-                HashMap<EntityType, String> killingQuestDifficulties = BeanPass.main.questManager.getKillingQuestDifficulties();
                 List<Map.Entry<EntityType, String>> matchingDifficultyEntity = new ArrayList<>();
 
-                for (Map.Entry<EntityType, String> entry : killingQuestDifficulties.entrySet()) {
+                for (Map.Entry<EntityType, String> entry : BeanPass.main.questManager.getKillingQuestDifficulties().entrySet()) {
                     if (entry.getValue().equals(questDifficultyKey)) {
                         matchingDifficultyEntity.add(entry);
                     }
@@ -156,9 +160,9 @@ public class Quests
     {
         final Structure GOAL_STRUCTURE_TYPE;
 
-        public ExplorationQuest(ServerGamemode gamemode, String playerUUID, double xpReward, Structure goalStructureType, int goalChestCount, int playerChestCount)
+        public ExplorationQuest(String playerUUID, double xpReward, Structure goalStructureType, int goalChestCount, int playerChestCount)
         {
-            super(gamemode, playerUUID, xpReward, goalChestCount, playerChestCount);
+            super(playerUUID, xpReward, goalChestCount, playerChestCount);
             this.GOAL_STRUCTURE_TYPE = goalStructureType;
         }
 
@@ -174,9 +178,9 @@ public class Quests
     {
         final EntityType GOAL_ENTITY_TYPE;
 
-        public BreedingQuest(ServerGamemode gamemode, String playerUUID, double xpReward, EntityType goalEntityType, int goalBabyCount, int playerBabyCount)
+        public BreedingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalBabyCount, int playerBabyCount)
         {
-            super(gamemode, playerUUID, xpReward, goalBabyCount, playerBabyCount);
+            super(playerUUID, xpReward, goalBabyCount, playerBabyCount);
             this.GOAL_ENTITY_TYPE = goalEntityType;
         }
 

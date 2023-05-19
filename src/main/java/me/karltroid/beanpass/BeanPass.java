@@ -5,16 +5,11 @@ import me.karltroid.beanpass.command.OpenBeanPassGUI;
 import me.karltroid.beanpass.command.ViewQuests;
 import me.karltroid.beanpass.data.DataManager;
 import me.karltroid.beanpass.data.Hats;
-import me.karltroid.beanpass.data.Quests;
 import me.karltroid.beanpass.data.Seasons;
-import me.karltroid.beanpass.enums.ServerGamemode;
 import me.karltroid.beanpass.gui.BeanPassGUI;
-import me.karltroid.beanpass.gui.Buttons;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,9 +18,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.HashMap;
 
 public final class BeanPass extends JavaPlugin implements Listener
@@ -33,7 +25,6 @@ public final class BeanPass extends JavaPlugin implements Listener
     public static BeanPass main;
     private FileConfiguration config;
     PluginManager pluginManager = getServer().getPluginManager();
-    ServerGamemode serverGamemode;
     public int activeSeason = 1;
 
     Hats hats = new Hats();
@@ -46,7 +37,6 @@ public final class BeanPass extends JavaPlugin implements Listener
 
 
     public Seasons.Season getActiveSeason() { return seasons.getSeason(activeSeason); }
-    public ServerGamemode getServerGamemode() { return serverGamemode; }
 
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
 
@@ -59,15 +49,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         saveDefaultConfig();
         reloadConfig();
         config = getConfig();
-
-        String configServerGamemode = config.getString("ServerGamemode", "NONE");
-        if (configServerGamemode.equals("NONE"))
-        {
-            main.getLogger().warning("ServerGamemode is not setup in config.yml, please pick a server gamemode.");
-            main.getPluginManager().disablePlugin(main);
-            return;
-        }
-        serverGamemode = ServerGamemode.valueOf(configServerGamemode.toUpperCase());
 
         dataManager = new DataManager();
         questDifficulties = new QuestDifficulties();
@@ -96,7 +77,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         }
 
         // save config settings
-        config.set("ServerGamemode", serverGamemode.toString());
         config.set("QuestsPerPlayer", questManager.getQuestsPerPlayer());
         saveConfig();
     }

@@ -2,27 +2,22 @@ package me.karltroid.beanpass.quests;
 
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.data.Quests;
 import me.karltroid.beanpass.data.Quests.KillingQuest;
 import me.karltroid.beanpass.data.Quests.MiningQuest;
 import me.karltroid.beanpass.data.Quests.Quest;
 import me.karltroid.beanpass.data.SeasonPlayer;
-import me.karltroid.beanpass.enums.ServerGamemode;
-import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
 import org.bukkit.ChatColor;
-import org.bukkit.Difficulty;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -81,7 +76,8 @@ public class QuestManager implements Listener
             EntityType entityType = null;
             for (EntityType type : EntityType.values())
             {
-                if (type.name().equalsIgnoreCase(entityTypeName)) entityType = type;
+                if (!type.name().equalsIgnoreCase(entityTypeName)) continue;
+                entityType = type;
                 break;
             }
             if (entityType == null)
@@ -110,23 +106,22 @@ public class QuestManager implements Listener
         UUID playerUUID = event.getPlayer().getUniqueId();
         SeasonPlayer seasonPlayer = BeanPass.main.getActiveSeason().playerData.get(playerUUID);
 
+        Material blockMinedType = event.getBlock().getType();
+
         MiningQuest miningQuest = null;
-        for (Quest quest : seasonPlayer.getQuests(BeanPass.main.getServerGamemode()))
+        for (Quest quest : seasonPlayer.getQuests())
         {
             if (!(quest instanceof MiningQuest)) continue;
+            if (blockMinedType != ((MiningQuest) quest).getGoalBlockType()) continue;
             miningQuest = (MiningQuest) quest;
         }
-
         if (miningQuest == null) return;
-
-        Material blockMinedType = event.getBlock().getType();
-        if (blockMinedType != miningQuest.getGoalBlockType()) return;
 
         miningQuest.incrementPlayerCount();
         if (miningQuest.isCompleted())
         {
             seasonPlayer.addXp(miningQuest.getXPReward());
-            seasonPlayer.getQuests(BeanPass.main.getServerGamemode()).remove(miningQuest);
+            seasonPlayer.getQuests().remove(miningQuest);
 
             event.getPlayer().sendMessage(ChatColor.GREEN + "COMPLETED: " + miningQuest.getGoalDescription());
             event.getPlayer().sendMessage(ChatColor.YELLOW + miningQuest.getRewardDescription());
@@ -145,25 +140,22 @@ public class QuestManager implements Listener
         SeasonPlayer seasonPlayer = BeanPass.main.getActiveSeason().playerData.get(playerUUID);
 
         KillingQuest killingQuest = null;
-        for (Quest quest : seasonPlayer.getQuests(BeanPass.main.getServerGamemode()))
+        for (Quest quest : seasonPlayer.getQuests())
         {
             if (!(quest instanceof KillingQuest)) continue;
+            if (entityTypeKilled != ((KillingQuest) quest).getGoalEntityType()) continue;
             killingQuest = (KillingQuest) quest;
         }
-
         if (killingQuest == null) return;
-
-        if (entityTypeKilled != killingQuest.getGoalEntityType()) return;
 
         killingQuest.incrementPlayerCount();
         if (killingQuest.isCompleted())
         {
             seasonPlayer.addXp(killingQuest.getXPReward());
-            seasonPlayer.getQuests(BeanPass.main.getServerGamemode()).remove(killingQuest);
+            seasonPlayer.getQuests().remove(killingQuest);
 
             player.sendMessage(ChatColor.GREEN + "COMPLETED: " + killingQuest.getGoalDescription());
             player.sendMessage(ChatColor.YELLOW + killingQuest.getRewardDescription());
-            //seasonPlayer.getQuests(BeanPass.main.getServerGamemode()).add(new MiningQuest(ServerGamemode.SURVIVAL, playerUUID.toString(), -1, null, -1, 0));
             seasonPlayer.giveQuest(null);
         }
     }

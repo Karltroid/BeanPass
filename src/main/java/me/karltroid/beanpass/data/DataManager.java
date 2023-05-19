@@ -3,7 +3,6 @@ package me.karltroid.beanpass.data;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.Quests.KillingQuest;
 import me.karltroid.beanpass.data.Quests.MiningQuest;
-import me.karltroid.beanpass.enums.ServerGamemode;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -63,13 +62,22 @@ public class DataManager implements Listener
             );
             stmt.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS " + PLAYER_MINING_QUESTS_TABLE_NAME + " ("
-                            + "server_gamemode VARCHAR(36) NOT NULL,"
                             + "uuid VARCHAR(36) NOT NULL,"
                             + "xp_reward DOUBLE NOT NULL,"
                             + "goal_count VARCHAR(36) NOT NULL,"
                             + "player_count VARCHAR(36) NOT NULL,"
                             + "goal_block_type VARCHAR(36) NOT NULL,"
-                            + "PRIMARY KEY (server_gamemode, uuid)"
+                            + "PRIMARY KEY (uuid, goal_count, goal_block_type)"
+                            + ")"
+            );
+            stmt.executeUpdate(
+                    "CREATE TABLE IF NOT EXISTS " + PLAYER_KILLING_QUESTS_TABLE_NAME + " ("
+                            + "uuid VARCHAR(36) NOT NULL,"
+                            + "xp_reward DOUBLE NOT NULL,"
+                            + "goal_count VARCHAR(36) NOT NULL,"
+                            + "player_count VARCHAR(36) NOT NULL,"
+                            + "goal_entity_type VARCHAR(36) NOT NULL,"
+                            + "PRIMARY KEY (uuid, goal_count, goal_entity_type)"
                             + ")"
             );
         } catch (SQLException e) {
@@ -77,7 +85,8 @@ public class DataManager implements Listener
         }
     }
 
-    public void loadPlayerData(UUID uuid) {
+    public void loadPlayerData(UUID uuid)
+    {
         try (Connection conn = getConnection(BeanPass.main))
         {
             boolean premium = false;
@@ -95,7 +104,7 @@ public class DataManager implements Listener
                 }
             }
 
-            SeasonPlayer seasonPlayer = new SeasonPlayer(xp, premium);
+            SeasonPlayer seasonPlayer = new SeasonPlayer(uuid.toString(), xp, premium);
 
             try (PreparedStatement playerHatsStatement = conn.prepareStatement("SELECT hat_id FROM player_hats WHERE uuid = ?"))
             {
@@ -116,13 +125,12 @@ public class DataManager implements Listener
                 {
                     while (playerMiningQuestResult.next())
                     {
-                        ServerGamemode serverGamemode = ServerGamemode.valueOf(playerMiningQuestResult.getString("server_gamemode"));
                         double xpReward = playerMiningQuestResult.getDouble("xp_reward");
                         Material goalBlockType = Material.valueOf(playerMiningQuestResult.getString("goal_block_type"));
                         int goalBlockCount = Integer.parseInt(playerMiningQuestResult.getString("goal_count"));
                         int playerBlockCount = Integer.parseInt(playerMiningQuestResult.getString("player_count"));
 
-                        seasonPlayer.giveQuest(new MiningQuest(serverGamemode, uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount));
+                        seasonPlayer.giveQuest(new MiningQuest(uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount));
                     }
 
                     //if (!hasQuest) { seasonPlayer.giveQuest(new MiningQuest(ServerGamemode.SURVIVAL, uuid.toString(), -1, null, -1, 0)); }
@@ -140,7 +148,6 @@ public class DataManager implements Listener
                 {
                     while (playerKillingQuestResult.next())
                     {
-                        ServerGamemode serverGamemode = ServerGamemode.valueOf(playerKillingQuestResult.getString("server_gamemode"));
                         double xpReward = playerKillingQuestResult.getDouble("xp_reward");
                         String goalEntityTypeName = playerKillingQuestResult.getString("goal_entity_type");
                         EntityType goalEntityType = null;
@@ -157,11 +164,11 @@ public class DataManager implements Listener
                         int goalKillCount = Integer.parseInt(playerKillingQuestResult.getString("goal_count"));
                         int playerKillCount = Integer.parseInt(playerKillingQuestResult.getString("player_count"));
 
-                        seasonPlayer.giveQuest(new KillingQuest(serverGamemode, uuid.toString(), xpReward, goalEntityType, goalKillCount, playerKillCount));
+                        seasonPlayer.giveQuest(new KillingQuest(uuid.toString(), xpReward, goalEntityType, goalKillCount, playerKillCount));
                     }
                 }
 
-                while (seasonPlayer.getQuests(BeanPass.main.getServerGamemode()).size() < BeanPass.main.questManager.getQuestsPerPlayer())
+                while (seasonPlayer.getQuests().size() < BeanPass.main.questManager.getQuestsPerPlayer())
                 {
                     seasonPlayer.giveQuest(null);
                 }
@@ -170,6 +177,9 @@ public class DataManager implements Listener
             {
                 getLogger().severe(e.getMessage());
             }
+
+            while (seasonPlayer.getQuests().size() < BeanPass.main.questManager.getQuestsPerPlayer())
+                seasonPlayer.giveQuest(null);
 
             BeanPass.main.getActiveSeason().playerData.put(uuid, seasonPlayer);
         } catch (SQLException e) {
@@ -194,8 +204,12 @@ public class DataManager implements Listener
                      "INSERT INTO player_hats (uuid, hat_id) VALUES (?, ?)"
              );
              PreparedStatement insertPlayerMiningQuestsStatement = conn.prepareStatement(
-                     "INSERT INTO " + PLAYER_MINING_QUESTS_TABLE_NAME + " (server_gamemode, uuid, xp_reward, goal_count, player_count, goal_block_type) VALUES (?, ?, ?, ?, ?, ?)" +
-                             "ON CONFLICT(server_gamemode, uuid) DO UPDATE SET xp_reward = excluded.xp_reward, goal_count = excluded.goal_count, player_count = excluded.player_count, goal_block_type = excluded.goal_block_type"
+                     "INSERT INTO " + PLAYER_MINING_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_block_type) VALUES (?, ?, ?, ?, ?)" +
+                             "ON CONFLICT(uuid, goal_count, goal_block_type) DO UPDATE SET xp_reward = excluded.xp_reward, goal_count = excluded.goal_count, player_count = excluded.player_count, goal_block_type = excluded.goal_block_type"
+             );
+             PreparedStatement insertPlayerKillingQuestsStatement = conn.prepareStatement(
+                     "INSERT INTO " + PLAYER_KILLING_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_entity_type) VALUES (?, ?, ?, ?, ?)" +
+                             "ON CONFLICT(uuid, goal_count, goal_entity_type) DO UPDATE SET xp_reward = excluded.xp_reward, goal_count = excluded.goal_count, player_count = excluded.player_count, goal_entity_type = excluded.goal_entity_type"
              )
         ) {
             // Insert or update player_season_data table
@@ -216,19 +230,31 @@ public class DataManager implements Listener
             }
             insertPlayerHatStatement.executeBatch();
 
-            for (Quests.Quest quest : seasonPlayer.getQuests(ServerGamemode.ALL))
+            for (Quests.Quest quest : seasonPlayer.getQuests())
             {
-                if (!(quest instanceof MiningQuest)) continue;
-                MiningQuest miningQuest = (MiningQuest) quest;
-                insertPlayerMiningQuestsStatement.setString(1, miningQuest.getServerGamemode().name());
-                insertPlayerMiningQuestsStatement.setString(2, miningQuest.PLAYER_UUID);
-                insertPlayerMiningQuestsStatement.setDouble(3, miningQuest.xpReward);
-                insertPlayerMiningQuestsStatement.setInt(4, miningQuest.goalCount);
-                insertPlayerMiningQuestsStatement.setInt(5, miningQuest.playerCount);
-                insertPlayerMiningQuestsStatement.setString(6, miningQuest.getGoalBlockType().name());
-                insertPlayerMiningQuestsStatement.addBatch();
+                if (quest instanceof MiningQuest)
+                {
+                    MiningQuest miningQuest = (MiningQuest) quest;
+                    insertPlayerMiningQuestsStatement.setString(1, miningQuest.playerUUID);
+                    insertPlayerMiningQuestsStatement.setDouble(2, miningQuest.xpReward);
+                    insertPlayerMiningQuestsStatement.setInt(3, miningQuest.goalCount);
+                    insertPlayerMiningQuestsStatement.setInt(4, miningQuest.playerCount);
+                    insertPlayerMiningQuestsStatement.setString(5, miningQuest.getGoalBlockType().name());
+                    insertPlayerMiningQuestsStatement.addBatch();
+                }
+                else if (quest instanceof KillingQuest)
+                {
+                    KillingQuest killingQuest = (KillingQuest) quest;
+                    insertPlayerKillingQuestsStatement.setString(1, killingQuest.playerUUID);
+                    insertPlayerKillingQuestsStatement.setDouble(2, killingQuest.xpReward);
+                    insertPlayerKillingQuestsStatement.setInt(3, killingQuest.goalCount);
+                    insertPlayerKillingQuestsStatement.setInt(4, killingQuest.playerCount);
+                    insertPlayerKillingQuestsStatement.setString(5, killingQuest.getGoalEntityType().name());
+                    insertPlayerKillingQuestsStatement.addBatch();
+                }
             }
             insertPlayerMiningQuestsStatement.executeBatch();
+            insertPlayerKillingQuestsStatement.executeBatch();
         }
         catch (SQLException e)
         {

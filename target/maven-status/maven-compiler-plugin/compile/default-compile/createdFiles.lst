@@ -20,10 +20,8 @@ me\karltroid\beanpass\data\Quests$KillingQuest.class
 me\karltroid\beanpass\data\Quests$MiningQuest.class
 me\karltroid\beanpass\quests\QuestManager.class
 me\karltroid\beanpass\data\Quests$Quest.class
-me\karltroid\beanpass\data\SeasonPlayer$1.class
 me\karltroid\beanpass\data\Hats.class
 me\karltroid\beanpass\data\Quests$BreedingQuest.class
-me\karltroid\beanpass\enums\ServerGamemode.class
 me\karltroid\beanpass\gui\ButtonElement.class
 me\karltroid\beanpass\BeanPass.class
 me\karltroid\beanpass\data\SeasonPlayer.class

@@ -1,7 +1,8 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.enums.ServerGamemode;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +12,16 @@ import static me.karltroid.beanpass.data.Quests.Quest;
 
 public class SeasonPlayer
 {
+    final String UUID;
     double xp = 0;
     Boolean premium = false;
     List<Integer> hats = new ArrayList<>();
-    List<Quest> survivalQuests = new ArrayList<>();
-    List<Quest> skyblockQuests = new ArrayList<>();
-    List<Quest> hardcoreQuests = new ArrayList<>();
+    List<Quest> quests = new ArrayList<>();
 
 
-    public SeasonPlayer(double xp, Boolean premiumPass)
+    public SeasonPlayer(String uuid, double xp, Boolean premiumPass)
     {
+        this.UUID = uuid;
         setXp(xp);
         this.premium = premiumPass;
     }
@@ -47,43 +48,11 @@ public class SeasonPlayer
     public boolean hasHat(int id) { return hats.contains(id); }
     public void giveQuest(Quest quest)
     {
-        switch (quest.SERVER_GAMEMODE)
-        {
-            case SURVIVAL:
-                survivalQuests.add(quest);
-                break;
-            case SKYBLOCK:
-                skyblockQuests.add(quest);
-                break;
-            case HARDCORE:
-                hardcoreQuests.add(quest);
-                break;
-            default:
-                break;
-        }
+        if (quest == null) quest = Quests.getRandomQuestType(UUID);
+
+        quests.add(quest);
     }
 
-    public List<Quest> getQuests(ServerGamemode serverGamemode)
-    {
-        switch (serverGamemode)
-        {
-            case SURVIVAL:
-                return survivalQuests;
-            case SKYBLOCK:
-                return skyblockQuests;
-            case HARDCORE:
-                return hardcoreQuests;
-            case ALL:
-                List<Quest> allQuests = new ArrayList<>();
-                allQuests.addAll(survivalQuests);
-                allQuests.addAll(skyblockQuests);
-                allQuests.addAll(hardcoreQuests);
-                return allQuests;
-            default:
-                break;
-        }
-
-        return null;
-    }
+    public List<Quest> getQuests() { return quests; }
 }
 
