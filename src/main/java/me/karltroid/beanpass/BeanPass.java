@@ -1,15 +1,21 @@
 package me.karltroid.beanpass;
 
+import me.karltroid.beanpass.Rewards.MoneyReward;
+import me.karltroid.beanpass.Rewards.Reward;
+import me.karltroid.beanpass.Rewards.SetHomeReward;
+import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.command.AddXP;
 import me.karltroid.beanpass.command.OpenBeanPassGUI;
 import me.karltroid.beanpass.command.ViewQuests;
 import me.karltroid.beanpass.data.DataManager;
-import me.karltroid.beanpass.data.Hats;
-import me.karltroid.beanpass.data.Seasons;
+import me.karltroid.beanpass.data.Level;
+import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.data.Season;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,24 +25,23 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public final class BeanPass extends JavaPlugin implements Listener
 {
-    public static BeanPass main;
+    static BeanPass main;
     private FileConfiguration config;
     PluginManager pluginManager = getServer().getPluginManager();
-    public int activeSeason = 1;
 
-    Hats hats = new Hats();
-    Seasons seasons = new Seasons();
+    HashMap<UUID, PlayerData> playerData;
+    Season season;
     public QuestDifficulties questDifficulties;
     public QuestManager questManager;
     DataManager dataManager;
 
+    public static BeanPass getInstance(){ return main; }
 
-
-
-    public Seasons.Season getActiveSeason() { return seasons.getSeason(activeSeason); }
+    public Season getSeason() { return season; }
 
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
 
@@ -64,6 +69,87 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("beanpass-addxp").setExecutor(new AddXP());
 
         main.getCommand("quests").setExecutor(new ViewQuests());
+
+        // get season data
+        HashMap<Integer, Level> seasonLevels = new HashMap<>();
+        // Check if the SeasonRewards section exists
+        if (config.contains("SeasonRewards"))
+        {
+            // Get the SeasonRewards section
+            ConfigurationSection seasonRewardsSection = config.getConfigurationSection("SeasonRewards");
+
+            // Iterate through each season
+            for (String season : seasonRewardsSection.getKeys(false))
+            {
+                int level = Integer.parseInt(season);
+
+                // Get the XP and Reward sections for the current season
+                ConfigurationSection seasonSection = seasonRewardsSection.getConfigurationSection(season);
+                if (seasonSection != null)
+                {
+                    // Get the XP value
+                    int xp = seasonSection.getInt("XP");
+
+                    // Get the Reward section
+                    ConfigurationSection rewardSection = seasonSection.getConfigurationSection("Reward");
+                    if (rewardSection != null)
+                    {
+                        // Get the Free rewards for the current season
+                        ConfigurationSection freeSection = rewardSection.getConfigurationSection("Free");
+                        Reward freeReward = null;
+                        if (freeSection != null)
+                        {
+                            // Get the Type and Amount values
+                            String freeType = freeSection.getString("Type");
+
+                            switch (freeType)
+                            {
+                                case "MONEY":
+                                    int moneyAmount = freeSection.getInt("Amount");
+                                    freeReward = new MoneyReward(moneyAmount);
+                                    break;
+                                case "SET_HOME":
+                                    int homeAmount = freeSection.getInt("Amount");
+                                    freeReward = new SetHomeReward(homeAmount);
+                                    break;
+                                case "SKIN":
+                                    String skinName = freeSection.getString("Skin");
+                                    freeReward = new SkinReward(skinName);
+                                    break;
+                            }
+                        }
+
+                        // Get the Paid rewards for the current season
+                        ConfigurationSection paidSection = rewardSection.getConfigurationSection("Paid");
+                        Reward premiumReward = null;
+                        if (paidSection != null) {
+                            // Get the Type, Item, and Skin values
+                            String paidType = paidSection.getString("Type");
+
+                            switch (paidType)
+                            {
+                                case "MONEY":
+                                    int moneyAmount = freeSection.getInt("Amount");
+                                    premiumReward = new MoneyReward(moneyAmount);
+                                    break;
+                                case "SET_HOME":
+                                    int homeAmount = freeSection.getInt("Amount");
+                                    premiumReward = new SetHomeReward(homeAmount);
+                                    break;
+                                case "SKIN":
+                                    String skinName = freeSection.getString("Skin");
+                                    premiumReward = new SkinReward(skinName);
+                                    break;
+                            }
+                        }
+
+                        seasonLevels.put(level, new Level(xp, freeReward, premiumReward));
+                    }
+                }
+            }
+        }
+        int seasonNumber = config.getInt("Season", 1);
+        season = new Season(seasonNumber, seasonLevels);
     }
 
     @Override
@@ -82,6 +168,15 @@ public final class BeanPass extends JavaPlugin implements Listener
     }
 
     public PluginManager getPluginManager(){ return pluginManager; }
+
+    public void addPlayerData(UUID uuid, PlayerData playerData) {
+        this.playerData.put(uuid, playerData);
+    }
+    public PlayerData getPlayerData(UUID uuid) {
+        return playerData.get(uuid);
+    }
+
+    public boolean playerDataExists(UUID playerUUID) { return playerData.containsKey(playerUUID); }
 
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event)

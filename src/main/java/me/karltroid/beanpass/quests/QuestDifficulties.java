@@ -30,12 +30,12 @@ public class QuestDifficulties
 
     private void loadDifficulties()
     {
-        FileConfiguration config = BeanPass.main.getConfig();
+        FileConfiguration config = BeanPass.getInstance().getConfig();
         ConfigurationSection difficultiesSection = config.getConfigurationSection("Difficulties");
 
         if (difficultiesSection == null)
         {
-            BeanPass.main.getLogger().warning("Couldn't get the Difficulties section in your Config.yml");
+            BeanPass.getInstance().getLogger().warning("Couldn't get the Difficulties section in your Config.yml");
             return;
         }
 
@@ -44,7 +44,7 @@ public class QuestDifficulties
             ConfigurationSection difficultySection = difficultiesSection.getConfigurationSection(difficulty);
 
             if (difficultySection == null) {
-                BeanPass.main.getLogger().warning("Couldn't get the " + difficulty + " difficulty in your Config.yml");
+                BeanPass.getInstance().getLogger().warning("Couldn't get the " + difficulty + " difficulty in your Config.yml");
                 continue;
             }
 

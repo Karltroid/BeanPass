@@ -1,7 +1,7 @@
 package me.karltroid.beanpass.command;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.data.SeasonPlayer;
+import me.karltroid.beanpass.data.PlayerData;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -29,10 +29,10 @@ public class AddXP implements CommandExecutor
             return true;
         }
 
-        OfflinePlayer targetPlayer = BeanPass.main.getServer().getOfflinePlayer(args[1]);
+        OfflinePlayer targetPlayer = BeanPass.getInstance().getServer().getOfflinePlayer(args[1]);
         UUID targetPlayerUUID = targetPlayer.getUniqueId();
 
-        if (!BeanPass.main.getActiveSeason().playerData.containsKey(targetPlayerUUID))
+        if (!BeanPass.getInstance().playerDataExists(targetPlayerUUID))
         {
             sender.sendMessage("Player has not played this season. (not found)");
             return false;
@@ -46,11 +46,11 @@ public class AddXP implements CommandExecutor
             return false;
         }
 
-        SeasonPlayer seasonPlayer = BeanPass.main.getActiveSeason().playerData.get(targetPlayerUUID);
-        double oldXP = seasonPlayer.getXp();
-        seasonPlayer.addXp(xpChange);
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(targetPlayerUUID);
+        double oldXP = playerData.getXp();
+        playerData.addXp(xpChange);
 
-        sender.sendMessage("Modified " + targetPlayer.getName() + "'s xp by " + xpChange + "(" + oldXP + " -> " + seasonPlayer.getXp() + ")");
+        sender.sendMessage("Modified " + targetPlayer.getName() + "'s xp by " + xpChange + "(" + oldXP + " -> " + playerData.getXp() + ")");
         return true;
     }
 }

@@ -1,8 +1,8 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.data.Quests.KillingQuest;
-import me.karltroid.beanpass.data.Quests.MiningQuest;
+import me.karltroid.beanpass.quests.Quests;
+import me.karltroid.beanpass.quests.Quests.*;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static org.bukkit.Bukkit.getLogger;
@@ -22,9 +23,10 @@ import static org.bukkit.Bukkit.getLogger;
 public class DataManager implements Listener
 {
     private static final String DATABASE_NAME = "database.db";
-    private static final String PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.main.getActiveSeason().getId() + "_data";
-    private static final String PLAYER_HATS_TABLE_NAME = "player_hats";
+    private static final String PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.getInstance().getSeason().getId() + "_data";
+    private static final String PLAYER_SKINS_TABLE_NAME = "player_skins";
     private static final String PLAYER_MINING_QUESTS_TABLE_NAME = "player_mining_quests";
+    private static final String PLAYER_LUMBER_QUESTS_TABLE_NAME = "player_lumber_quests";
     private static final String PLAYER_KILLING_QUESTS_TABLE_NAME = "player_killing_quests";
     private static final String PLAYER_EXPLORATION_QUESTS_TABLE_NAME = "player_exploration_quests";
 
@@ -44,7 +46,7 @@ public class DataManager implements Listener
     }
 
     public void createTables() {
-        try (Connection conn = getConnection(BeanPass.main);
+        try (Connection conn = getConnection(BeanPass.getInstance());
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(
                     "CREATE TABLE IF NOT EXISTS " + PLAYER_SEASON_DATA_TABLE_NAME + " ("
@@ -54,10 +56,10 @@ public class DataManager implements Listener
                             + ")"
             );
             stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_HATS_TABLE_NAME + " ("
+                    "CREATE TABLE IF NOT EXISTS " + PLAYER_SKINS_TABLE_NAME + " ("
                             + "uuid VARCHAR(36) NOT NULL,"
-                            + "hat_id VARCHAR(16) NOT NULL,"
-                            + "PRIMARY KEY (uuid, hat_id)"
+                            + "skin_id VARCHAR(16) NOT NULL,"
+                            + "PRIMARY KEY (uuid, skin_id)"
                             + ")"
             );
             stmt.executeUpdate(
@@ -87,7 +89,7 @@ public class DataManager implements Listener
 
     public void loadPlayerData(UUID uuid)
     {
-        try (Connection conn = getConnection(BeanPass.main))
+        try (Connection conn = getConnection(BeanPass.getInstance()))
         {
             boolean premium = false;
             double xp = 0.0;
@@ -104,16 +106,17 @@ public class DataManager implements Listener
                 }
             }
 
-            SeasonPlayer seasonPlayer = new SeasonPlayer(uuid.toString(), xp, premium);
+            PlayerData playerData = new PlayerData(uuid.toString(), premium, new ArrayList<>(), xp);
 
-            try (PreparedStatement playerHatsStatement = conn.prepareStatement("SELECT hat_id FROM player_hats WHERE uuid = ?"))
+            try (PreparedStatement playerSkinsStatement = conn.prepareStatement("SELECT skin_id FROM player_skins WHERE uuid = ?"))
             {
-                playerHatsStatement.setString(1, uuid.toString());
+                playerSkinsStatement.setString(1, uuid.toString());
 
-                try (ResultSet playerHatsResult = playerHatsStatement.executeQuery()) {
-                    while (playerHatsResult.next()) {
-                        int hatID = Integer.parseInt(playerHatsResult.getString("hat_id"));
-                        seasonPlayer.giveHat(hatID);
+                try (ResultSet playerSkinsResult = playerSkinsStatement.executeQuery()) {
+                    while (playerSkinsResult.next())
+                    {
+                        int skinID = Integer.parseInt(playerSkinsResult.getString("skin_id"));
+                        playerData.giveSkin(skinID);
                     }
                 }
             }
@@ -130,7 +133,7 @@ public class DataManager implements Listener
                         int goalBlockCount = Integer.parseInt(playerMiningQuestResult.getString("goal_count"));
                         int playerBlockCount = Integer.parseInt(playerMiningQuestResult.getString("player_count"));
 
-                        seasonPlayer.giveQuest(new MiningQuest(uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount));
+                        playerData.giveQuest(new MiningQuest(uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount));
                     }
 
                     //if (!hasQuest) { seasonPlayer.giveQuest(new MiningQuest(ServerGamemode.SURVIVAL, uuid.toString(), -1, null, -1, 0)); }
@@ -158,30 +161,28 @@ public class DataManager implements Listener
                         }
                         if (goalEntityType == null)
                         {
-                            BeanPass.main.getLogger().warning("Entity type " + goalEntityTypeName + " does not exist. Skipping.");
+                            BeanPass.getInstance().getLogger().warning("Entity type " + goalEntityTypeName + " does not exist. Skipping.");
                             continue;
                         }
                         int goalKillCount = Integer.parseInt(playerKillingQuestResult.getString("goal_count"));
                         int playerKillCount = Integer.parseInt(playerKillingQuestResult.getString("player_count"));
 
-                        seasonPlayer.giveQuest(new KillingQuest(uuid.toString(), xpReward, goalEntityType, goalKillCount, playerKillCount));
+                        playerData.giveQuest(new KillingQuest(uuid.toString(), xpReward, goalEntityType, goalKillCount, playerKillCount));
                     }
                 }
 
-                while (seasonPlayer.getQuests().size() < BeanPass.main.questManager.getQuestsPerPlayer())
-                {
-                    seasonPlayer.giveQuest(null);
-                }
+                while (playerData.getQuests().size() < BeanPass.getInstance().questManager.getQuestsPerPlayer())
+                    playerData.giveQuest(null);
             }
             catch (SQLException e)
             {
                 getLogger().severe(e.getMessage());
             }
 
-            while (seasonPlayer.getQuests().size() < BeanPass.main.questManager.getQuestsPerPlayer())
-                seasonPlayer.giveQuest(null);
+            while (playerData.getQuests().size() < BeanPass.getInstance().questManager.getQuestsPerPlayer())
+                playerData.giveQuest(null);
 
-            BeanPass.main.getActiveSeason().playerData.put(uuid, seasonPlayer);
+            BeanPass.getInstance().addPlayerData(uuid, playerData);
         } catch (SQLException e) {
             getLogger().severe("Failed to load data from database: " + e.getMessage());
         }
@@ -189,19 +190,19 @@ public class DataManager implements Listener
 
     public void savePlayerData(UUID uuid)
     {
-        if (!BeanPass.main.getActiveSeason().playerData.containsKey(uuid)) return;
-        SeasonPlayer seasonPlayer = BeanPass.main.getActiveSeason().playerData.get(uuid);
+        if (!BeanPass.getInstance().playerDataExists(uuid)) return;
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(uuid);
 
-        try (Connection conn = getConnection(BeanPass.main);
+        try (Connection conn = getConnection(BeanPass.getInstance());
              PreparedStatement playerSeasonDataStatement = conn.prepareStatement(
                      "INSERT INTO " + PLAYER_SEASON_DATA_TABLE_NAME + " (uuid, xp, premium) VALUES (?, ?, ?) " +
                              "ON CONFLICT(uuid) DO UPDATE SET xp = excluded.xp, premium = excluded.premium"
              );
-             PreparedStatement deletePlayerHatsStatement = conn.prepareStatement(
-                     "DELETE FROM player_hats WHERE uuid = ?"
+             PreparedStatement deletePlayerSkinsStatement = conn.prepareStatement(
+                     "DELETE FROM player_skins WHERE uuid = ?"
              );
-             PreparedStatement insertPlayerHatStatement = conn.prepareStatement(
-                     "INSERT INTO player_hats (uuid, hat_id) VALUES (?, ?)"
+             PreparedStatement insertPlayerSkinStatement = conn.prepareStatement(
+                     "INSERT INTO player_skins (uuid, skin_id) VALUES (?, ?)"
              );
              PreparedStatement insertPlayerMiningQuestsStatement = conn.prepareStatement(
                      "INSERT INTO " + PLAYER_MINING_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_block_type) VALUES (?, ?, ?, ?, ?)" +
@@ -214,23 +215,23 @@ public class DataManager implements Listener
         ) {
             // Insert or update player_season_data table
             playerSeasonDataStatement.setString(1, uuid.toString());
-            playerSeasonDataStatement.setDouble(2, seasonPlayer.xp);
-            playerSeasonDataStatement.setBoolean(3, seasonPlayer.premium);
+            playerSeasonDataStatement.setDouble(2, playerData.xp);
+            playerSeasonDataStatement.setBoolean(3, playerData.premium);
             playerSeasonDataStatement.executeUpdate();
 
-            // Delete all player_hats for the player
-            deletePlayerHatsStatement.setString(1, uuid.toString());
-            deletePlayerHatsStatement.executeUpdate();
+            // Delete all player_skins for the player
+            deletePlayerSkinsStatement.setString(1, uuid.toString());
+            deletePlayerSkinsStatement.executeUpdate();
 
-            // Insert new player_hats for the player
-            for (Integer hatId : seasonPlayer.hats) {
-                insertPlayerHatStatement.setString(1, uuid.toString());
-                insertPlayerHatStatement.setString(2, hatId.toString());
-                insertPlayerHatStatement.addBatch();
+            // Insert new player_skins for the player
+            for (Integer skinID : playerData.skins) {
+                insertPlayerSkinStatement.setString(1, uuid.toString());
+                insertPlayerSkinStatement.setString(2, skinID.toString());
+                insertPlayerSkinStatement.addBatch();
             }
-            insertPlayerHatStatement.executeBatch();
+            insertPlayerSkinStatement.executeBatch();
 
-            for (Quests.Quest quest : seasonPlayer.getQuests())
+            for (Quest quest : playerData.getQuests())
             {
                 if (quest instanceof MiningQuest)
                 {

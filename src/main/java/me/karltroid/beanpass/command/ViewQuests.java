@@ -1,7 +1,7 @@
 package me.karltroid.beanpass.command;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.data.Quests;
+import me.karltroid.beanpass.quests.Quests;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,7 +27,7 @@ public class ViewQuests implements CommandExecutor
             return false;
         }
 
-        for (Quests.Quest quest : BeanPass.main.getActiveSeason().playerData.get(senderPlayer.getUniqueId()).getQuests())
+        for (Quests.Quest quest : BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getQuests())
         {
             senderPlayer.sendMessage(quest.getGoalDescription());
         }

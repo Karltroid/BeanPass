@@ -1,31 +1,21 @@
 package me.karltroid.beanpass.gui;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.data.SeasonPlayer;
-import me.karltroid.beanpass.data.Seasons.Season;
+import me.karltroid.beanpass.data.PlayerData;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
-import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BeanPassGUI implements Listener
 {
     Player player;
-    SeasonPlayer seasonPlayer;
+    PlayerData playerData;
     private List<DisplayElement> allDisplayElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
     private List<TextElement> allTextElements = new ArrayList<>();
@@ -36,10 +26,8 @@ public class BeanPassGUI implements Listener
     public BeanPassGUI(Player player)
     {
         this.player = player;
-        this.seasonPlayer = BeanPass.main.getActiveSeason().playerData.get(player.getUniqueId());
+        this.playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
         buttons = new Buttons();
-
-        Season season = BeanPass.main.getActiveSeason();
 
         //allButtonElements.add(new ButtonElement(Hologram.createHolographicText(this, player, 0, 0, 45, season.getTitle())));
 
@@ -54,12 +42,12 @@ public class BeanPassGUI implements Listener
         allButtonElements.add(new ButtonElement(player, -1, 0, -25, buttons.get(10005)));
         allButtonElements.add(new ButtonElement(player, -1, 28, -25, buttons.get(10004)));
 
-        allTextElements.add(new TextElement(player, -2, 0, 0, ChatColor.GREEN + "XP: " + seasonPlayer.getXp()));
+        allTextElements.add(new TextElement(player, -2, 0, 0, ChatColor.GREEN + "XP: " + playerData.getXp()));
 
 
-        BeanPass.main.getPluginManager().registerEvents(this, BeanPass.main);
+        BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
 
-        BeanPass.main.activeGUIs.put(player, this);
+        BeanPass.getInstance().activeGUIs.put(player, this);
 
         new BukkitRunnable() {
             public void run()
@@ -97,7 +85,7 @@ public class BeanPassGUI implements Listener
                     selectedButtonElement.armorStand.teleport(newLocation);
                 }
             }
-        }.runTaskTimer(BeanPass.main,0,0);
+        }.runTaskTimer(BeanPass.getInstance(),0,0);
     }
 
     public void close()
@@ -108,7 +96,7 @@ public class BeanPassGUI implements Listener
 
         for (TextElement element : allTextElements) element.armorStand.remove();
 
-        BeanPass.main.activeGUIs.remove(player);
+        BeanPass.getInstance().activeGUIs.remove(player);
     }
 
     /*@EventHandler

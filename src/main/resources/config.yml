@@ -55,24 +55,6 @@ MiningQuestDifficulties:
     difficulty: VERY_EASY
   GRAVEL:
     difficulty: VERY_EASY
-  OAK_LOG:
-    difficulty: VERY_EASY
-  SPRUCE_LOG:
-    difficulty: VERY_EASY
-  BIRCH_LOG:
-    difficulty: VERY_EASY
-  JUNGLE_LOG:
-    difficulty: VERY_EASY
-  ACACIA_LOG:
-    difficulty: VERY_EASY
-  DARK_OAK_LOG:
-    difficulty: VERY_EASY
-  MANGROVE_ROOTS:
-    difficulty: EASY
-  CRIMSON_STEM:
-    difficulty: EASY
-  WARPED_STEM:
-    difficulty: EASY
   CLAY:
     difficulty: EASY
   COAL_ORE:
@@ -121,6 +103,27 @@ MiningQuestDifficulties:
     difficulty: VERY_HARD
   ANCIENT_DEBRIS:
     difficulty: SUPER_HARD
+
+# All Possible Lumber Quests And Its Respective Difficulty
+LumberQuestDifficulties:
+  OAK_LOG:
+    difficulty: VERY_EASY
+  SPRUCE_LOG:
+    difficulty: VERY_EASY
+  BIRCH_LOG:
+    difficulty: VERY_EASY
+  JUNGLE_LOG:
+    difficulty: VERY_EASY
+  ACACIA_LOG:
+    difficulty: VERY_EASY
+  DARK_OAK_LOG:
+    difficulty: VERY_EASY
+  MANGROVE_ROOTS:
+    difficulty: EASY
+  CRIMSON_STEM:
+    difficulty: EASY
+  WARPED_STEM:
+    difficulty: EASY
 
 KillingQuestDifficulties:
   BLAZE:
@@ -292,3 +295,73 @@ ExplorationQuestDifficulties:
       - VILLAGE_SNOWY
       - VILLAGE_TAIGA
     difficulty: HARD
+
+# Beanpass Rewards
+# TYPES: MONEY, SET_HOME, SKIN
+Season: 1
+SeasonRewards:
+  1:
+    XP: 0
+    Reward:
+  2:
+    XP: 25
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 10
+  3:
+    XP: 30
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 15
+      Paid:
+        Type: SKIN
+        Item: carved_pumpkin
+        Skin: witch_hat
+  4:
+    XP: 40
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 15
+  5:
+    XP: 50
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 1
+  6:
+    XP: 60
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 20
+      Paid:
+        Type: SKIN
+        Item: wooden_sword
+        Skin: wooden_club
+  7:
+    XP: 75
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 20
+  8:
+    XP: 90
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 20
+  9:
+    XP: 105
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 20
+  10:
+    XP: 120
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 1
