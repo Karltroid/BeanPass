@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class MoneyReward implements Reward
 {
-    private int amount;
+    private double amount;
 
-    public MoneyReward(int amount)
+    public MoneyReward(double amount)
     {
         this.amount = amount;
     }
@@ -16,5 +16,10 @@ public class MoneyReward implements Reward
     {
         // Code to give the player money
         // Example: EconomyAPI.deposit(player, amount);
+    }
+
+    public double getAmount()
+    {
+        return amount;
     }
 }

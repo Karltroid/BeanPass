@@ -33,7 +33,7 @@ public final class BeanPass extends JavaPlugin implements Listener
     private FileConfiguration config;
     PluginManager pluginManager = getServer().getPluginManager();
 
-    HashMap<UUID, PlayerData> playerData;
+    HashMap<UUID, PlayerData> playerData = new HashMap<>();
     Season season;
     public QuestDifficulties questDifficulties;
     public QuestManager questManager;
@@ -55,21 +55,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         reloadConfig();
         config = getConfig();
 
-        dataManager = new DataManager();
-        questDifficulties = new QuestDifficulties();
-        questManager = new QuestManager(config.getInt("QuestsPerPlayer", 5));
-
-        // register event listeners to the plugin instance
-        pluginManager.registerEvents(dataManager, this);
-        pluginManager.registerEvents(questManager, this);
-
-        // register the commands for the plugin instance
-
-        main.getCommand("beanpass").setExecutor(new OpenBeanPassGUI());
-        main.getCommand("beanpass-addxp").setExecutor(new AddXP());
-
-        main.getCommand("quests").setExecutor(new ViewQuests());
-
         // get season data
         HashMap<Integer, Level> seasonLevels = new HashMap<>();
         // Check if the SeasonRewards section exists
@@ -82,6 +67,7 @@ public final class BeanPass extends JavaPlugin implements Listener
             for (String season : seasonRewardsSection.getKeys(false))
             {
                 int level = Integer.parseInt(season);
+                System.out.println("Loading Level " + level);
 
                 // Get the XP and Reward sections for the current season
                 ConfigurationSection seasonSection = seasonRewardsSection.getConfigurationSection(season);
@@ -89,6 +75,7 @@ public final class BeanPass extends JavaPlugin implements Listener
                 {
                     // Get the XP value
                     int xp = seasonSection.getInt("XP");
+                    System.out.println(level + " XP: " + xp);
 
                     // Get the Reward section
                     ConfigurationSection rewardSection = seasonSection.getConfigurationSection("Reward");
@@ -105,7 +92,7 @@ public final class BeanPass extends JavaPlugin implements Listener
                             switch (freeType)
                             {
                                 case "MONEY":
-                                    int moneyAmount = freeSection.getInt("Amount");
+                                    double moneyAmount = freeSection.getDouble("Amount");
                                     freeReward = new MoneyReward(moneyAmount);
                                     break;
                                 case "SET_HOME":
@@ -118,6 +105,7 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                             }
                         }
+                        System.out.println("Free Null? " + (freeReward == null));
 
                         // Get the Paid rewards for the current season
                         ConfigurationSection paidSection = rewardSection.getConfigurationSection("Paid");
@@ -142,6 +130,7 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                             }
                         }
+                        System.out.println("Premium Null? " + (premiumReward == null));
 
                         seasonLevels.put(level, new Level(xp, freeReward, premiumReward));
                     }
@@ -150,6 +139,21 @@ public final class BeanPass extends JavaPlugin implements Listener
         }
         int seasonNumber = config.getInt("Season", 1);
         season = new Season(seasonNumber, seasonLevels);
+
+        dataManager = new DataManager();
+        questDifficulties = new QuestDifficulties();
+        questManager = new QuestManager(config.getInt("QuestsPerPlayer", 5));
+
+        // register event listeners to the plugin instance
+        pluginManager.registerEvents(dataManager, this);
+        pluginManager.registerEvents(questManager, this);
+
+        // register the commands for the plugin instance
+
+        main.getCommand("beanpass").setExecutor(new OpenBeanPassGUI());
+        main.getCommand("beanpass-addxp").setExecutor(new AddXP());
+
+        main.getCommand("quests").setExecutor(new ViewQuests());
     }
 
     @Override

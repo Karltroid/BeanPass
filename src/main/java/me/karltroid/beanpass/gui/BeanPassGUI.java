@@ -1,6 +1,10 @@
 package me.karltroid.beanpass.gui;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.Rewards.MoneyReward;
+import me.karltroid.beanpass.Rewards.Reward;
+import me.karltroid.beanpass.Rewards.SetHomeReward;
+import me.karltroid.beanpass.data.Level;
 import me.karltroid.beanpass.data.PlayerData;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Location;
@@ -10,7 +14,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public class BeanPassGUI implements Listener
 {
@@ -19,9 +25,11 @@ public class BeanPassGUI implements Listener
     private List<DisplayElement> allDisplayElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
     private List<TextElement> allTextElements = new ArrayList<>();
+    private List<TextElement> beanPassTextElements = new ArrayList<>();
     ButtonElement selectedButtonElement;
     ButtonElement previousButtonElement;
     Buttons buttons;
+    int rewardPage = 0;
 
     public BeanPassGUI(Player player)
     {
@@ -34,16 +42,41 @@ public class BeanPassGUI implements Listener
         //guiSphereTest(player, 45, 0);
 
         //allTextElements.add(new TextElement(player, 0, 0, 15, ChatColor.BOLD + "BEANPASS"));
-        allDisplayElements.add(new DisplayElement(player, 0, 0, 22, buttons.get(10006)));
-        allDisplayElements.add(new DisplayElement(player, 0, 0, 0, buttons.get(10000)));
-        allButtonElements.add(new ButtonElement(player, 0, -40, 0, buttons.get(10001)));
-        allButtonElements.add(new ButtonElement(player, 0, 40, 0, buttons.get(10002)));
-        allButtonElements.add(new ButtonElement(player, -1, -28, -25, buttons.get(10003)));
-        allButtonElements.add(new ButtonElement(player, -1, 0, -25, buttons.get(10005)));
-        allButtonElements.add(new ButtonElement(player, -1, 28, -25, buttons.get(10004)));
+        allDisplayElements.add(new DisplayElement(player, 0, 0, 22, 1f, buttons.get(10006)));
+        allDisplayElements.add(new DisplayElement(player, 0.05, 0, 0, 1.75f, buttons.get(10000)));
+        allButtonElements.add(new ButtonElement(player, 0.85, -41.5, 0, 0.3f, buttons.get(10001)));
+        allButtonElements.add(new ButtonElement(player, 0.85, 41.5, 0, 0.3f, buttons.get(10002)));
+        allButtonElements.add(new ButtonElement(player, 0, -29, -27, 0.48f, buttons.get(10003)));
+        allButtonElements.add(new ButtonElement(player, 0, 0, -27, 0.48f, buttons.get(10005)));
+        allButtonElements.add(new ButtonElement(player, 0, 29, -27, 0.48f, buttons.get(10004)));
 
-        allTextElements.add(new TextElement(player, -2, 0, 0, ChatColor.GREEN + "XP: " + playerData.getXp()));
+        allTextElements.add(new TextElement(player, -2, 0, -90, ChatColor.GREEN + "XP: " + playerData.getXp()));
 
+
+        HashMap<Integer, Level> beanpassLevels = BeanPass.getInstance().getSeason().getLevels();
+        System.out.println(beanpassLevels);
+        for (int i = 1; i <= 5; i++)
+        {
+            int levelNumber = rewardPage + i;
+            double xAngle = -30 + (15 * (i-1));
+            beanPassTextElements.add(new TextElement(player, 0, xAngle, -2, ChatColor.BOLD + "LVL" + levelNumber));
+
+            Level level = beanpassLevels.get(levelNumber);
+            if (level == null) continue;
+
+            Reward freeReward = level.getFreeReward();
+
+            if (freeReward == null) continue;
+
+            if (freeReward instanceof MoneyReward)
+            {
+                beanPassTextElements.add(new TextElement(player, 0, xAngle, 8, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()));
+            }
+            else if (freeReward instanceof SetHomeReward)
+            {
+                beanPassTextElements.add(new TextElement(player, 0, xAngle, 8,  "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"));
+            }
+        }
 
         BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
 
@@ -53,7 +86,7 @@ public class BeanPassGUI implements Listener
             public void run()
             {
                 Location playerLocation = player.getLocation();
-                playerLocation.add(0, player.getEyeHeight() - Hologram.ARMOR_STAND_HEIGHT, 0);
+                playerLocation.add(0, player.getEyeHeight(), 0);
 
                 Location firstElementLocation = allButtonElements.get(0).originalLocation;
                 double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
@@ -67,7 +100,7 @@ public class BeanPassGUI implements Listener
 
                 for (ButtonElement element : allButtonElements)
                 {
-                    if (!Hologram.isLookingAt(player, element.armorStand.getLocation())) continue;
+                    if (!Hologram.isLookingAt(player, element.itemDisplay.getLocation())) continue;
 
                     newSelectedElement = element;
                     break;
@@ -77,24 +110,22 @@ public class BeanPassGUI implements Listener
                 previousButtonElement = selectedButtonElement;
                 selectedButtonElement = newSelectedElement;
 
-                if (previousButtonElement != null) previousButtonElement.armorStand.teleport(previousButtonElement.originalLocation);
-                if (selectedButtonElement != null)
-                {
-                    Vector direction = playerLocation.getDirection().normalize();
-                    Location newLocation = selectedButtonElement.armorStand.getLocation().subtract(direction.divide(new Vector(3,3,3)));
-                    selectedButtonElement.armorStand.teleport(newLocation);
-                }
+                if (previousButtonElement != null) previousButtonElement.unselect();
+                if (selectedButtonElement != null) selectedButtonElement.select();
+
             }
         }.runTaskTimer(BeanPass.getInstance(),0,0);
     }
 
     public void close()
     {
-        for (DisplayElement element : allDisplayElements) element.armorStand.remove();
+        for (DisplayElement element : allDisplayElements) element.itemDisplay.remove();
 
-        for (ButtonElement element : allButtonElements) element.armorStand.remove();
+        for (ButtonElement element : allButtonElements) element.itemDisplay.remove();
 
-        for (TextElement element : allTextElements) element.armorStand.remove();
+        for (TextElement element : allTextElements) element.textDisplay.remove();
+
+        for (TextElement element : beanPassTextElements) element.textDisplay.remove();
 
         BeanPass.getInstance().activeGUIs.remove(player);
     }
@@ -121,7 +152,7 @@ public class BeanPassGUI implements Listener
             for (double anglePitch = 0.0; anglePitch < 360; anglePitch += angleIncrement)
             {
                 // Call createHolographicText with the angle offsets for X and Y positioning on the sphere
-                allButtonElements.add(new ButtonElement(player, radiusOffset, angleYaw, anglePitch, buttons.get(10000)));
+                allButtonElements.add(new ButtonElement(player, radiusOffset, angleYaw, anglePitch, 1f, buttons.get(10000)));
             }
         }
     }

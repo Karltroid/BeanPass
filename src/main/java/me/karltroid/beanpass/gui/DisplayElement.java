@@ -1,22 +1,22 @@
 package me.karltroid.beanpass.gui;
 
 import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
+import org.joml.Vector3f;
 
 public class DisplayElement
 {
-    ArmorStand armorStand;
+    ItemDisplay itemDisplay;
     Location originalLocation;
 
-    public DisplayElement(Player player, double radiusOffset, double angleOffsetX, double angleOffsetY, Buttons.Button button)
+    public DisplayElement(Player player, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Buttons.Button button)
     {
         // Get the player's eye location
         Location playerLocation = player.getLocation();
-        playerLocation.add(0, player.getEyeHeight() - Hologram.ARMOR_STAND_HEIGHT, 0);
+        playerLocation.add(0, player.getEyeHeight(), 0);
 
         // Calculate the position of the sphere, its circumference, and yaw rotation based on the player head's rotation
         double angleYaw = Math.toRadians(angleOffsetX + playerLocation.getYaw() + Hologram.HOLOGRAM_CENTER_CORRECTION);
@@ -26,27 +26,21 @@ public class DisplayElement
         double z = playerLocation.getZ() + ((Hologram.RADIUS + radiusOffset) * Math.cos(anglePitch) * Math.sin(angleYaw));
 
         // Create the armor stand at the calculated position
-        Location armorStandLocation = new Location(playerLocation.getWorld(), x, y, z, playerLocation.getYaw(), playerLocation.getPitch());
-        ArmorStand hologram = (ArmorStand) playerLocation.getWorld().spawnEntity(armorStandLocation, EntityType.ARMOR_STAND);
-        hologram.setGravity(false);
-        hologram.setVisible(false);
-        hologram.setBasePlate(false);
-        hologram.setInvulnerable(true);
-        hologram.setSmall(true);
-        hologram.setFireTicks(72000);
-        hologram.getEquipment().setHelmet(button.itemStack);
+        this.originalLocation = new Location(playerLocation.getWorld(), x, y, z, playerLocation.getYaw(), playerLocation.getPitch());
+        this.itemDisplay = (ItemDisplay) playerLocation.getWorld().spawnEntity(this.originalLocation, EntityType.ITEM_DISPLAY);
+        this.itemDisplay.setBillboard(Display.Billboard.FIXED);
+        this.itemDisplay.setItemStack(button.itemStack);
+        this.itemDisplay.setBrightness(new Display.Brightness(15, 15));
+        Transformation transformation = this.itemDisplay.getTransformation();
+        this.itemDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
 
         // Set the entire armor stand to face the player
-        Vector facingDirection = playerLocation.toVector().subtract(armorStandLocation.toVector()).normalize();
+        Vector facingDirection = playerLocation.toVector().subtract(this.originalLocation.toVector()).normalize();
         float yaw = (float) Math.toDegrees(Math.atan2(-facingDirection.getX(), facingDirection.getZ()));
         float pitch = (float) Math.toDegrees(Math.asin(facingDirection.getY()));
-        hologram.setRotation(yaw, pitch);
+        itemDisplay.setRotation(yaw, -pitch);
 
-        // Set the head pose to tilt up/down to look at the player
-        EulerAngle headPose = new EulerAngle(-Math.toRadians(pitch), 0, 0);
-        hologram.setHeadPose(headPose);
 
-        this.armorStand = hologram;
-        this.originalLocation = hologram.getLocation();
+
     }
 }

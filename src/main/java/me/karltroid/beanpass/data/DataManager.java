@@ -170,9 +170,6 @@ public class DataManager implements Listener
                         playerData.giveQuest(new KillingQuest(uuid.toString(), xpReward, goalEntityType, goalKillCount, playerKillCount));
                     }
                 }
-
-                while (playerData.getQuests().size() < BeanPass.getInstance().questManager.getQuestsPerPlayer())
-                    playerData.giveQuest(null);
             }
             catch (SQLException e)
             {
@@ -183,7 +180,9 @@ public class DataManager implements Listener
                 playerData.giveQuest(null);
 
             BeanPass.getInstance().addPlayerData(uuid, playerData);
-        } catch (SQLException e) {
+        }
+        catch (SQLException e)
+        {
             getLogger().severe("Failed to load data from database: " + e.getMessage());
         }
     }

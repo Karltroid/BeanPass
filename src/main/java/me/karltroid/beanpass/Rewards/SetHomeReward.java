@@ -17,4 +17,9 @@ public class SetHomeReward implements Reward
         // Code to add another available /sethome for the player
         // Example: HomeManager.addSetHome(player);
     }
+
+    public int getAmount()
+    {
+        return amount;
+    }
 }
