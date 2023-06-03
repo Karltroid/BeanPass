@@ -6,60 +6,73 @@ import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.Rewards.SetHomeReward;
 import me.karltroid.beanpass.data.Level;
 import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.gui.ButtonElements.*;
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class BeanPassGUI implements Listener
 {
+    World world;
     Player player;
+    Location playerLocation;
+    GameMode originalGamemode;
     PlayerData playerData;
-    private List<DisplayElement> allDisplayElements = new ArrayList<>();
+    private List<Element> allElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
-    private List<TextElement> allTextElements = new ArrayList<>();
-    private List<TextElement> beanPassTextElements = new ArrayList<>();
     ButtonElement selectedButtonElement;
     ButtonElement previousButtonElement;
-    Buttons buttons;
     int rewardPage = 0;
+    static final double GUI_ROTATION_CORRECTION = 90; // 1 = 1 block/meter
 
     public BeanPassGUI(Player player)
     {
         this.player = player;
+        this.world = player.getWorld();
+        this.playerLocation = player.getEyeLocation();
         this.playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
-        buttons = new Buttons();
 
-        //allButtonElements.add(new ButtonElement(Hologram.createHolographicText(this, player, 0, 0, 45, season.getTitle())));
+        player.setGameMode(GameMode.ADVENTURE);
 
-        //guiSphereTest(player, 45, 0);
+        loadElement(new VisualElement(this, 3, 0, 22, 1f, Material.GLASS_BOTTLE, 10006));
+        loadElement(new VisualElement(this, 3.05, 0, 0, 1.75f, Material.GLASS_BOTTLE, 10000));
 
-        //allTextElements.add(new TextElement(player, 0, 0, 15, ChatColor.BOLD + "BEANPASS"));
-        allDisplayElements.add(new DisplayElement(player, 0, 0, 22, 1f, buttons.get(10006)));
-        allDisplayElements.add(new DisplayElement(player, 0.05, 0, 0, 1.75f, buttons.get(10000)));
-        allButtonElements.add(new ButtonElement(player, 0.85, -41.5, 0, 0.3f, buttons.get(10001)));
-        allButtonElements.add(new ButtonElement(player, 0.85, 41.5, 0, 0.3f, buttons.get(10002)));
-        allButtonElements.add(new ButtonElement(player, 0, -29, -27, 0.48f, buttons.get(10003)));
-        allButtonElements.add(new ButtonElement(player, 0, 0, -27, 0.48f, buttons.get(10005)));
-        allButtonElements.add(new ButtonElement(player, 0, 29, -27, 0.48f, buttons.get(10004)));
+        loadElement(new LeftArrow(this, 3.85, -41.5, 0, 0.3f, Material.GLASS_BOTTLE, 10001));
+        loadElement(new RightArrow(this, 3.85, 41.5, 0, 0.3f, Material.GLASS_BOTTLE, 10002));
+        loadElement(new OpenGetPremiumPage(this, 3, -29, -27, 0.48f, Material.GLASS_BOTTLE, 10003));
+        loadElement(new OpenQuestsPage(this, 3, 0, -27, 0.48f, Material.GLASS_BOTTLE, 10005));
+        loadElement(new OpenItemsPage(this, 3, 29, -27, 0.48f, Material.GLASS_BOTTLE, 10004));
 
-        allTextElements.add(new TextElement(player, -2, 0, -90, ChatColor.GREEN + "XP: " + playerData.getXp()));
-
+        loadElement(new TextElement(this, 2, 0, -75, 1f, ChatColor.GREEN + "XP: " + playerData.getXp()));
 
         HashMap<Integer, Level> beanpassLevels = BeanPass.getInstance().getSeason().getLevels();
-        System.out.println(beanpassLevels);
+
+        int playerLevel = playerData.getLevel();
+        /*int xpNeededForCurrentLevel = 0;
+        int xpNeededForNextLevel = beanpassLevels.get(playerLevel + 1).getXpRequired();
+        for (int i = 1; i <= beanpassLevels.size(); i++)
+        {
+            xpNeededForCurrentLevel += beanpassLevels.get(i).getXpRequired();
+        }
+        player.sendMessage("Level " + playerLevel + " -> " + xpNeededForCurrentLevel + " | " + playerData.getXp() + " | " + xpNeededForNextLevel);
+        */
         for (int i = 1; i <= 5; i++)
         {
             int levelNumber = rewardPage + i;
-            double xAngle = -30 + (15 * (i-1));
-            beanPassTextElements.add(new TextElement(player, 0, xAngle, -2, ChatColor.BOLD + "LVL" + levelNumber));
+            double xAngle = -32 + (16 * (i-1));
+            loadElement(new TextElement(this, 3, xAngle, 0, 0.5f, (playerLevel >= levelNumber ? ChatColor.BOLD : ChatColor.GRAY) + "LVL" + levelNumber));
 
             Level level = beanpassLevels.get(levelNumber);
             if (level == null) continue;
@@ -70,11 +83,11 @@ public class BeanPassGUI implements Listener
 
             if (freeReward instanceof MoneyReward)
             {
-                beanPassTextElements.add(new TextElement(player, 0, xAngle, 8, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()));
+                loadElement(new TextElement(this, 3, xAngle, 8, 0.5f, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()));
             }
             else if (freeReward instanceof SetHomeReward)
             {
-                beanPassTextElements.add(new TextElement(player, 0, xAngle, 8,  "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"));
+                loadElement(new TextElement(this, 3, xAngle, 8, 0.5f, "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"));
             }
         }
 
@@ -88,7 +101,7 @@ public class BeanPassGUI implements Listener
                 Location playerLocation = player.getLocation();
                 playerLocation.add(0, player.getEyeHeight(), 0);
 
-                Location firstElementLocation = allButtonElements.get(0).originalLocation;
+                Location firstElementLocation = allElements.get(0).location;
                 double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
                 if (distance > 5)
                 {
@@ -100,7 +113,7 @@ public class BeanPassGUI implements Listener
 
                 for (ButtonElement element : allButtonElements)
                 {
-                    if (!Hologram.isLookingAt(player, element.itemDisplay.getLocation())) continue;
+                    if (!element.isPlayerLooking(player)) continue;
 
                     newSelectedElement = element;
                     break;
@@ -117,42 +130,58 @@ public class BeanPassGUI implements Listener
         }.runTaskTimer(BeanPass.getInstance(),0,0);
     }
 
+    void loadElement(Element element)
+    {
+        allElements.add(element);
+
+        if (element instanceof ButtonElement) allButtonElements.add((ButtonElement) element);
+    }
+
+    void unloadElement(Element element)
+    {
+        allElements.remove(element);
+
+        if (element instanceof VisualElement)
+        {
+            if (element instanceof ButtonElement) allButtonElements.remove((ButtonElement) element);
+            ((VisualElement)element).itemDisplay.remove();
+        }
+        else ((TextElement)element).textDisplay.remove();
+    }
+
     public void close()
     {
-        for (DisplayElement element : allDisplayElements) element.itemDisplay.remove();
+        player.setGameMode(player.getPreviousGameMode());
 
-        for (ButtonElement element : allButtonElements) element.itemDisplay.remove();
-
-        for (TextElement element : allTextElements) element.textDisplay.remove();
-
-        for (TextElement element : beanPassTextElements) element.textDisplay.remove();
+        List<Element> elementsToRemove = new ArrayList<>(allElements);
+        for (Element element : elementsToRemove) {
+            unloadElement(element);
+            allElements.remove(element);
+        }
 
         BeanPass.getInstance().activeGUIs.remove(player);
     }
 
-    /*@EventHandler
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
+        if (selectedButtonElement == null) return;
+
         Player player = event.getPlayer();
-        World world = player.getWorld();
+        if (player != this.player) return;
 
-        RayTraceResult result = world.rayTraceEntities(player.getEyeLocation(), player.getEyeLocation().getDirection(), 15);
-        if (result == null) return;
+        Button button = selectedButtonElement;
+        button.click();
+    }
 
-        Entity hitEntity = result.getHitEntity();
-        if (hitEntity == null) return;
-
-        player.sendMessage("Nearest entity: " + hitEntity.getType().toString());
-    }*/
-
-    void guiSphereTest(Player player, double angleIncrement, double radiusOffset)
+    void guiSphereTest(double angleIncrement, double radiusOffset)
     {
         for (double angleYaw = 0.0; angleYaw < 360; angleYaw += angleIncrement)
         {
             for (double anglePitch = 0.0; anglePitch < 360; anglePitch += angleIncrement)
             {
                 // Call createHolographicText with the angle offsets for X and Y positioning on the sphere
-                allButtonElements.add(new ButtonElement(player, radiusOffset, angleYaw, anglePitch, 1f, buttons.get(10000)));
+                loadElement(new ButtonElement(this, radiusOffset, angleYaw, anglePitch, 1f, Material.STONE, 0));
             }
         }
     }

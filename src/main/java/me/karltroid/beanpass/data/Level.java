@@ -6,14 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-enum QuestRewardType
-{
-    MONEY,
-    SET_HOME,
-    SKIN,
-    NONE
-}
-
 public class Level
 {
     int xpRequired;
@@ -30,6 +22,11 @@ public class Level
     public Reward getFreeReward()
     {
         return freeReward;
+    }
+
+    public int getXpRequired()
+    {
+        return xpRequired;
     }
 
     public Reward getPremiumReward()

@@ -5,39 +5,28 @@ import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
+import org.joml.Vector3f;
 import org.w3c.dom.Text;
 
-public class TextElement
+public class TextElement extends Element
 {
     TextDisplay textDisplay;
-    Location originalLocation;
+    Transformation originalTransformation;
 
-    public TextElement(Player player, double radiusOffset, double angleOffsetX, double angleOffsetY, String text)
+    public TextElement(BeanPassGUI beanPassGUI, double distance, double angleOffsetX, double angleOffsetY, float displayScale, String text)
     {
-        // Get the player's eye location
-        Location playerLocation = player.getLocation();
-        playerLocation.add(0, player.getEyeHeight(), 0);
+        super(beanPassGUI, distance, angleOffsetX, angleOffsetY);
 
-        // Calculate the position of the sphere, its circumference, and yaw rotation based on the player head's rotation
-        double angleYaw = Math.toRadians(angleOffsetX + playerLocation.getYaw() + Hologram.HOLOGRAM_CENTER_CORRECTION);
-        double anglePitch = Math.toRadians(angleOffsetY);
-        double x = playerLocation.getX() + ((Hologram.RADIUS + radiusOffset) * Math.cos(anglePitch) * Math.cos(angleYaw));
-        double y = playerLocation.getY() + ((Hologram.RADIUS + radiusOffset) * Math.sin(anglePitch));
-        double z = playerLocation.getZ() + ((Hologram.RADIUS + radiusOffset) * Math.cos(anglePitch) * Math.sin(angleYaw));
-
-        // Create the text display entity at the calculated position
-        this.originalLocation = new Location(playerLocation.getWorld(), x, y, z, playerLocation.getYaw(), playerLocation.getPitch());
-        this.textDisplay = (TextDisplay) playerLocation.getWorld().spawnEntity(this.originalLocation, EntityType.TEXT_DISPLAY);
+        this.textDisplay = (TextDisplay) beanPassGUI.world.spawnEntity(this.location, EntityType.TEXT_DISPLAY);
         this.textDisplay.setText(text);
+
         this.textDisplay.setBillboard(Display.Billboard.FIXED);
         this.textDisplay.setBrightness(new Display.Brightness(15, 15));
-        this.textDisplay.setShadowed(false);
-        this.textDisplay.setGravity(false);
-
-        Vector facingDirection = playerLocation.toVector().subtract(this.originalLocation.toVector()).normalize();
-        float yaw = (float) Math.toDegrees(Math.atan2(-facingDirection.getX(), facingDirection.getZ()));
-        float pitch = (float) Math.toDegrees(Math.asin(facingDirection.getY()));
-        this.textDisplay.setRotation(yaw, -pitch);
+        Transformation transformation = this.textDisplay.getTransformation();
+        this.textDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
+        this.originalTransformation = this.textDisplay.getTransformation();
+        this.textDisplay.setRotation(location.getYaw(), location.getPitch());
     }
 }
