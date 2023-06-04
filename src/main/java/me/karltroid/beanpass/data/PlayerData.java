@@ -1,16 +1,24 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.Button;
 import me.karltroid.beanpass.quests.Quests;
 import me.karltroid.beanpass.quests.Quests.Quest;
+import org.bukkit.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class PlayerData
 {
-    final String UUID;
+    final UUID UUID;
     Boolean premium;
     List<Integer> skins;
 
@@ -18,7 +26,7 @@ public class PlayerData
     double xp = 0;
     List<Quest> quests = new ArrayList<>();
 
-    public PlayerData(String UUID, boolean premium, List<Integer> skins, double xp)
+    public PlayerData(UUID UUID, boolean premium, List<Integer> skins, double xp)
     {
         this.UUID = UUID;
         this.premium = premium;
@@ -33,31 +41,74 @@ public class PlayerData
     public int getLevel() // calculate and return the players level based on their xp and each levels required xp
     {
         double playerXP = getXp();
-        int playerLevel = 0;
 
+        int playerLevel = 0;
         for (Map.Entry<Integer, Level> entry : BeanPass.getInstance().getSeason().levels.entrySet())
         {
+            playerLevel++;
             Level level = entry.getValue();
             playerXP -= level.xpRequired;
-            if (playerXP >= 0)
-            {
-                playerLevel++;
-                continue;
-            }
-
-            break;
+            if (playerXP < 0) break;
         }
 
         return playerLevel;
     }
     public double getXp() { return this.xp; }
     public void setXp(double xp) { this.xp = xp; }
-    public void addXp(double xp) { setXp(this.xp + xp); }
-    public String getUUID() { return UUID; }
+    public void addXp(double xp)
+    {
+        int beforeLevel = getLevel();
+
+        setXp(this.xp + xp);
+        int afterLevel = getLevel();
+
+        if (beforeLevel == afterLevel) return;
+        // levelled up!
+        leveledUp();
+    }
+
+    void leveledUp()
+    {
+        int level = getLevel();
+
+        BeanPass.getInstance().getSeason().getLevel(level).getFreeReward().giveReward(getUUID());
+
+        Player player = Bukkit.getPlayer(getUUID());
+        World world = player.getWorld();
+        Location location = player.getLocation();
+        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Leveled up! " + ChatColor.YELLOW + " " + ChatColor.BOLD + "LVL " + level);
+        world.playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+        Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
+        FireworkMeta fireworkMeta = firework.getFireworkMeta();
+        FireworkEffect effect = FireworkEffect.builder()
+                .flicker(true)
+                .trail(true)
+                .withColor(Color.LIME)
+                .withFade(Color.YELLOW)
+                .with(FireworkEffect.Type.STAR)
+                .withFlicker()
+                .withTrail()
+                .withFade(Color.fromRGB(0xE6E600))
+                .withFlicker()
+                .withTrail()
+                .build();
+        fireworkMeta.addEffect(effect);
+        fireworkMeta.setPower(level);
+
+        firework.setFireworkMeta(fireworkMeta);
+
+        if (BeanPass.getInstance().activeGUIs.containsKey(player))
+        {
+            BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(player);
+            beanPassGUI.reloadLevelElements();
+        }
+    }
+
+    public UUID getUUID() { return UUID; }
 
     public Quest giveQuest(Quest quest)
     {
-        if (quest == null) quest = Quests.getRandomQuestType(UUID);
+        if (quest == null) quest = Quests.getRandomQuestType(UUID.toString());
 
         quests.add(quest);
         return quest;

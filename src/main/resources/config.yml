@@ -299,9 +299,9 @@ ExplorationQuestDifficulties:
 # Beanpass Rewards
 # TYPES: MONEY, SET_HOME, SKIN
 Season: 1
-SeasonRewards:
+SeasonLevels:
   1:
-    XP: 0
+    XP: 0 #amount of xp needed from the previous level
     Reward:
   2:
     XP: 25

@@ -7,37 +7,37 @@ public class ButtonElements
 {
     static class LeftArrow extends ButtonElement implements Button
     {
-        public LeftArrow(BeanPassGUI beanPassGUI, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public LeftArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
         {
-            super(beanPassGUI, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
         }
 
         @Override
         public void click()
         {
-            beanPassGUI.player.sendMessage("Left!");
+            beanPassGUI.changeLevelsPage(-1);
         }
     }
 
     static class RightArrow extends ButtonElement implements Button
     {
-        public RightArrow(BeanPassGUI beanPassGUI, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public RightArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
         {
-            super(beanPassGUI, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
         }
 
         @Override
         public void click()
         {
-            beanPassGUI.player.sendMessage("Right!");
+            beanPassGUI.changeLevelsPage(1);
         }
     }
 
     static class OpenQuestsPage extends ButtonElement implements Button
     {
-        public OpenQuestsPage(BeanPassGUI beanPassGUI, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public OpenQuestsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
         {
-            super(beanPassGUI, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
         }
 
         @Override
@@ -49,9 +49,9 @@ public class ButtonElements
 
     static class OpenItemsPage extends ButtonElement implements Button
     {
-        public OpenItemsPage(BeanPassGUI beanPassGUI, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public OpenItemsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
         {
-            super(beanPassGUI, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
         }
 
         @Override
@@ -63,9 +63,9 @@ public class ButtonElements
 
     static class OpenGetPremiumPage extends ButtonElement implements Button
     {
-        public OpenGetPremiumPage(BeanPassGUI beanPassGUI, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public OpenGetPremiumPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
         {
-            super(beanPassGUI, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
         }
 
         @Override

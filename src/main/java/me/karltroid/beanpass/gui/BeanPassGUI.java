@@ -15,6 +15,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -32,10 +33,12 @@ public class BeanPassGUI implements Listener
     PlayerData playerData;
     private List<Element> allElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
+    private List<Element> allLevelRewardElements = new ArrayList<>();
     ButtonElement selectedButtonElement;
     ButtonElement previousButtonElement;
     int rewardPage = 0;
     static final double GUI_ROTATION_CORRECTION = 90; // 1 = 1 block/meter
+    final static int LEVELS_PER_PAGE = 5;
 
     public BeanPassGUI(Player player)
     {
@@ -43,23 +46,21 @@ public class BeanPassGUI implements Listener
         this.world = player.getWorld();
         this.playerLocation = player.getEyeLocation();
         this.playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+        this.rewardPage = playerData.getLevel()/LEVELS_PER_PAGE;
 
         player.setGameMode(GameMode.ADVENTURE);
 
-        loadElement(new VisualElement(this, 3, 0, 22, 1f, Material.GLASS_BOTTLE, 10006));
-        loadElement(new VisualElement(this, 3.05, 0, 0, 1.75f, Material.GLASS_BOTTLE, 10000));
+        loadElement(new VisualElement(this, true, 3, 0, 22, 1f, Material.GLASS_BOTTLE, 10006), null);
+        loadElement(new VisualElement(this, true, 3.05, 0, 0, 1.75f, Material.GLASS_BOTTLE, 10000), null);
 
-        loadElement(new LeftArrow(this, 3.85, -41.5, 0, 0.3f, Material.GLASS_BOTTLE, 10001));
-        loadElement(new RightArrow(this, 3.85, 41.5, 0, 0.3f, Material.GLASS_BOTTLE, 10002));
-        loadElement(new OpenGetPremiumPage(this, 3, -29, -27, 0.48f, Material.GLASS_BOTTLE, 10003));
-        loadElement(new OpenQuestsPage(this, 3, 0, -27, 0.48f, Material.GLASS_BOTTLE, 10005));
-        loadElement(new OpenItemsPage(this, 3, 29, -27, 0.48f, Material.GLASS_BOTTLE, 10004));
+        loadElement(new LeftArrow(this, true, 3.85, -43, 0, 0.3f, Material.GLASS_BOTTLE, 10001), null);
+        loadElement(new RightArrow(this, true,3.85, 43, 0, 0.3f, Material.GLASS_BOTTLE, 10002), null);
+        loadElement(new OpenGetPremiumPage(this, true,3, -29, -27, 0.48f, Material.GLASS_BOTTLE, 10003), null);
+        loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f, Material.GLASS_BOTTLE, 10005), null);
+        loadElement(new OpenItemsPage(this, true,3, 29, -27, 0.48f, Material.GLASS_BOTTLE, 10004), null);
 
-        loadElement(new TextElement(this, 2, 0, -75, 1f, ChatColor.GREEN + "XP: " + playerData.getXp()));
+        loadElement(new TextElement(this, true,2, 0, -75, 1f, ChatColor.GREEN + "XP: " + playerData.getXp()), null);
 
-        HashMap<Integer, Level> beanpassLevels = BeanPass.getInstance().getSeason().getLevels();
-
-        int playerLevel = playerData.getLevel();
         /*int xpNeededForCurrentLevel = 0;
         int xpNeededForNextLevel = beanpassLevels.get(playerLevel + 1).getXpRequired();
         for (int i = 1; i <= beanpassLevels.size(); i++)
@@ -68,28 +69,8 @@ public class BeanPassGUI implements Listener
         }
         player.sendMessage("Level " + playerLevel + " -> " + xpNeededForCurrentLevel + " | " + playerData.getXp() + " | " + xpNeededForNextLevel);
         */
-        for (int i = 1; i <= 5; i++)
-        {
-            int levelNumber = rewardPage + i;
-            double xAngle = -32 + (16 * (i-1));
-            loadElement(new TextElement(this, 3, xAngle, 0, 0.5f, (playerLevel >= levelNumber ? ChatColor.BOLD : ChatColor.GRAY) + "LVL" + levelNumber));
 
-            Level level = beanpassLevels.get(levelNumber);
-            if (level == null) continue;
-
-            Reward freeReward = level.getFreeReward();
-
-            if (freeReward == null) continue;
-
-            if (freeReward instanceof MoneyReward)
-            {
-                loadElement(new TextElement(this, 3, xAngle, 8, 0.5f, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()));
-            }
-            else if (freeReward instanceof SetHomeReward)
-            {
-                loadElement(new TextElement(this, 3, xAngle, 8, 0.5f, "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"));
-            }
-        }
+        displayLevelData();
 
         BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
 
@@ -106,7 +87,7 @@ public class BeanPassGUI implements Listener
                 if (distance > 5)
                 {
                     cancel();
-                    close();
+                    closeEntireGUI();
                 }
 
                 ButtonElement newSelectedElement = null;
@@ -130,16 +111,75 @@ public class BeanPassGUI implements Listener
         }.runTaskTimer(BeanPass.getInstance(),0,0);
     }
 
-    void loadElement(Element element)
+    public void reloadLevelElements()
+    {
+        if (allLevelRewardElements.isEmpty()) return;
+        this.rewardPage = playerData.getLevel()/LEVELS_PER_PAGE;
+        changeLevelsPage(0);
+    }
+
+    public void changeLevelsPage(int pageChange)
+    {
+        int newPage = this.rewardPage + pageChange;
+        if (newPage < 0) return;
+
+        this.rewardPage = newPage;
+        displayLevelData();
+    }
+
+    void displayLevelData()
+    {
+        closeElementList(allLevelRewardElements);
+
+        HashMap<Integer, Level> beanpassLevels = BeanPass.getInstance().getSeason().getLevels();
+
+        int playerLevel = playerData.getLevel();
+
+        for (int i = 1; i <= LEVELS_PER_PAGE; i++)
+        {
+            int levelNumber = (rewardPage * LEVELS_PER_PAGE) + i;
+            double xAngle = -34 + (17 * (i-1));
+
+            if (playerLevel == levelNumber)
+            {
+                loadElement(new TextElement(this, false, 3, xAngle, 0, 0.7f, ChatColor.GOLD + "" + ChatColor.BOLD + "LVL" + levelNumber), allLevelRewardElements);
+            }
+            else if (playerLevel > levelNumber)
+            {
+                loadElement(new TextElement(this, false, 3, xAngle, 0, 0.6f, ChatColor.BOLD + "LVL" + levelNumber), allLevelRewardElements);
+            }
+            else loadElement(new TextElement(this, false, 3, xAngle, 0, 0.50f, ChatColor.GRAY + "LVL" + levelNumber), allLevelRewardElements);
+
+            Level level = beanpassLevels.get(levelNumber);
+            if (level == null) continue;
+
+            Reward freeReward = level.getFreeReward();
+
+            if (freeReward == null) continue;
+
+            if (freeReward instanceof MoneyReward)
+            {
+                loadElement(new TextElement(this, false, 3, xAngle, 8, 0.5f, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()), allLevelRewardElements);
+            }
+            else if (freeReward instanceof SetHomeReward)
+            {
+                loadElement(new TextElement(this, false, 3, xAngle, 8, 0.5f, "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"), allLevelRewardElements);
+            }
+        }
+    }
+
+    void loadElement(Element element, List<Element> altElementList)
     {
         allElements.add(element);
+        if (altElementList != null) altElementList.add(element);
 
         if (element instanceof ButtonElement) allButtonElements.add((ButtonElement) element);
     }
 
-    void unloadElement(Element element)
+    void unloadElement(Element element, List<Element> altElementList)
     {
         allElements.remove(element);
+        if (altElementList != null && altElementList != allElements) altElementList.remove(element);
 
         if (element instanceof VisualElement)
         {
@@ -149,15 +189,19 @@ public class BeanPassGUI implements Listener
         else ((TextElement)element).textDisplay.remove();
     }
 
-    public void close()
+    void closeElementList(List<Element> elements)
+    {
+        List<Element> elementsToRemove = new ArrayList<>(elements);
+        for (Element element : elementsToRemove) {
+            unloadElement(element, elements);
+        }
+    }
+
+    public void closeEntireGUI()
     {
         player.setGameMode(player.getPreviousGameMode());
 
-        List<Element> elementsToRemove = new ArrayList<>(allElements);
-        for (Element element : elementsToRemove) {
-            unloadElement(element);
-            allElements.remove(element);
-        }
+        closeElementList(allElements);
 
         BeanPass.getInstance().activeGUIs.remove(player);
     }
@@ -165,6 +209,7 @@ public class BeanPassGUI implements Listener
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
+        if (event.getAction() != Action.LEFT_CLICK_AIR && event.getAction() != Action.LEFT_CLICK_BLOCK) return;
         if (selectedButtonElement == null) return;
 
         Player player = event.getPlayer();
@@ -181,7 +226,7 @@ public class BeanPassGUI implements Listener
             for (double anglePitch = 0.0; anglePitch < 360; anglePitch += angleIncrement)
             {
                 // Call createHolographicText with the angle offsets for X and Y positioning on the sphere
-                loadElement(new ButtonElement(this, radiusOffset, angleYaw, anglePitch, 1f, Material.STONE, 0));
+                loadElement(new ButtonElement(this, true, radiusOffset, angleYaw, anglePitch, 1f, Material.STONE, 0), null);
             }
         }
     }

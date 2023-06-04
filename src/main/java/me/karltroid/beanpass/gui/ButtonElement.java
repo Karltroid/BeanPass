@@ -1,5 +1,7 @@
 package me.karltroid.beanpass.gui;
 
+import net.kyori.adventure.bossbar.BossBar;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,19 +11,22 @@ import org.joml.Vector3f;
 
 public class ButtonElement extends VisualElement implements Button
 {
-    public ButtonElement(BeanPassGUI beanPassGUI, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+    public ButtonElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
     {
-        super(beanPassGUI, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+        super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
     }
 
     public void select()
     {
         itemDisplay.setTransformation(new Transformation(originalTransformation.getTranslation(), originalTransformation.getLeftRotation(), new Vector3f(originalTransformation.getScale().x * 1.2f), originalTransformation.getRightRotation()));
+        itemDisplay.setGlowing(true);
+        itemDisplay.setGlowColorOverride(Color.WHITE);
     }
 
     public void unselect()
     {
         itemDisplay.setTransformation(originalTransformation);
+        itemDisplay.setGlowing(false);
     }
 
     public boolean isPlayerLooking(Player player)

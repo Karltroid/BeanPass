@@ -57,20 +57,20 @@ public final class BeanPass extends JavaPlugin implements Listener
 
         // get season data
         HashMap<Integer, Level> seasonLevels = new HashMap<>();
-        // Check if the SeasonRewards section exists
-        if (config.contains("SeasonRewards"))
+        // Check if the SeasonLevels section exists
+        if (config.contains("SeasonLevels"))
         {
             // Get the SeasonRewards section
-            ConfigurationSection seasonRewardsSection = config.getConfigurationSection("SeasonRewards");
+            ConfigurationSection seasonLevelsSection = config.getConfigurationSection("SeasonLevels");
 
             // Iterate through each season
-            for (String season : seasonRewardsSection.getKeys(false))
+            for (String season : seasonLevelsSection.getKeys(false))
             {
                 int level = Integer.parseInt(season);
                 System.out.println("Loading Level " + level);
 
                 // Get the XP and Reward sections for the current season
-                ConfigurationSection seasonSection = seasonRewardsSection.getConfigurationSection(season);
+                ConfigurationSection seasonSection = seasonLevelsSection.getConfigurationSection(season);
                 if (seasonSection != null)
                 {
                     // Get the XP value
@@ -163,7 +163,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         for (Player player : Bukkit.getOnlinePlayers())
         {
             dataManager.savePlayerData(player.getUniqueId());
-            if (activeGUIs.containsKey(player)) activeGUIs.get(player).close();
+            if (activeGUIs.containsKey(player)) activeGUIs.get(player).closeEntireGUI();
         }
 
         // save config settings
@@ -188,6 +188,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         Player player = event.getPlayer();
         if (!activeGUIs.containsKey(player)) return;
 
-        activeGUIs.get(player).close();
+        activeGUIs.get(player).closeEntireGUI();
     }
 }

@@ -14,9 +14,9 @@ public class VisualElement extends Element
     ItemDisplay itemDisplay;
     Transformation originalTransformation;
 
-    public VisualElement(BeanPassGUI beanPassGUI, double distance, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+    public VisualElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
     {
-        super(beanPassGUI, distance, angleOffsetX, angleOffsetY);
+        super(beanPassGUI, spherePlacement, distance, angleOffsetX, angleOffsetY);
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();

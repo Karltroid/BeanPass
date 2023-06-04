@@ -29,8 +29,13 @@ public class OpenBeanPassGUI implements CommandExecutor
             return false;
         }
 
-        new BeanPassGUI(senderPlayer);
+        if (BeanPass.getInstance().activeGUIs.containsKey(senderPlayer))
+        {
+            senderPlayer.sendMessage("You already have a BeanPass menu open!");
+            return false;
+        }
 
+        new BeanPassGUI(senderPlayer);
         return true;
     }
 }

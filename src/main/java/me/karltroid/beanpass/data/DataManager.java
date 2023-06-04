@@ -106,7 +106,7 @@ public class DataManager implements Listener
                 }
             }
 
-            PlayerData playerData = new PlayerData(uuid.toString(), premium, new ArrayList<>(), xp);
+            PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), xp);
 
             try (PreparedStatement playerSkinsStatement = conn.prepareStatement("SELECT skin_id FROM player_skins WHERE uuid = ?"))
             {

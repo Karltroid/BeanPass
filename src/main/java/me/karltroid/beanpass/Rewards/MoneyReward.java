@@ -16,6 +16,7 @@ public class MoneyReward implements Reward
     {
         // Code to give the player money
         // Example: EconomyAPI.deposit(player, amount);
+        System.out.println("give " + uuid + "$" + getAmount());
     }
 
     public double getAmount()
