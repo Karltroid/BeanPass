@@ -7,10 +7,7 @@ import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.command.AddXP;
 import me.karltroid.beanpass.command.OpenBeanPassGUI;
 import me.karltroid.beanpass.command.ViewQuests;
-import me.karltroid.beanpass.data.DataManager;
-import me.karltroid.beanpass.data.Level;
-import me.karltroid.beanpass.data.PlayerData;
-import me.karltroid.beanpass.data.Season;
+import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
@@ -101,7 +98,7 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                                 case "SKIN":
                                     String skinName = freeSection.getString("Skin");
-                                    freeReward = new SkinReward(skinName);
+                                    freeReward = new SkinReward(Skins.database.get(skinName));
                                     break;
                             }
                         }
@@ -117,16 +114,16 @@ public final class BeanPass extends JavaPlugin implements Listener
                             switch (paidType)
                             {
                                 case "MONEY":
-                                    int moneyAmount = freeSection.getInt("Amount");
+                                    int moneyAmount = paidSection.getInt("Amount");
                                     premiumReward = new MoneyReward(moneyAmount);
                                     break;
                                 case "SET_HOME":
-                                    int homeAmount = freeSection.getInt("Amount");
+                                    int homeAmount = paidSection.getInt("Amount");
                                     premiumReward = new SetHomeReward(homeAmount);
                                     break;
                                 case "SKIN":
-                                    String skinName = freeSection.getString("Skin");
-                                    premiumReward = new SkinReward(skinName);
+                                    String skinName = paidSection.getString("Skin");
+                                    premiumReward = new SkinReward(Skins.database.get(skinName));
                                     break;
                             }
                         }

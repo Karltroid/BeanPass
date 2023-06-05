@@ -6,14 +6,11 @@ import java.util.HashMap;
 
 public final class Skins
 {
-    public HashMap<String, Skin> database = new HashMap<>();
+    public static HashMap<String, Skin> database = new HashMap<String, Skin>() {{
+        put("witch_hat", new Skin("witch_hat", 116, Material.CARVED_PUMPKIN));
+    }};
 
-    public Skins()
-    {
-        database.put("witch_hat", new Skin("witch_hat", 100000, Material.CARVED_PUMPKIN));
-    }
-
-    class Skin
+    public static class Skin
     {
         final String NAME;
         final int CUSTOM_MODEL_DATA;
@@ -24,6 +21,14 @@ public final class Skins
             NAME = name;
             CUSTOM_MODEL_DATA = customModelData;
             SKIN_APPLICANT = skinApplicant;
+        }
+
+        public int getCUSTOM_MODEL_DATA() {
+            return CUSTOM_MODEL_DATA;
+        }
+
+        public Material getSKIN_APPLICANT() {
+            return SKIN_APPLICANT;
         }
     }
 

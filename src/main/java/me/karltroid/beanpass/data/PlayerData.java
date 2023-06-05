@@ -62,9 +62,30 @@ public class PlayerData
         setXp(this.xp + xp);
         int afterLevel = getLevel();
 
+        Player player = Bukkit.getPlayer(getUUID());
+        if (BeanPass.getInstance().activeGUIs.containsKey(player))
+        {
+            BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(player);
+            beanPassGUI.reloadLevelElements();
+        }
+
         if (beforeLevel == afterLevel) return;
         // levelled up!
         leveledUp();
+    }
+
+    public double getXpNeededForNextLevel()
+    {
+        double nextLevelXpRequired = BeanPass.getInstance().getSeason().getLevel(getLevel() + 1).getXpRequired();
+
+        double xpLeftover = getXp();
+
+        for(int level = getLevel(); level > 0; level--)
+        {
+            xpLeftover -= BeanPass.getInstance().getSeason().getLevel(level).xpRequired;
+        }
+
+        return nextLevelXpRequired - xpLeftover;
     }
 
     void leveledUp()

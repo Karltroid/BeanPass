@@ -12,6 +12,7 @@ me\karltroid\beanpass\quests\QuestDifficulties$QuestDifficulty.class
 me\karltroid\beanpass\data\Level.class
 me\karltroid\beanpass\quests\Quests.class
 me\karltroid\beanpass\command\AddXP.class
+me\karltroid\beanpass\data\Skins$1.class
 me\karltroid\beanpass\quests\QuestDifficulties.class
 me\karltroid\beanpass\gui\ButtonElements$LeftArrow.class
 me\karltroid\beanpass\gui\VisualElement.class

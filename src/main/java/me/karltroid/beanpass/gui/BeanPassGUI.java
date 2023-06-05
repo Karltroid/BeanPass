@@ -4,8 +4,11 @@ import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.MoneyReward;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.Rewards.SetHomeReward;
+import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.data.Level;
 import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.data.Skins;
+import me.karltroid.beanpass.data.Skins.Skin;
 import me.karltroid.beanpass.gui.ButtonElements.*;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.GameMode;
@@ -50,8 +53,8 @@ public class BeanPassGUI implements Listener
 
         player.setGameMode(GameMode.ADVENTURE);
 
-        loadElement(new VisualElement(this, true, 3, 0, 22, 1f, Material.GLASS_BOTTLE, 10006), null);
-        loadElement(new VisualElement(this, true, 3.05, 0, 0, 1.75f, Material.GLASS_BOTTLE, 10000), null);
+        loadElement(new VisualElement(this, true, 3.1, 0, 21, 1f, Material.GLASS_BOTTLE, 10006), null);
+        loadElement(new VisualElement(this, false, 3.05, 0, 0, 1.75f, Material.GLASS_BOTTLE, 10000), null);
 
         loadElement(new LeftArrow(this, true, 3.85, -43, 0, 0.3f, Material.GLASS_BOTTLE, 10001), null);
         loadElement(new RightArrow(this, true,3.85, 43, 0, 0.3f, Material.GLASS_BOTTLE, 10002), null);
@@ -59,7 +62,7 @@ public class BeanPassGUI implements Listener
         loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f, Material.GLASS_BOTTLE, 10005), null);
         loadElement(new OpenItemsPage(this, true,3, 29, -27, 0.48f, Material.GLASS_BOTTLE, 10004), null);
 
-        loadElement(new TextElement(this, true,2, 0, -75, 1f, ChatColor.GREEN + "XP: " + playerData.getXp()), null);
+        loadElement(new TextElement(this, true,1.5, 0, -45, 1f, ChatColor.GREEN + "" + playerData.getXpNeededForNextLevel() + "XP needed for LVL " + playerData.getLevel() + 1), allLevelRewardElements);
 
         /*int xpNeededForCurrentLevel = 0;
         int xpNeededForNextLevel = beanpassLevels.get(playerLevel + 1).getXpRequired();
@@ -138,7 +141,8 @@ public class BeanPassGUI implements Listener
         for (int i = 1; i <= LEVELS_PER_PAGE; i++)
         {
             int levelNumber = (rewardPage * LEVELS_PER_PAGE) + i;
-            double xAngle = -34 + (17 * (i-1));
+            double angleIncrement = 14.5;
+            double xAngle = (angleIncrement * -2) + (angleIncrement * (i-1));
 
             if (playerLevel == levelNumber)
             {
@@ -154,16 +158,28 @@ public class BeanPassGUI implements Listener
             if (level == null) continue;
 
             Reward freeReward = level.getFreeReward();
-
-            if (freeReward == null) continue;
-
-            if (freeReward instanceof MoneyReward)
+            if (freeReward != null)
             {
-                loadElement(new TextElement(this, false, 3, xAngle, 8, 0.5f, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()), allLevelRewardElements);
+                if (freeReward instanceof MoneyReward)
+                {
+                    loadElement(new TextElement(this, false, 3, xAngle, 6, 0.5f, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()), allLevelRewardElements);
+                }
+                else if (freeReward instanceof SetHomeReward)
+                {
+                    loadElement(new TextElement(this, false, 3, xAngle, 6, 0.5f, "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"), allLevelRewardElements);
+                }
             }
-            else if (freeReward instanceof SetHomeReward)
+
+            Reward premiumReward = level.getPremiumReward();
+            if (premiumReward != null)
             {
-                loadElement(new TextElement(this, false, 3, xAngle, 8, 0.5f, "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"), allLevelRewardElements);
+                if (premiumReward instanceof SkinReward)
+                {
+                    SkinReward skinReward = (SkinReward) premiumReward;
+                    Skin skin = skinReward.getSkin();
+                    if (skin == null) continue;
+                    loadElement(new VisualElement(this, false, 3, xAngle, -6, 0.5f, skin.getSKIN_APPLICANT(), skin.getCUSTOM_MODEL_DATA()), allLevelRewardElements);
+                }
             }
         }
     }

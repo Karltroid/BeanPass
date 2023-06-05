@@ -1,14 +1,22 @@
 package me.karltroid.beanpass.Rewards;
 
+import me.karltroid.beanpass.data.Skins;
+import me.karltroid.beanpass.data.Skins.Skin;
+import org.bukkit.Material;
+
 import java.util.UUID;
 
 public class SkinReward implements Reward
 {
-    private String skinName;
+    private final Skin skin;
 
-    public SkinReward(String skinName)
+    public SkinReward(Skin skin)
     {
-        this.skinName = skinName;
+        this.skin = skin;
+    }
+
+    public Skin getSkin() {
+        return skin;
     }
 
     @Override
