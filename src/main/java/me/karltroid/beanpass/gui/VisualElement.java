@@ -27,7 +27,7 @@ public class VisualElement extends Element
         this.itemDisplay.setItemStack(itemStack);
 
         this.itemDisplay.setBillboard(Display.Billboard.FIXED);
-        this.itemDisplay.setBrightness(new Display.Brightness(15, 15));
+        this.itemDisplay.setBrightness(new Display.Brightness(10, 10));
         Transformation transformation = this.itemDisplay.getTransformation();
         this.itemDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
         this.originalTransformation = this.itemDisplay.getTransformation();

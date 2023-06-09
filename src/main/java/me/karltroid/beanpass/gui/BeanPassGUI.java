@@ -50,6 +50,7 @@ public class BeanPassGUI implements Listener
         this.playerLocation = player.getEyeLocation();
         this.playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
         this.rewardPage = playerData.getLevel()/LEVELS_PER_PAGE;
+        this.originalGamemode = player.getGameMode();
 
         player.setGameMode(GameMode.ADVENTURE);
 
@@ -215,7 +216,7 @@ public class BeanPassGUI implements Listener
 
     public void closeEntireGUI()
     {
-        player.setGameMode(player.getPreviousGameMode());
+        player.setGameMode(originalGamemode);
 
         closeElementList(allElements);
 

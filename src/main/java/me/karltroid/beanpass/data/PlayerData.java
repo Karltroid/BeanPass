@@ -80,9 +80,9 @@ public class PlayerData
 
         double xpLeftover = getXp();
 
-        for(int level = getLevel(); level > 0; level--)
+        for(int level = getLevel(); level > 1; level--)
         {
-            xpLeftover -= BeanPass.getInstance().getSeason().getLevel(level).xpRequired;
+            xpLeftover -= BeanPass.getInstance().getSeason().getLevel(level).getXpRequired();
         }
 
         return nextLevelXpRequired - xpLeftover;

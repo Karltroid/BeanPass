@@ -1,6 +1,5 @@
 package me.karltroid.beanpass.gui;
 
-import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;

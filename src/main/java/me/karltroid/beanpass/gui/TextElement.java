@@ -25,7 +25,7 @@ public class TextElement extends Element
         this.textDisplay.setBillboard(Display.Billboard.FIXED);
         this.textDisplay.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
         this.textDisplay.setShadowed(true);
-        this.textDisplay.setBrightness(new Display.Brightness(15, 15));
+        this.textDisplay.setBrightness(new Display.Brightness(10, 10));
         Transformation transformation = this.textDisplay.getTransformation();
         this.textDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
         this.originalTransformation = this.textDisplay.getTransformation();

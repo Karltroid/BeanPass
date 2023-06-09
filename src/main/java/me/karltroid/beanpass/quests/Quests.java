@@ -3,11 +3,9 @@ package me.karltroid.beanpass.quests;
 import me.karltroid.beanpass.BeanPass;
 
 import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.generator.structure.Structure;
-import org.apache.commons.lang3.StringUtils;
 import java.util.*;
 
 public class Quests
