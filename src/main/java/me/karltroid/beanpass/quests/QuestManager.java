@@ -6,6 +6,7 @@ import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
@@ -44,7 +45,7 @@ public class QuestManager implements Listener
         ConfigurationSection lumberQuestDifficultiesSection = config.getConfigurationSection("LumberQuestDifficulties");
         ConfigurationSection killingQuestDifficultiesSection = config.getConfigurationSection("KillingQuestDifficulties");
 
-        if (miningQuestDifficultiesSection == null || killingQuestDifficultiesSection == null)
+        if (miningQuestDifficultiesSection == null || killingQuestDifficultiesSection == null || lumberQuestDifficultiesSection == null)
         {
             BeanPass.getInstance().getLogger().warning("Couldn't get a QuestDifficulties section in your Config.yml");
             return;
@@ -68,7 +69,7 @@ public class QuestManager implements Listener
 
         for (String materialName : lumberQuestDifficultiesSection.getKeys(false))
         {
-            ConfigurationSection difficultySection = miningQuestDifficultiesSection.getConfigurationSection(materialName);
+            ConfigurationSection difficultySection = lumberQuestDifficultiesSection.getConfigurationSection(materialName);
 
             if (difficultySection == null)
             {
@@ -79,6 +80,7 @@ public class QuestManager implements Listener
             Material material = Material.matchMaterial(materialName);
             String difficulty = difficultySection.getString("difficulty");
 
+            System.out.println(material.name() + " " + difficulty);
             lumberQuestDifficulties.put(material, difficulty);
         }
 
@@ -114,6 +116,7 @@ public class QuestManager implements Listener
     {
         playerData.addXp(quest.getXPReward());
         playerData.getQuests().remove(quest);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         player.sendMessage(BOLD_GREEN + "COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription() + " " + ITALIC_YELLOW + quest.getRewardDescription());
 
         Quest nextQuest = playerData.giveQuest(null);

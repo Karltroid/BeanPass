@@ -4,8 +4,7 @@ import me.karltroid.beanpass.Rewards.MoneyReward;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.Rewards.SetHomeReward;
 import me.karltroid.beanpass.Rewards.SkinReward;
-import me.karltroid.beanpass.command.AddXP;
-import me.karltroid.beanpass.command.OpenBeanPassGUI;
+import me.karltroid.beanpass.command.BeanPassCommand;
 import me.karltroid.beanpass.command.ViewQuests;
 import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
@@ -29,17 +28,13 @@ public final class BeanPass extends JavaPlugin implements Listener
     static BeanPass main;
     private FileConfiguration config;
     PluginManager pluginManager = getServer().getPluginManager();
-
     HashMap<UUID, PlayerData> playerData = new HashMap<>();
     Season season;
     public QuestDifficulties questDifficulties;
     public QuestManager questManager;
     DataManager dataManager;
-
     public static BeanPass getInstance(){ return main; }
-
     public Season getSeason() { return season; }
-
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
 
     @Override
@@ -64,7 +59,6 @@ public final class BeanPass extends JavaPlugin implements Listener
             for (String season : seasonLevelsSection.getKeys(false))
             {
                 int level = Integer.parseInt(season);
-                System.out.println("Loading Level " + level);
 
                 // Get the XP and Reward sections for the current season
                 ConfigurationSection seasonSection = seasonLevelsSection.getConfigurationSection(season);
@@ -72,7 +66,6 @@ public final class BeanPass extends JavaPlugin implements Listener
                 {
                     // Get the XP value
                     int xp = seasonSection.getInt("XP");
-                    System.out.println(level + " XP: " + xp);
 
                     // Get the Reward section
                     ConfigurationSection rewardSection = seasonSection.getConfigurationSection("Reward");
@@ -102,7 +95,6 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                             }
                         }
-                        System.out.println("Free Null? " + (freeReward == null));
 
                         // Get the Paid rewards for the current season
                         ConfigurationSection paidSection = rewardSection.getConfigurationSection("Paid");
@@ -127,7 +119,6 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                             }
                         }
-                        System.out.println("Premium Null? " + (premiumReward == null));
 
                         seasonLevels.put(level, new Level(xp, freeReward, premiumReward));
                     }
@@ -146,10 +137,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         pluginManager.registerEvents(questManager, this);
 
         // register the commands for the plugin instance
-
-        main.getCommand("beanpass").setExecutor(new OpenBeanPassGUI());
-        main.getCommand("beanpass-addxp").setExecutor(new AddXP());
-
+        main.getCommand("beanpass").setExecutor(new BeanPassCommand());
         main.getCommand("quests").setExecutor(new ViewQuests());
     }
 

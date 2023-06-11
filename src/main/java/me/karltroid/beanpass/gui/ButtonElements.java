@@ -7,9 +7,9 @@ public class ButtonElements
 {
     static class LeftArrow extends ButtonElement implements Button
     {
-        public LeftArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public LeftArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10001);
         }
 
         @Override
@@ -21,9 +21,9 @@ public class ButtonElements
 
     static class RightArrow extends ButtonElement implements Button
     {
-        public RightArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public RightArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10002);
         }
 
         @Override
@@ -35,23 +35,23 @@ public class ButtonElements
 
     static class OpenQuestsPage extends ButtonElement implements Button
     {
-        public OpenQuestsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public OpenQuestsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10005);
         }
 
         @Override
         public void click()
         {
-            beanPassGUI.player.sendMessage("Quests!");
+            beanPassGUI.loadQuestsMenu();
         }
     }
 
     static class OpenItemsPage extends ButtonElement implements Button
     {
-        public OpenItemsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public OpenItemsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10004);
         }
 
         @Override
@@ -63,15 +63,53 @@ public class ButtonElements
 
     static class OpenGetPremiumPage extends ButtonElement implements Button
     {
-        public OpenGetPremiumPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+        public OpenGetPremiumPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10003);
         }
 
         @Override
         public void click()
         {
-            beanPassGUI.player.sendMessage("Premium!");
+            beanPassGUI.player.sendMessage("Get Premium!");
+        }
+    }
+
+    static class OpenBeanPassPage extends ButtonElement implements Button
+    {
+        public OpenBeanPassPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10007);
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.loadBeanPassMenu();
+        }
+    }
+
+    static class BeanPassTitle extends VisualElement
+    {
+        public BeanPassTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10006);
+        }
+    }
+
+    static class QuestsTitle extends VisualElement
+    {
+        public QuestsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10008);
+        }
+    }
+
+    static class BeanPassBackground extends VisualElement
+    {
+        public BeanPassBackground(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10000);
         }
     }
 }

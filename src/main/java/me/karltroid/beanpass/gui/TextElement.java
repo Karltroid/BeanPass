@@ -30,6 +30,7 @@ public class TextElement extends Element
         this.textDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
         this.originalTransformation = this.textDisplay.getTransformation();
         this.textDisplay.setRotation(location.getYaw(), location.getPitch());
+        this.textDisplay.setLineWidth(300);
 
         this.textDisplay.setText(text);
     }

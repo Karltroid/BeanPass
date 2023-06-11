@@ -97,7 +97,6 @@ public class PlayerData
         Player player = Bukkit.getPlayer(getUUID());
         World world = player.getWorld();
         Location location = player.getLocation();
-        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Leveled up! " + ChatColor.YELLOW + " " + ChatColor.BOLD + "LVL " + level);
         world.playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
         Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
         FireworkMeta fireworkMeta = firework.getFireworkMeta();
@@ -122,6 +121,14 @@ public class PlayerData
         {
             BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(player);
             beanPassGUI.reloadLevelElements();
+        }
+
+        // alert all the players that this player levelled up (give the player a personalized message)
+        player.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + "Leveled up! " + ChatColor.YELLOW + " " + ChatColor.BOLD + "LVL " + level);
+        for (Player p : Bukkit.getOnlinePlayers())
+        {
+            if (p == player) continue;
+            p.sendMessage(ChatColor.GREEN + "" + ChatColor.BOLD + player.getDisplayName() + " leveled up! " + ChatColor.YELLOW + " " + ChatColor.BOLD + "LVL " + level);
         }
     }
 

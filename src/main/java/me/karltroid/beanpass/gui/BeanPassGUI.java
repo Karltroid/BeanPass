@@ -10,16 +10,15 @@ import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.data.Skins;
 import me.karltroid.beanpass.data.Skins.Skin;
 import me.karltroid.beanpass.gui.ButtonElements.*;
+import me.karltroid.beanpass.quests.Quests;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
@@ -43,38 +42,37 @@ public class BeanPassGUI implements Listener
     static final double GUI_ROTATION_CORRECTION = 90; // 1 = 1 block/meter
     final static int LEVELS_PER_PAGE = 5;
 
-    public BeanPassGUI(Player player)
+    GUIMenu currentMenu;
+
+    public BeanPassGUI(Player player, GUIMenu guiMenu)
     {
+        BeanPassGUI alreadyOpenGUI = BeanPass.getInstance().activeGUIs.get(player);
+        if (alreadyOpenGUI != null) alreadyOpenGUI.closeEntireGUI();
+
         this.player = player;
         this.world = player.getWorld();
         this.playerLocation = player.getEyeLocation();
         this.playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
         this.rewardPage = playerData.getLevel()/LEVELS_PER_PAGE;
         this.originalGamemode = player.getGameMode();
+        this.currentMenu = guiMenu;
 
         player.setGameMode(GameMode.ADVENTURE);
 
-        loadElement(new VisualElement(this, true, 3.1, 0, 21, 1f, Material.GLASS_BOTTLE, 10006), null);
-        loadElement(new VisualElement(this, false, 3.05, 0, 0, 1.75f, Material.GLASS_BOTTLE, 10000), null);
-
-        loadElement(new LeftArrow(this, true, 3.85, -43, 0, 0.3f, Material.GLASS_BOTTLE, 10001), null);
-        loadElement(new RightArrow(this, true,3.85, 43, 0, 0.3f, Material.GLASS_BOTTLE, 10002), null);
-        loadElement(new OpenGetPremiumPage(this, true,3, -29, -27, 0.48f, Material.GLASS_BOTTLE, 10003), null);
-        loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f, Material.GLASS_BOTTLE, 10005), null);
-        loadElement(new OpenItemsPage(this, true,3, 29, -27, 0.48f, Material.GLASS_BOTTLE, 10004), null);
-
-        loadElement(new TextElement(this, true,1.5, 0, -45, 1f, ChatColor.GREEN + "" + playerData.getXpNeededForNextLevel() + "XP needed for LVL " + playerData.getLevel() + 1), allLevelRewardElements);
-
-        /*int xpNeededForCurrentLevel = 0;
-        int xpNeededForNextLevel = beanpassLevels.get(playerLevel + 1).getXpRequired();
-        for (int i = 1; i <= beanpassLevels.size(); i++)
+        switch (guiMenu)
         {
-            xpNeededForCurrentLevel += beanpassLevels.get(i).getXpRequired();
+            case BeanPass:
+                loadBeanPassMenu();
+                break;
+            case Quests:
+                loadQuestsMenu();
+                break;
+            default:
+                Bukkit.getLogger().warning("gui menu does not exist, loading BeanPass menu.");
+                loadBeanPassMenu();
+                break;
         }
-        player.sendMessage("Level " + playerLevel + " -> " + xpNeededForCurrentLevel + " | " + playerData.getXp() + " | " + xpNeededForNextLevel);
-        */
 
-        displayLevelData();
 
         BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
 
@@ -115,6 +113,43 @@ public class BeanPassGUI implements Listener
         }.runTaskTimer(BeanPass.getInstance(),0,0);
     }
 
+    void loadBeanPassMenu()
+    {
+        this.currentMenu = GUIMenu.BeanPass;
+
+        closeElementList(allElements);
+        loadElement(new BeanPassTitle(this, true, 3.1, 0, 21, 1f), null);
+        loadElement(new BeanPassBackground(this, false, 3.05, 0, 0, 1.75f), null);
+
+        loadElement(new LeftArrow(this, true, 3.85, -43, 0, 0.3f), null);
+        loadElement(new RightArrow(this, true,3.85, 43, 0, 0.3f), null);
+        loadElement(new OpenGetPremiumPage(this, true,3, -29, -27, 0.48f), null);
+        loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
+        loadElement(new OpenItemsPage(this, true,3, 29, -27, 0.48f), null);
+
+        displayLevelData();
+    }
+
+    public void loadQuestsMenu()
+    {
+        this.currentMenu = GUIMenu.Quests;
+
+        closeElementList(allElements);
+        loadElement(new QuestsTitle(this, true, 3.1, 0, 21, 1f), null);
+
+        loadElement(new OpenBeanPassPage(this, true,3, -29, -27, 0.48f), null);
+        loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
+        loadElement(new OpenItemsPage(this, true,3, 29, -27, 0.48f), null);
+
+        int lineSpacing = 3;
+        int y = 8;
+        for (Quests.Quest quest : BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests())
+        {
+            loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
+            y -= lineSpacing;
+        }
+    }
+
     public void reloadLevelElements()
     {
         if (allLevelRewardElements.isEmpty()) return;
@@ -136,6 +171,8 @@ public class BeanPassGUI implements Listener
         closeElementList(allLevelRewardElements);
 
         HashMap<Integer, Level> beanpassLevels = BeanPass.getInstance().getSeason().getLevels();
+
+        //loadElement(new TextElement(this, true,1.5, 0, -45, 1f, ChatColor.GREEN + "" + playerData.getXpNeededForNextLevel() + "XP needed for LVL " + playerData.getLevel() + 1), allLevelRewardElements);
 
         int playerLevel = playerData.getLevel();
 
@@ -185,12 +222,17 @@ public class BeanPassGUI implements Listener
         }
     }
 
-    void loadElement(Element element, List<Element> altElementList)
+    public void loadElement(Element element, List<Element> altElementList)
     {
         allElements.add(element);
         if (altElementList != null) altElementList.add(element);
 
         if (element instanceof ButtonElement) allButtonElements.add((ButtonElement) element);
+    }
+
+    public List<Element> getAllElements()
+    {
+        return allElements;
     }
 
     void unloadElement(Element element, List<Element> altElementList)
@@ -206,7 +248,7 @@ public class BeanPassGUI implements Listener
         else ((TextElement)element).textDisplay.remove();
     }
 
-    void closeElementList(List<Element> elements)
+    public void closeElementList(List<Element> elements)
     {
         List<Element> elementsToRemove = new ArrayList<>(elements);
         for (Element element : elementsToRemove) {
@@ -234,6 +276,15 @@ public class BeanPassGUI implements Listener
 
         Button button = selectedButtonElement;
         button.click();
+    }
+
+    @EventHandler
+    void onPlayerLeave(PlayerQuitEvent event)
+    {
+        Player player = event.getPlayer();
+        if (player != this.player) return;
+
+        closeEntireGUI();
     }
 
     void guiSphereTest(double angleIncrement, double radiusOffset)

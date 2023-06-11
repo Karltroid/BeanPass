@@ -1,6 +1,8 @@
 package me.karltroid.beanpass.command;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.quests.Quests;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,11 +28,7 @@ public class ViewQuests implements CommandExecutor
             return false;
         }
 
-        for (Quests.Quest quest : BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getQuests())
-        {
-            senderPlayer.sendMessage(quest.getGoalDescription());
-        }
-
+        new BeanPassGUI(senderPlayer, GUIMenu.Quests);
         return true;
     }
 }

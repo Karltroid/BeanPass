@@ -74,7 +74,9 @@ public class Quests
         public MiningQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
         {
             super(playerUUID, xpReward, goalBlockCount, playerBlockCount, "Mine");
+            HashMap<Material, String> miningQuestDifficulties = BeanPass.getInstance().questManager.getMiningQuestDifficulties();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!miningQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
 
             this.goalCount = (goalBlockCount <= 0 ? questDifficulty.generateUnitAmount() : goalBlockCount);
@@ -87,7 +89,6 @@ public class Quests
             }
             else
             {
-                HashMap<Material, String> miningQuestDifficulties = BeanPass.getInstance().questManager.getMiningQuestDifficulties();
                 List<Map.Entry<Material, String>> matchingDifficultyMaterials = new ArrayList<>();
 
                 for (Map.Entry<Material, String> entry : miningQuestDifficulties.entrySet()) {
@@ -117,12 +118,9 @@ public class Quests
         public KillingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount)
         {
             super(playerUUID, xpReward, goalKillCount, playerKillCount, "Kill");
-            String questDifficultyKey = null;
-            for (int i = 0; i < 100; i++)
-            {
-                questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
-                if (BeanPass.getInstance().questManager.getKillingQuestDifficulties().containsValue(questDifficultyKey)) break;
-            }
+            HashMap<EntityType, String> killingQuestDifficulties = BeanPass.getInstance().questManager.getKillingQuestDifficulties();
+            String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!killingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
 
             this.goalCount = (goalKillCount <= 0 ? questDifficulty.generateUnitAmount() : goalKillCount);
@@ -188,14 +186,16 @@ public class Quests
 
         private final Material goalBlockType;
 
-        public LumberQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount) {
+        public LumberQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
+        {
             super(playerUUID, xpReward, goalBlockCount, playerBlockCount, "Chop down");
+            HashMap<Material, String> lumberQuestDifficulties = BeanPass.getInstance().questManager.getLumberQuestDifficulties();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!lumberQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
 
             this.goalCount = (goalBlockCount <= 0 ? questDifficulty.generateUnitAmount() : goalBlockCount);
             this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
-
 
             if (goalBlockType != null)
             {
@@ -203,10 +203,10 @@ public class Quests
             }
             else
             {
-                HashMap<Material, String> miningQuestDifficulties = BeanPass.getInstance().questManager.getMiningQuestDifficulties();
                 List<Map.Entry<Material, String>> matchingDifficultyMaterials = new ArrayList<>();
 
-                for (Map.Entry<Material, String> entry : miningQuestDifficulties.entrySet()) {
+                for (Map.Entry<Material, String> entry : lumberQuestDifficulties.entrySet())
+                {
                     if (entry.getValue().equals(questDifficultyKey)) {
                         matchingDifficultyMaterials.add(entry);
                     }
