@@ -9,10 +9,12 @@ commands:
     usage: /beanpass
     permission: beanpass.user
     aliases: [ bp ]
+    executor: me.karltroid.beanpass.command.BeanPassCommand
   beanpass-addxp:
     description: Modify a player's BeanPass season XP
     usage: /beanpass addxp <player> <amount>
     permission: beanpass.admin
+    executor: me.karltroid.beanpass.command.BeanPassCommand
   quests:
     description: View the player's active quests
     usage: /quests
