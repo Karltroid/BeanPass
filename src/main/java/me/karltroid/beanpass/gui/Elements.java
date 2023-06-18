@@ -1,9 +1,8 @@
 package me.karltroid.beanpass.gui;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 
-public class ButtonElements
+public class Elements
 {
     static class LeftArrow extends ButtonElement implements Button
     {
@@ -47,9 +46,9 @@ public class ButtonElements
         }
     }
 
-    static class OpenItemsPage extends ButtonElement implements Button
+    static class OpenSkinsPage extends ButtonElement implements Button
     {
-        public OpenItemsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        public OpenSkinsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
             super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10004);
         }
@@ -57,7 +56,7 @@ public class ButtonElements
         @Override
         public void click()
         {
-            beanPassGUI.player.sendMessage("Items!");
+            beanPassGUI.loadSkinsMenu();
         }
     }
 
@@ -94,6 +93,14 @@ public class ButtonElements
         public BeanPassTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
             super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10006);
+        }
+    }
+
+    static class SkinsTitle extends VisualElement
+    {
+        public SkinsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10009);
         }
     }
 

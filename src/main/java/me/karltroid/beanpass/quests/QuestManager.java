@@ -25,9 +25,9 @@ public class QuestManager implements Listener
     HashMap<Material, String> lumberQuestDifficulties = new HashMap<>();
     HashMap<EntityType, String> killingQuestDifficulties = new HashMap<>();
 
-    final String BOLD_GREEN = ChatColor.GREEN + " " + ChatColor.BOLD;
-    final String BOLD_GRAY = ChatColor.GRAY + " " + ChatColor.BOLD;
-    final String ITALIC_YELLOW = ChatColor.YELLOW + " " + ChatColor.ITALIC;
+    final String BOLD_GREEN = ChatColor.GREEN + "" + ChatColor.BOLD;
+    final String BOLD_GRAY = ChatColor.GRAY + "" + ChatColor.BOLD;
+    final String ITALIC_YELLOW = ChatColor.YELLOW + "" + ChatColor.ITALIC;
     int questsPerPlayer;
 
     public QuestManager(int questsPerPlayer)
@@ -117,7 +117,7 @@ public class QuestManager implements Listener
         playerData.addXp(quest.getXPReward());
         playerData.getQuests().remove(quest);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-        player.sendMessage(BOLD_GREEN + "COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription() + " " + ITALIC_YELLOW + quest.getRewardDescription());
+        player.sendMessage(BOLD_GREEN + "QUEST COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription() + " " + ITALIC_YELLOW + quest.getRewardDescription());
 
         Quest nextQuest = playerData.giveQuest(null);
         player.sendMessage(BOLD_GRAY + "NEW QUEST: " + ChatColor.GRAY + nextQuest.getGoalDescription() + " " + ITALIC_YELLOW + nextQuest.getRewardDescription());

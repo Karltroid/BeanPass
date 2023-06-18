@@ -13,6 +13,7 @@ public class VisualElement extends Element
 {
     ItemDisplay itemDisplay;
     Transformation originalTransformation;
+    float displayScale;
 
     public VisualElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
     {
@@ -22,6 +23,8 @@ public class VisualElement extends Element
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setCustomModelData(customModelData);
         itemStack.setItemMeta(itemMeta);
+
+        this.displayScale = displayScale;
 
         this.itemDisplay = (ItemDisplay) beanPassGUI.world.spawnEntity(this.location, EntityType.ITEM_DISPLAY);
         this.itemDisplay.setItemStack(itemStack);

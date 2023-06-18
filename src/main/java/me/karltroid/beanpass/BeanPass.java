@@ -10,7 +10,10 @@ import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -18,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -36,11 +40,18 @@ public final class BeanPass extends JavaPlugin implements Listener
     public static BeanPass getInstance(){ return main; }
     public Season getSeason() { return season; }
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
+    private static Economy econ = null;
 
     @Override
     public void onEnable()
     {
         main = this; // set singleton instance of the plugin
+
+        if (!setupEconomy() ) {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         // load config
         saveDefaultConfig();
@@ -174,5 +185,31 @@ public final class BeanPass extends JavaPlugin implements Listener
         if (!activeGUIs.containsKey(player)) return;
 
         activeGUIs.get(player).closeEntireGUI();
+    }
+
+    private boolean setupEconomy()
+    {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        econ = rsp.getProvider();
+        return econ != null;
+    }
+
+    public Economy getEconomy()
+    {
+        return econ;
+    }
+
+    public static void sendMessage(OfflinePlayer p, String message)
+    {
+        if (!p.isOnline()) return;
+
+        Player player = (Player) p;
+        player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[BeanPass] " + ChatColor.RESET + message);
     }
 }

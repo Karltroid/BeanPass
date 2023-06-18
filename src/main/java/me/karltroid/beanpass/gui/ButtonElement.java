@@ -31,14 +31,16 @@ public class ButtonElement extends VisualElement implements Button
     public boolean isPlayerLooking(Player player)
     {
         Location eye = player.getEyeLocation();
-        eye.setY(eye.getY());
+        eye.setY(eye.getY()-0.25);
 
         double distance = Math.sqrt(Math.pow(location.getX() - eye.getX(), 2) + Math.pow(location.getY() - eye.getY(), 2) + Math.pow(location.getZ() - eye.getZ(), 2));
         if (distance > 10) return false;
 
         Vector toEntity = location.toVector().subtract(eye.toVector());
         double dot = toEntity.normalize().dot(eye.getDirection());
-        return dot > 0.985D;
+
+        Double baseSelectionArea = 0.025D;
+        return dot > (1D - baseSelectionArea) + (baseSelectionArea * displayScale);
     }
 
     @Override

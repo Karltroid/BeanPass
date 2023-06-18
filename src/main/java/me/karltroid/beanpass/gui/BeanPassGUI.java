@@ -7,9 +7,8 @@ import me.karltroid.beanpass.Rewards.SetHomeReward;
 import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.data.Level;
 import me.karltroid.beanpass.data.PlayerData;
-import me.karltroid.beanpass.data.Skins;
 import me.karltroid.beanpass.data.Skins.Skin;
-import me.karltroid.beanpass.gui.ButtonElements.*;
+import me.karltroid.beanpass.gui.Elements.*;
 import me.karltroid.beanpass.quests.Quests;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -23,7 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class BeanPassGUI implements Listener
@@ -116,30 +114,23 @@ public class BeanPassGUI implements Listener
     void loadBeanPassMenu()
     {
         this.currentMenu = GUIMenu.BeanPass;
-
         closeElementList(allElements);
+
         loadElement(new BeanPassTitle(this, true, 3.1, 0, 21, 1f), null);
         loadElement(new BeanPassBackground(this, false, 3.05, 0, 0, 1.75f), null);
-
         loadElement(new LeftArrow(this, true, 3.85, -43, 0, 0.3f), null);
         loadElement(new RightArrow(this, true,3.85, 43, 0, 0.3f), null);
-        loadElement(new OpenGetPremiumPage(this, true,3, -29, -27, 0.48f), null);
-        loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
-        loadElement(new OpenItemsPage(this, true,3, 29, -27, 0.48f), null);
 
         displayLevelData();
+        displayNavigationButtons();
     }
 
     public void loadQuestsMenu()
     {
         this.currentMenu = GUIMenu.Quests;
-
         closeElementList(allElements);
-        loadElement(new QuestsTitle(this, true, 3.1, 0, 21, 1f), null);
 
-        loadElement(new OpenBeanPassPage(this, true,3, -29, -27, 0.48f), null);
-        loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
-        loadElement(new OpenItemsPage(this, true,3, 29, -27, 0.48f), null);
+        loadElement(new QuestsTitle(this, true, 3.1, 0, 21, 1f), null);
 
         int lineSpacing = 3;
         int y = 8;
@@ -148,6 +139,38 @@ public class BeanPassGUI implements Listener
             loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
             y -= lineSpacing;
         }
+
+        displayNavigationButtons();
+    }
+
+    public void loadSkinsMenu()
+    {
+        this.currentMenu = GUIMenu.Skins;
+        closeElementList(allElements);
+
+        loadElement(new SkinsTitle(this, true, 3.1, 0, 25, 1f), null);
+
+        Material[] categories = new Material[] { Material.CARVED_PUMPKIN, Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE };
+
+        double firstRowYPosition = 10.0;
+        double firstColumnXPosition = -35.0;
+        double columnSpacing = Math.abs((firstColumnXPosition * 2)/(categories.length - 1));
+        int skinsPerColumn = 4;
+        double rowSpacing = Math.abs((firstRowYPosition * 1.7)/(skinsPerColumn - 1));
+        for(int x = 0; x < categories.length; x++)
+        {
+            double columnXPosition = firstColumnXPosition + (x * columnSpacing);
+            loadElement(new VisualElement(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, categories[x], 0), null);
+
+            for(int y = 0; y < skinsPerColumn; y++)
+            {
+                // for loop through players skins of this material
+                double columnYPosition = firstRowYPosition - (y * rowSpacing);
+                loadElement(new ButtonElement(this, false, 3, columnXPosition, columnYPosition, 0.25f, Material.BARRIER, 0), null);
+            }
+        }
+
+        displayNavigationButtons();
     }
 
     public void reloadLevelElements()
@@ -164,6 +187,13 @@ public class BeanPassGUI implements Listener
 
         this.rewardPage = newPage;
         displayLevelData();
+    }
+
+    void displayNavigationButtons()
+    {
+        loadElement(new OpenBeanPassPage(this, true,3, -29, -27, 0.48f), null);
+        loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
+        loadElement(new OpenSkinsPage(this, true,3, 29, -27, 0.48f), null);
     }
 
     void displayLevelData()

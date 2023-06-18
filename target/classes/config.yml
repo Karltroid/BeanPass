@@ -160,8 +160,6 @@ KillingQuestDifficulties:
     difficulty: HARD
   HUSK:
     difficulty: HARD
-  ILLUSIONER:
-    difficulty: VERY_HARD
   MAGMA_CUBE:
     difficulty: HARD
   MUSHROOM_COW:
