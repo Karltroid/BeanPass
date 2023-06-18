@@ -1,10 +1,12 @@
 package me.karltroid.beanpass;
 
+import com.earth2me.essentials.Essentials;
 import me.karltroid.beanpass.Rewards.MoneyReward;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.Rewards.SetHomeReward;
 import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.command.BeanPassCommand;
+import me.karltroid.beanpass.command.SetHome;
 import me.karltroid.beanpass.command.ViewQuests;
 import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
@@ -40,13 +42,21 @@ public final class BeanPass extends JavaPlugin implements Listener
     public static BeanPass getInstance(){ return main; }
     public Season getSeason() { return season; }
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
-    private static Economy econ = null;
+    private Economy econ = null;
+    private Essentials ess;
 
     @Override
     public void onEnable()
     {
         main = this; // set singleton instance of the plugin
 
+        ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
+        if (ess == null)
+        {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Essentials dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         if (!setupEconomy() ) {
             Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
@@ -150,6 +160,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         // register the commands for the plugin instance
         main.getCommand("beanpass").setExecutor(new BeanPassCommand());
         main.getCommand("quests").setExecutor(new ViewQuests());
+        main.getCommand("sethome").setExecutor(new SetHome());
     }
 
     @Override
@@ -203,6 +214,11 @@ public final class BeanPass extends JavaPlugin implements Listener
     public Economy getEconomy()
     {
         return econ;
+    }
+
+    public Essentials getEssentials()
+    {
+        return ess;
     }
 
     public static void sendMessage(OfflinePlayer p, String message)

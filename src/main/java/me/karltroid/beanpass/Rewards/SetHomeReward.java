@@ -1,5 +1,7 @@
 package me.karltroid.beanpass.Rewards;
 
+import me.karltroid.beanpass.BeanPass;
+
 import java.util.UUID;
 
 public class SetHomeReward implements Reward
@@ -14,8 +16,7 @@ public class SetHomeReward implements Reward
     @Override
     public void giveReward(UUID uuid)
     {
-        // Code to add another available /sethome for the player
-        // Example: HomeManager.addSetHome(player);
+        BeanPass.getInstance().getPlayerData(uuid).increaseMaxHomes(amount);
     }
 
     public int getAmount()

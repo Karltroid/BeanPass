@@ -1,5 +1,6 @@
 package me.karltroid.beanpass.data;
 
+import com.earth2me.essentials.User;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.Button;
@@ -23,17 +24,19 @@ public class PlayerData
     List<Integer> skins;
 
     // current season data
-    double xp = 0;
-    int lastKnownLevel = 1;
+    double xp;
+    int lastKnownLevel;
+    int maxHomes;
     List<Quest> quests = new ArrayList<>();
 
-    public PlayerData(UUID UUID, boolean premium, List<Integer> skins, double xp, int lastKnownLevel)
+    public PlayerData(UUID UUID, boolean premium, List<Integer> skins, double xp, int lastKnownLevel, int maxHomes)
     {
         this.UUID = UUID;
         this.premium = premium;
         this.skins = skins;
         this.xp = xp;
         this.lastKnownLevel = lastKnownLevel;
+        this.maxHomes = maxHomes;
 
         if (lastKnownLevel < getLevel()) leveledUp(); // level up player if they got xp while offline
     }
@@ -75,6 +78,19 @@ public class PlayerData
         if (beforeLevel == afterLevel) return;
         // levelled up!
         leveledUp();
+    }
+
+    public void increaseMaxHomes(int increment)
+    {
+        maxHomes += increment;
+        OfflinePlayer player = Bukkit.getOfflinePlayer(getUUID());
+        User essentialsPlayer = BeanPass.getInstance().getEssentials().getUser(getUUID());
+        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "homes" : "home") + "! " + essentialsPlayer.getHomes().size() + "/" + maxHomes + " used.");
+    }
+
+    public int getMaxHomes()
+    {
+        return maxHomes;
     }
 
     public double getXpNeededForNextLevel()

@@ -26,7 +26,7 @@ public class MoneyReward implements Reward
         OfflinePlayer player = Bukkit.getOfflinePlayer(uuid);
         EconomyResponse response = BeanPass.getInstance().getEconomy().depositPlayer(Bukkit.getOfflinePlayer(uuid), getAmount());
         if (response.transactionSuccess() && player.isOnline())
-            BeanPass.sendMessage(player,  "Level Reward:" + ChatColor.GREEN + " " + ChatColor.BOLD + "+$" + getAmount() + " added to your account!");
+            BeanPass.sendMessage(player,  ChatColor.GREEN + "+$" + getAmount() + " added to your account!");
         else
             Bukkit.getLogger().severe("Couldn't give player their money reward.");
     }

@@ -54,7 +54,8 @@ public class DataManager implements Listener
                             + "uuid VARCHAR(36) NOT NULL PRIMARY KEY,"
                             + "premium BOOLEAN NOT NULL,"
                             + "xp DOUBLE NOT NULL,"
-                            + "last_known_level INT NOT NULL"
+                            + "last_known_level INT NOT NULL,"
+                            + "max_homes INT NOT NULL"
                             + ")"
             );
             stmt.executeUpdate(
@@ -106,6 +107,7 @@ public class DataManager implements Listener
             boolean premium = false;
             double xp = 0.0;
             int lastKnownLevel = 1;
+            int maxHomes = 0;
 
             try (PreparedStatement playerSeasonDataStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_SEASON_DATA_TABLE_NAME + " WHERE uuid = ?"))
             {
@@ -116,11 +118,12 @@ public class DataManager implements Listener
                         premium = playerSeasonDataResult.getBoolean("premium");
                         xp = playerSeasonDataResult.getDouble("xp");
                         lastKnownLevel = playerSeasonDataResult.getInt("last_known_level");
+                        maxHomes = playerSeasonDataResult.getInt("max_homes");
                     }
                 }
             }
 
-            PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), xp, lastKnownLevel);
+            PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), xp, lastKnownLevel, maxHomes);
 
             try (PreparedStatement playerSkinsStatement = conn.prepareStatement("SELECT skin_id FROM player_skins WHERE uuid = ?"))
             {
@@ -231,8 +234,8 @@ public class DataManager implements Listener
 
         try (Connection conn = getConnection(BeanPass.getInstance());
              PreparedStatement playerSeasonDataStatement = conn.prepareStatement(
-                     "INSERT INTO " + PLAYER_SEASON_DATA_TABLE_NAME + " (uuid, xp, premium, last_known_level) VALUES (?, ?, ?, ?) " +
-                             "ON CONFLICT(uuid) DO UPDATE SET xp = excluded.xp, premium = excluded.premium, last_known_level = excluded.last_known_level"
+                     "INSERT INTO " + PLAYER_SEASON_DATA_TABLE_NAME + " (uuid, xp, premium, last_known_level, max_homes) VALUES (?, ?, ?, ?, ?) " +
+                             "ON CONFLICT(uuid) DO UPDATE SET xp = excluded.xp, premium = excluded.premium, last_known_level = excluded.last_known_level, max_homes = excluded.max_homes"
              );
              PreparedStatement deletePlayerSkinsStatement = conn.prepareStatement(
                      "DELETE FROM player_skins WHERE uuid = ?"
@@ -259,6 +262,7 @@ public class DataManager implements Listener
             playerSeasonDataStatement.setDouble(2, playerData.xp);
             playerSeasonDataStatement.setBoolean(3, playerData.premium);
             playerSeasonDataStatement.setInt(4, playerData.lastKnownLevel);
+            playerSeasonDataStatement.setInt(5, playerData.maxHomes);
             playerSeasonDataStatement.executeUpdate();
 
             // Delete all player_skins for the player

@@ -20,6 +20,7 @@ me\karltroid\beanpass\gui\BeanPassGUI.class
 me\karltroid\beanpass\quests\Quests$LumberQuest.class
 me\karltroid\beanpass\Rewards\SkinReward.class
 me\karltroid\beanpass\Rewards\MoneyReward.class
+me\karltroid\beanpass\command\SetHome.class
 me\karltroid\beanpass\gui\TextElement.class
 me\karltroid\beanpass\command\BeanPassCommand.class
 me\karltroid\beanpass\data\DataManager.class

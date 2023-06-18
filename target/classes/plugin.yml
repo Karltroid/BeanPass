@@ -21,3 +21,9 @@ commands:
     permission: beanpass.user
     aliases: [ quest ]
     executor: me.karltroid.beanpass.command.ViewQuests
+  sethome:
+    description: Set a home that you can teleport to with /home "<home nickname>" later
+    usage: /sethome
+    permission: beanpass.user
+    aliases: [ esethome, createhome, ecreatehome ]
+    executor: me.karltroid.beanpass.command.ViewQuests

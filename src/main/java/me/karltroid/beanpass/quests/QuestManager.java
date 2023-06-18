@@ -117,10 +117,10 @@ public class QuestManager implements Listener
         playerData.addXp(quest.getXPReward());
         playerData.getQuests().remove(quest);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-        player.sendMessage(BOLD_GREEN + "QUEST COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription() + " " + ITALIC_YELLOW + quest.getRewardDescription());
+        BeanPass.sendMessage(player, BOLD_GREEN + "QUEST COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription() + " " + ITALIC_YELLOW + quest.getRewardDescription());
 
         Quest nextQuest = playerData.giveQuest(null);
-        player.sendMessage(BOLD_GRAY + "NEW QUEST: " + ChatColor.GRAY + nextQuest.getGoalDescription() + " " + ITALIC_YELLOW + nextQuest.getRewardDescription());
+        BeanPass.sendMessage(player, BOLD_GRAY + "NEW QUEST: " + ChatColor.GRAY + nextQuest.getGoalDescription() + " " + ITALIC_YELLOW + nextQuest.getRewardDescription());
     }
 
     @EventHandler
