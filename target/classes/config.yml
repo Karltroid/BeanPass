@@ -11,33 +11,33 @@ QuestsPerPlayer: 5
 # Quest Difficulties To Be Set For Individual Quests
 Difficulties:
   SUPER_EASY:
-    base_units: 16
-    max_unit_multiplier: 32
-    xp_per_unit: 0.1
+    base_units: 8
+    max_unit_multiplier: 24
+    xp_per_unit: 0.0521
   VERY_EASY:
     base_units: 8
     max_unit_multiplier: 16
-    xp_per_unit: 0.5
+    xp_per_unit: 0.196
   EASY:
-    base_units: 4
-    max_unit_multiplier: 8
-    xp_per_unit: 1
+    base_units: 6
+    max_unit_multiplier: 12
+    xp_per_unit: 0.56
   NORMAL:
     base_units: 4
     max_unit_multiplier: 8
-    xp_per_unit: 5
+    xp_per_unit: 1.6
   HARD:
     base_units: 2
     max_unit_multiplier: 8
-    xp_per_unit: 15
+    xp_per_unit: 5
   VERY_HARD:
     base_units: 2
     max_unit_multiplier: 4
-    xp_per_unit: 50
+    xp_per_unit: 13
   SUPER_HARD:
     base_units: 1
-    max_unit_multiplier: 4
-    xp_per_unit: 100
+    max_unit_multiplier: 1
+    xp_per_unit: 150
 
 # All Possible Mining Quests And Its Respective Difficulty
 MiningQuestDifficulties:
@@ -311,8 +311,8 @@ SeasonLevels:
     XP: 30
     Reward:
       Free:
-        Type: MONEY
-        Amount: 15
+        Type: SET_HOME
+        Amount: 1
       Paid:
         Type: SKIN
         Item: carved_pumpkin
@@ -327,14 +327,14 @@ SeasonLevels:
     XP: 50
     Reward:
       Free:
-        Type: SET_HOME
-        Amount: 1
+        Type: MONEY
+        Amount: 20
   6:
     XP: 60
     Reward:
       Free:
         Type: MONEY
-        Amount: 20
+        Amount: 25
       Paid:
         Type: SKIN
         Item: wooden_sword
@@ -344,22 +344,52 @@ SeasonLevels:
     Reward:
       Free:
         Type: MONEY
-        Amount: 20
+        Amount: 30
   8:
     XP: 90
     Reward:
       Free:
-        Type: MONEY
-        Amount: 20
+        Type: SET_HOME
+        Amount: 1
   9:
     XP: 105
     Reward:
       Free:
         Type: MONEY
-        Amount: 20
+        Amount: 35
   10:
     XP: 120
     Reward:
       Free:
+        Type: MONEY
+        Amount: 40
+  11:
+    XP: 140
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 45
+  12:
+    XP: 160
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 50
+  13:
+    XP: 180
+    Reward:
+      Free:
         Type: SET_HOME
         Amount: 1
+  14:
+    XP: 200
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 55
+  15:
+    XP: 225
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 60

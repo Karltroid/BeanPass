@@ -6,6 +6,8 @@ import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.generator.structure.Structure;
+
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Quests
@@ -51,7 +53,8 @@ public class Quests
 
         public String getRewardDescription()
         {
-            return "+" + xpReward + "XP";
+            DecimalFormat tenths = new DecimalFormat("0.00");
+            return "+" + tenths.format(xpReward) + "XP";
         }
         public String getGoalDescription()
         {

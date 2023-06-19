@@ -115,7 +115,13 @@ public class PlayerData
 
         for(int l = lastKnownLevel + 1; l <= newLevel; l++)
         {
-            BeanPass.getInstance().getSeason().getLevel(l).getFreeReward().giveReward(getUUID());
+            // alert all the players that this player levelled up (give the player a personalized message)
+            BeanPass.sendMessage(player, ChatColor.GREEN + "" + ChatColor.BOLD + "You leveled up to" + ChatColor.YELLOW + " " + ChatColor.BOLD + "LVL " + l);
+            for (Player p : Bukkit.getOnlinePlayers())
+            {
+                if (p == player) continue;
+                BeanPass.sendMessage(p, ChatColor.GREEN + player.getDisplayName() + " leveled up to" + ChatColor.YELLOW + " " + "LVL " + l);
+            }
 
             Location location = player.getLocation();
             world.playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
@@ -135,16 +141,9 @@ public class PlayerData
                     .build();
             fireworkMeta.addEffect(effect);
             fireworkMeta.setPower(l);
-
             firework.setFireworkMeta(fireworkMeta);
 
-            // alert all the players that this player levelled up (give the player a personalized message)
-            BeanPass.sendMessage(player, "You leveled up to  " + ChatColor.GREEN + " " + ChatColor.BOLD + "LVL " + l);
-            for (Player p : Bukkit.getOnlinePlayers())
-            {
-                if (p == player) continue;
-                BeanPass.sendMessage(p, player.getDisplayName() + " leveled up to " + ChatColor.GREEN + " " + ChatColor.BOLD + "LVL " + l);
-            }
+            BeanPass.getInstance().getSeason().getLevel(l).getFreeReward().giveReward(getUUID());
         }
 
         if (BeanPass.getInstance().activeGUIs.containsKey(player))

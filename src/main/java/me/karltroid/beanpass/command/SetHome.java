@@ -34,15 +34,18 @@ public class SetHome implements CommandExecutor
         }
 
         User essentialsUser = BeanPass.getInstance().getEssentials().getUser(senderPlayer);
-        if (essentialsUser.getHomes().size() >= BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getMaxHomes())
+        int playerMaxHomes = BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getMaxHomes();
+        int playerHomesAmount = essentialsUser.getHomes().size();
+        if (playerHomesAmount >= playerMaxHomes)
         {
-            BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You have used all your available sethome, delete one or level up to earn more!");
+            if (playerMaxHomes == 0) BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You don't have any available sethomes, level up in /beanpass to earn more!");
+            else BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You have used all " + playerHomesAmount + "/" + playerMaxHomes + " of your available sethomes, delete one or level up in /beanpass to earn more!");
             return false;
         }
 
         String homeName = args[0];
         essentialsUser.setHome(homeName, senderPlayer.getLocation());
-        BeanPass.sendMessage(senderPlayer, "Set home successfully! " + ChatColor.GRAY + "Visit it with: " + ChatColor.ITALIC + "/home " + homeName);
+        BeanPass.sendMessage(senderPlayer, "Home set! " + ChatColor.GRAY + "Visit it with: " + ChatColor.ITALIC + "/home " + homeName);
         return true;
     }
 }
