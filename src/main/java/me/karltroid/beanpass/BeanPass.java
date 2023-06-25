@@ -26,7 +26,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public final class BeanPass extends JavaPlugin implements Listener
@@ -38,12 +40,14 @@ public final class BeanPass extends JavaPlugin implements Listener
     Season season;
     public QuestDifficulties questDifficulties;
     public QuestManager questManager;
-    DataManager dataManager;
+    PlayerDataManager dataManager;
     public static BeanPass getInstance(){ return main; }
     public Season getSeason() { return season; }
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
     private Economy econ = null;
     private Essentials ess;
+
+    public SkinManager skinManager;
 
     @Override
     public void onEnable()
@@ -67,6 +71,8 @@ public final class BeanPass extends JavaPlugin implements Listener
         saveDefaultConfig();
         reloadConfig();
         config = getConfig();
+
+        skinManager = new SkinManager();
 
         // get season data
         HashMap<Integer, Level> seasonLevels = new HashMap<>();
@@ -112,7 +118,7 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                                 case "SKIN":
                                     String skinName = freeSection.getString("Skin");
-                                    freeReward = new SkinReward(Skins.database.get(skinName));
+                                    freeReward = new SkinReward(skinManager.getSkinByName(skinName.toLowerCase()));
                                     break;
                             }
                         }
@@ -136,7 +142,7 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                                 case "SKIN":
                                     String skinName = paidSection.getString("Skin");
-                                    premiumReward = new SkinReward(Skins.database.get(skinName));
+                                    premiumReward = new SkinReward(skinManager.getSkinByName(skinName));
                                     break;
                             }
                         }
@@ -149,19 +155,22 @@ public final class BeanPass extends JavaPlugin implements Listener
         int seasonNumber = config.getInt("Season", 1);
         season = new Season(seasonNumber, seasonLevels);
 
-        dataManager = new DataManager();
+        dataManager = new PlayerDataManager();
         questDifficulties = new QuestDifficulties();
         questManager = new QuestManager(config.getInt("QuestsPerPlayer", 5));
 
         // register event listeners to the plugin instance
         pluginManager.registerEvents(dataManager, this);
         pluginManager.registerEvents(questManager, this);
+        pluginManager.registerEvents(skinManager, this);
 
         // register the commands for the plugin instance
         main.getCommand("beanpass").setExecutor(new BeanPassCommand());
         main.getCommand("quests").setExecutor(new ViewQuests());
         main.getCommand("sethome").setExecutor(new SetHome());
     }
+
+    public FileConfiguration getBeanPassConfig() { return config; }
 
     @Override
     public void onDisable()

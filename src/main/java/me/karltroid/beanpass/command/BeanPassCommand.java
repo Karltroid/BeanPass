@@ -74,9 +74,9 @@ public class BeanPassCommand implements CommandExecutor
 
             PlayerData playerData = BeanPass.getInstance().getPlayerData(targetPlayerUUID);
             double oldXP = playerData.getXp();
-            playerData.addXp(xpChange);
 
             BeanPass.sendMessage(senderPlayer, ((xpChange > 0) ? "Increased " : "Decreased ") + targetPlayer.getName() + "'s xp by " + Math.abs(xpChange) + " (" + oldXP + " -> " + playerData.getXp() + ")");
+            playerData.addXp(xpChange);
             return true;
         }
 

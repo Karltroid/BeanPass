@@ -1,5 +1,7 @@
 package me.karltroid.beanpass.gui;
 
+import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.Skin;
 import org.bukkit.Material;
 
 public class Elements
@@ -117,6 +119,24 @@ public class Elements
         public BeanPassBackground(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
             super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10000);
+        }
+    }
+
+    static class EquipSkin extends ButtonElement implements Button
+    {
+        Skin skin;
+
+        public EquipSkin(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Skin skin)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, skin.getSkinApplicant(), skin.getId());
+            this.skin = skin;
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.playerData.equipSkin(skin, true);
+            BeanPass.getInstance().skinManager.updateInventorySkins(beanPassGUI.player, beanPassGUI.player.getInventory());
         }
     }
 }

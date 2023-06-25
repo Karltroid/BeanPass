@@ -1,8 +1,6 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.gui.BeanPassGUI;
-import me.karltroid.beanpass.quests.Quests;
 import me.karltroid.beanpass.quests.Quests.*;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -21,7 +19,7 @@ import java.util.UUID;
 import static org.bukkit.Bukkit.getLogger;
 
 
-public class DataManager implements Listener
+public class PlayerDataManager implements Listener
 {
     private static final String DATABASE_NAME = "database.db";
     private static final String PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.getInstance().getSeason().getId() + "_data";
@@ -31,7 +29,7 @@ public class DataManager implements Listener
     private static final String PLAYER_KILLING_QUESTS_TABLE_NAME = "player_killing_quests";
     private static final String PLAYER_EXPLORATION_QUESTS_TABLE_NAME = "player_exploration_quests";
 
-    public DataManager()
+    public PlayerDataManager()
     {
         createTables();
     }
@@ -62,6 +60,7 @@ public class DataManager implements Listener
                     "CREATE TABLE IF NOT EXISTS " + PLAYER_SKINS_TABLE_NAME + " ("
                             + "uuid VARCHAR(36) NOT NULL,"
                             + "skin_id VARCHAR(16) NOT NULL,"
+                            + "equipped BOOLEAN NOT NULL DEFAULT FALSE,"
                             + "PRIMARY KEY (uuid, skin_id)"
                             + ")"
             );
@@ -125,7 +124,7 @@ public class DataManager implements Listener
 
             PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), xp, lastKnownLevel, maxHomes);
 
-            try (PreparedStatement playerSkinsStatement = conn.prepareStatement("SELECT skin_id FROM player_skins WHERE uuid = ?"))
+            try (PreparedStatement playerSkinsStatement = conn.prepareStatement("SELECT * FROM player_skins WHERE uuid = ?"))
             {
                 playerSkinsStatement.setString(1, uuid.toString());
 
@@ -133,7 +132,9 @@ public class DataManager implements Listener
                     while (playerSkinsResult.next())
                     {
                         int skinID = Integer.parseInt(playerSkinsResult.getString("skin_id"));
-                        playerData.giveSkin(skinID);
+                        Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinID);
+                        if (playerSkinsResult.getBoolean("equipped")) playerData.equipSkin(skin, false);
+                        playerData.giveSkin(skin, false);
                     }
                 }
             }
@@ -241,7 +242,7 @@ public class DataManager implements Listener
                      "DELETE FROM player_skins WHERE uuid = ?"
              );
              PreparedStatement insertPlayerSkinStatement = conn.prepareStatement(
-                     "INSERT INTO player_skins (uuid, skin_id) VALUES (?, ?)"
+                     "INSERT INTO player_skins (uuid, skin_id, equipped) VALUES (?, ?, ?)"
              );
              PreparedStatement insertPlayerMiningQuestsStatement = conn.prepareStatement(
                      "INSERT INTO " + PLAYER_MINING_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_block_type) VALUES (?, ?, ?, ?, ?)" +
@@ -270,9 +271,11 @@ public class DataManager implements Listener
             deletePlayerSkinsStatement.executeUpdate();
 
             // Insert new player_skins for the player
-            for (Integer skinID : playerData.skins) {
+            for (Integer skinID : playerData.skins)
+            {
                 insertPlayerSkinStatement.setString(1, uuid.toString());
                 insertPlayerSkinStatement.setString(2, skinID.toString());
+                insertPlayerSkinStatement.setBoolean(3, playerData.equippedSkins.contains(BeanPass.getInstance().skinManager.getSkinById(skinID)));
                 insertPlayerSkinStatement.addBatch();
             }
             insertPlayerSkinStatement.executeBatch();

@@ -315,7 +315,6 @@ SeasonLevels:
         Amount: 1
       Paid:
         Type: SKIN
-        Item: carved_pumpkin
         Skin: witch_hat
   4:
     XP: 40
@@ -335,10 +334,6 @@ SeasonLevels:
       Free:
         Type: MONEY
         Amount: 25
-      Paid:
-        Type: SKIN
-        Item: wooden_sword
-        Skin: wooden_club
   7:
     XP: 75
     Reward:
@@ -351,6 +346,9 @@ SeasonLevels:
       Free:
         Type: SET_HOME
         Amount: 1
+      Paid:
+        Type: SKIN
+        Skin: top_hat
   9:
     XP: 105
     Reward:
@@ -381,6 +379,9 @@ SeasonLevels:
       Free:
         Type: SET_HOME
         Amount: 1
+      Paid:
+        Type: SKIN
+        Skin: santa_hat
   14:
     XP: 200
     Reward:
@@ -393,3 +394,14 @@ SeasonLevels:
       Free:
         Type: MONEY
         Amount: 60
+
+Skins:
+  witch_hat:
+    Material: CARVED_PUMPKIN
+    ID: 116
+  top_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10009
+  santa_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10010

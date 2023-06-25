@@ -2,6 +2,7 @@ package me.karltroid.beanpass.data;
 
 import com.earth2me.essentials.User;
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.Button;
 import me.karltroid.beanpass.quests.Quests;
@@ -11,6 +12,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +21,10 @@ import java.util.UUID;
 
 public class PlayerData
 {
-    final UUID UUID;
+    OfflinePlayer player;
     Boolean premium;
     List<Integer> skins;
+    List<Skin> equippedSkins = new ArrayList<>();
 
     // current season data
     double xp;
@@ -31,7 +34,7 @@ public class PlayerData
 
     public PlayerData(UUID UUID, boolean premium, List<Integer> skins, double xp, int lastKnownLevel, int maxHomes)
     {
-        this.UUID = UUID;
+        this.player = Bukkit.getOfflinePlayer(UUID);
         this.premium = premium;
         this.skins = skins;
         this.xp = xp;
@@ -42,7 +45,48 @@ public class PlayerData
     }
 
     public void setPremiumPass(boolean hasPass) { this.premium = hasPass; }
-    public void giveSkin(int skinID) { if (this.skins.contains(skinID)) return; this.skins.add(skinID); }
+    public void giveSkin(Skin skin, boolean alert)
+    {
+        if (skins.contains(skin.getId()))
+        {
+            if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + skin.getName() + " but you already own this skin.");
+            return;
+        }
+        if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "You were given a " + skin.getName() + "! Equip it in the /skins menu!");
+        skins.add(skin.getId());
+    }
+    public void giveSkinById(Integer skinId, boolean alert)
+    {
+        Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
+        if (hasSkin(skinId))
+        {
+            if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + skin.getName() + " but you already own this skin.");
+            return;
+        }
+        skins.add(skinId);
+    }
+    public void equipSkin(Skin skin, boolean alert)
+    {
+        for (Skin equippedSkin : equippedSkins)
+        {
+            if (equippedSkin.getSkinApplicant() == skin.getSkinApplicant())
+            {
+                unequipSkin(equippedSkin);
+                break;
+            }
+        }
+
+        if (alert) BeanPass.sendMessage(player, "Equipped skin! The " + skin.getName().toLowerCase().replace("_", " ") + " will appear on any " + skin.skinApplicant.name().toLowerCase().replace("_", " ") + " you equip now.");
+        equippedSkins.add(skin);
+    }
+    public void unequipSkin(Skin skin)
+    {
+        equippedSkins.remove(skin);
+    }
+    public List<Integer> getAllOwnedSkinIds()
+    {
+        return skins;
+    }
     public void removeSkin(int skinID) { this.skins.removeIf( hat -> hat.equals(skinID)); }
     public boolean hasSkin(int skinID) { return skins.contains(skinID); }
     public int getLevel() // calculate and return the players level based on their xp and each levels required xp
@@ -68,10 +112,10 @@ public class PlayerData
         this.xp += xp;
         int afterLevel = getLevel();
 
-        Player player = Bukkit.getPlayer(getUUID());
-        if (BeanPass.getInstance().activeGUIs.containsKey(player))
+        Player p = (player.getPlayer());
+        if (BeanPass.getInstance().activeGUIs.containsKey(p))
         {
-            BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(player);
+            BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(p);
             beanPassGUI.reloadLevelElements();
         }
 
@@ -143,7 +187,12 @@ public class PlayerData
             fireworkMeta.setPower(l);
             firework.setFireworkMeta(fireworkMeta);
 
-            BeanPass.getInstance().getSeason().getLevel(l).getFreeReward().giveReward(getUUID());
+            Reward freeReward = BeanPass.getInstance().getSeason().getLevel(l).getFreeReward();
+            if (freeReward != null) freeReward.giveReward(getUUID());
+
+            // in the future check if they have premium !!!!!!!!
+            Reward premiumReward = BeanPass.getInstance().getSeason().getLevel(l).getPremiumReward();
+            if (premiumReward != null) premiumReward.giveReward(getUUID());
         }
 
         if (BeanPass.getInstance().activeGUIs.containsKey(player))
@@ -155,11 +204,11 @@ public class PlayerData
         lastKnownLevel = newLevel;
     }
 
-    public UUID getUUID() { return UUID; }
+    public UUID getUUID() { return player.getUniqueId(); }
 
     public Quest giveQuest(Quest quest)
     {
-        if (quest == null) quest = Quests.getRandomQuestType(UUID.toString());
+        if (quest == null) quest = Quests.getRandomQuestType( getUUID().toString());
 
         quests.add(quest);
         return quest;

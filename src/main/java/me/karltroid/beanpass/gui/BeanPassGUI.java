@@ -7,7 +7,7 @@ import me.karltroid.beanpass.Rewards.SetHomeReward;
 import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.data.Level;
 import me.karltroid.beanpass.data.PlayerData;
-import me.karltroid.beanpass.data.Skins.Skin;
+import me.karltroid.beanpass.data.Skin;
 import me.karltroid.beanpass.gui.Elements.*;
 import me.karltroid.beanpass.quests.Quests;
 import net.md_5.bungee.api.ChatColor;
@@ -19,6 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -151,7 +152,8 @@ public class BeanPassGUI implements Listener
         loadElement(new SkinsTitle(this, true, 3.1, 0, 25, 1f), null);
 
         Material[] categories = new Material[] { Material.CARVED_PUMPKIN, Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE };
-
+        List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
+        
         double firstRowYPosition = 10.0;
         double firstColumnXPosition = -35.0;
         double columnSpacing = Math.abs((firstColumnXPosition * 2)/(categories.length - 1));
@@ -161,12 +163,31 @@ public class BeanPassGUI implements Listener
         {
             double columnXPosition = firstColumnXPosition + (x * columnSpacing);
             loadElement(new VisualElement(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, categories[x], 0), null);
-
+            List<Skin> ownedSkinsInCategory = new ArrayList<>();
+            for (Integer skinId : ownedSkins)
+            {
+                Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
+                if (skin.getSkinApplicant() == categories[x])
+                    ownedSkinsInCategory.add(skin);
+            }
+            
             for(int y = 0; y < skinsPerColumn; y++)
             {
                 // for loop through players skins of this material
                 double columnYPosition = firstRowYPosition - (y * rowSpacing);
-                loadElement(new ButtonElement(this, false, 3, columnXPosition, columnYPosition, 0.25f, Material.BARRIER, 0), null);
+
+                Skin skin = null;
+                try
+                {
+                    skin = ownedSkinsInCategory.get(y);
+                }
+                catch (Exception e)
+                {
+                    // do nothing
+                }
+
+                if (skin == null) loadElement(new VisualElement(this, false, 3, columnXPosition, columnYPosition, 0.25f, Material.BARRIER, 0), null);
+                else loadElement(new EquipSkin(this, false, 3, columnXPosition, columnYPosition, 0.25f, skin), null);
             }
         }
 
@@ -246,7 +267,7 @@ public class BeanPassGUI implements Listener
                     SkinReward skinReward = (SkinReward) premiumReward;
                     Skin skin = skinReward.getSkin();
                     if (skin == null) continue;
-                    loadElement(new VisualElement(this, false, 3, xAngle, -6, 0.5f, skin.getSKIN_APPLICANT(), skin.getCUSTOM_MODEL_DATA()), allLevelRewardElements);
+                    loadElement(new VisualElement(this, false, 3, xAngle, -6, 0.5f, skin.getSkinApplicant(), skin.getId()), allLevelRewardElements);
                 }
             }
         }
