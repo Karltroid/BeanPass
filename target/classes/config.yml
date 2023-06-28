@@ -394,6 +394,39 @@ SeasonLevels:
       Free:
         Type: MONEY
         Amount: 60
+  16:
+    XP: 250
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 65
+  17:
+    XP: 275
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 70
+  18:
+    XP: 300
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 1
+      Paid:
+        Type: SKIN
+        Skin: hard_hat
+  19:
+    XP: 350
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 85
+  20:
+    XP: 400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
 
 Skins:
   witch_hat:
@@ -405,3 +438,6 @@ Skins:
   santa_hat:
     Material: CARVED_PUMPKIN
     ID: 10010
+  hard_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10011

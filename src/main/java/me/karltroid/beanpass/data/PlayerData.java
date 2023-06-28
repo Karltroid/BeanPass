@@ -40,8 +40,6 @@ public class PlayerData
         this.xp = xp;
         this.lastKnownLevel = lastKnownLevel;
         this.maxHomes = maxHomes;
-
-        if (lastKnownLevel < getLevel()) leveledUp(); // level up player if they got xp while offline
     }
 
     public void setPremiumPass(boolean hasPass) { this.premium = hasPass; }

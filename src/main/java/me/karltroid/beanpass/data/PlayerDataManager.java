@@ -123,6 +123,8 @@ public class PlayerDataManager implements Listener
             }
 
             PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), xp, lastKnownLevel, maxHomes);
+            BeanPass.getInstance().addPlayerData(uuid, playerData);
+            if (lastKnownLevel < playerData.getLevel()) playerData.leveledUp(); // level up player if they got xp while offline
 
             try (PreparedStatement playerSkinsStatement = conn.prepareStatement("SELECT * FROM player_skins WHERE uuid = ?"))
             {
@@ -219,8 +221,6 @@ public class PlayerDataManager implements Listener
 
             while (playerData.getQuests().size() < BeanPass.getInstance().questManager.getQuestsPerPlayer())
                 playerData.giveQuest(null);
-
-            BeanPass.getInstance().addPlayerData(uuid, playerData);
         }
         catch (SQLException e)
         {

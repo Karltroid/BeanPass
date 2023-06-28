@@ -19,6 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ public class BeanPassGUI implements Listener
     final static int LEVELS_PER_PAGE = 5;
 
     GUIMenu currentMenu;
+    BukkitTask interactionLoop;
 
     public BeanPassGUI(Player player, GUIMenu guiMenu)
     {
@@ -77,7 +79,8 @@ public class BeanPassGUI implements Listener
 
         BeanPass.getInstance().activeGUIs.put(player, this);
 
-        new BukkitRunnable() {
+        this.interactionLoop = new BukkitRunnable()
+        {
             public void run()
             {
                 Location playerLocation = player.getLocation();
@@ -87,8 +90,8 @@ public class BeanPassGUI implements Listener
                 double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
                 if (distance > 5)
                 {
-                    cancel();
                     closeEntireGUI();
+                    return;
                 }
 
                 ButtonElement newSelectedElement = null;
@@ -313,6 +316,8 @@ public class BeanPassGUI implements Listener
 
         closeElementList(allElements);
 
+        interactionLoop.cancel();
+        interactionLoop = null;
         BeanPass.getInstance().activeGUIs.remove(player);
     }
 
