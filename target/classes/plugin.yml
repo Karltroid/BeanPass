@@ -27,3 +27,9 @@ commands:
     permission: beanpass.user
     aliases: [ esethome, createhome, ecreatehome ]
     executor: me.karltroid.beanpass.command.ViewQuests
+  mounttest:
+    description: Testing mounts
+    usage: /mounttest
+    permission: beanpass.admin
+    aliases: [ mount ]
+    executor: me.karltroid.beanpass.command.MountTest

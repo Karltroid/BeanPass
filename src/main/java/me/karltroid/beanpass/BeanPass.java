@@ -1,15 +1,19 @@
 package me.karltroid.beanpass;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
 import me.karltroid.beanpass.Rewards.MoneyReward;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.Rewards.SetHomeReward;
 import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.command.BeanPassCommand;
+import me.karltroid.beanpass.command.MountTest;
 import me.karltroid.beanpass.command.SetHome;
 import me.karltroid.beanpass.command.ViewQuests;
 import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.mounts.MountManager;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
 import net.milkbowl.vault.economy.Economy;
@@ -46,13 +50,24 @@ public final class BeanPass extends JavaPlugin implements Listener
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
     private Economy econ = null;
     private Essentials ess;
+    private ProtocolManager protocolManager;
 
     public SkinManager skinManager;
+    public MountManager mountManager;
 
     @Override
     public void onEnable()
     {
         main = this; // set singleton instance of the plugin
+
+        if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
+            getLogger().severe("ProtocolLib not found. Disabling the plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        // Initialize ProtocolManager
+        protocolManager = ProtocolLibrary.getProtocolManager();
 
         ess = (Essentials) Bukkit.getServer().getPluginManager().getPlugin("Essentials");
         if (ess == null)
@@ -73,6 +88,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         config = getConfig();
 
         skinManager = new SkinManager();
+        mountManager = new MountManager();
 
         // get season data
         HashMap<Integer, Level> seasonLevels = new HashMap<>();
@@ -163,11 +179,13 @@ public final class BeanPass extends JavaPlugin implements Listener
         pluginManager.registerEvents(dataManager, this);
         pluginManager.registerEvents(questManager, this);
         pluginManager.registerEvents(skinManager, this);
+        pluginManager.registerEvents(mountManager, this);
 
         // register the commands for the plugin instance
         main.getCommand("beanpass").setExecutor(new BeanPassCommand());
         main.getCommand("quests").setExecutor(new ViewQuests());
         main.getCommand("sethome").setExecutor(new SetHome());
+        main.getCommand("mounttest").setExecutor(new MountTest());
     }
 
     public FileConfiguration getBeanPassConfig() { return config; }
@@ -236,5 +254,13 @@ public final class BeanPass extends JavaPlugin implements Listener
 
         Player player = (Player) p;
         player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[BeanPass] " + ChatColor.RESET + message);
+    }
+
+    public ProtocolManager getProtocolManager() {
+        return protocolManager;
+    }
+
+    public MountManager getMountManager() {
+        return mountManager;
     }
 }
