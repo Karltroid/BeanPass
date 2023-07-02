@@ -8,8 +8,13 @@ import com.comphenix.protocol.reflect.StructureModifier;
 import me.karltroid.beanpass.BeanPass;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -17,56 +22,43 @@ import java.util.List;
 
 public class MountInstance
 {
-    Player mountOwner;
-    Entity preMountEntity;
+    Player player;
+    Entity mountEntity;
     Mount mount;
+    ArmorStand customModelDisplay;
 
-    // 0 = baby horse for applying velocity and stepping up blocks
-    // 1...x = armor stands for height and displaying custom model at top
-    List<Entity> mountStructure = new ArrayList<>();
-
-    public MountInstance(Player mountOwner, Entity preMountEntity, Mount mount)
+    public MountInstance(Player player, Entity preMountEntity, Mount mount)
     {
-        //this.preMountEntity = preMountEntity;
-        this.mountOwner = mountOwner;
+        this.player = player;
         this.mount = mount;
+        this.mountEntity = preMountEntity;
 
-        Location mountOwnerLocation = mountOwner.getLocation();
+        Location mountOwnerLocation = player.getLocation();
         World world = mountOwnerLocation.getWorld();
 
-        Horse mountBase = (Horse) world.spawnEntity(mountOwnerLocation, EntityType.HORSE);
+        Horse mountBase = (Horse)preMountEntity;
         mountBase.setBaby();
-        mountBase.setOwner(mountOwner);
-        mountBase.setTamed(true);
-        mountStructure.add(mountBase);
+        mountBase.setInvisible(true);
 
-        List<ArmorStand> mountHeightAndDisplay = new ArrayList<>();
-        for (int i = 0; i < mount.getHeight(); i++)
-        {
-            ArmorStand armorStand = (ArmorStand)world.spawnEntity(mountOwnerLocation, EntityType.ARMOR_STAND);
-            armorStand.setSmall(true);
-            // if i == last i, put custom model on head.
-            mountHeightAndDisplay.add(armorStand);
-        }
-        mountStructure.addAll(mountHeightAndDisplay);
+        ArmorStand armorStand = (ArmorStand)world.spawnEntity(mountOwnerLocation, EntityType.ARMOR_STAND);
+        armorStand.setMarker(true);
+        armorStand.setInvisible(true);
+        ItemStack customModel = new ItemStack(Material.GLASS_BOTTLE);
+        ItemMeta customModelMeta = customModel.getItemMeta();
+        customModelMeta.setCustomModelData(10010);
+        customModel.setItemMeta(customModelMeta);
+        armorStand.getEquipment().setHelmet(customModel);
 
-        // stack all the mountStructure entities together
-        for (int i = 1; i < mountStructure.size(); i++) mountStructure.get(i-1).addPassenger(mountStructure.get(i));
-        mountStructure.get(mountStructure.size()-1).addPassenger(mountOwner);
+        this.customModelDisplay = armorStand;
+        player.addPassenger(armorStand);
     }
 
-    public void updateMountMovement(float xVel, float zVel)
+    public void updateMountMovement()
     {
-        float speed = 1.1f;
-        Horse mountBase = (Horse) mountStructure.get(0);
-        Location playerEyeLocation = mountOwner.getEyeLocation();
-        Vector playerDirection = playerEyeLocation.getDirection().normalize();
+        // Get the player's yaw
+        float yaw = player.getEyeLocation().getYaw();
 
-        // Calculate the direction relative to the player's side movement
-        Vector rightDirection = playerDirection.clone().crossProduct(new Vector(0, 1, 0)).normalize().multiply(-1);
-        Vector velocity = playerDirection.clone().multiply(speed*zVel).add(rightDirection.clone().multiply(xVel));
-        velocity.setY(mountBase.getVelocity().getY());
-
-        mountBase.setVelocity(velocity);
+        // Set the armor stand's rotation
+        customModelDisplay.setRotation(yaw, 0);
     }
 }

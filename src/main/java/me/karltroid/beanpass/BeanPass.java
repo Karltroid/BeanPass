@@ -8,7 +8,6 @@ import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.Rewards.SetHomeReward;
 import me.karltroid.beanpass.Rewards.SkinReward;
 import me.karltroid.beanpass.command.BeanPassCommand;
-import me.karltroid.beanpass.command.MountTest;
 import me.karltroid.beanpass.command.SetHome;
 import me.karltroid.beanpass.command.ViewQuests;
 import me.karltroid.beanpass.data.*;
@@ -30,9 +29,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public final class BeanPass extends JavaPlugin implements Listener
@@ -185,7 +182,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("beanpass").setExecutor(new BeanPassCommand());
         main.getCommand("quests").setExecutor(new ViewQuests());
         main.getCommand("sethome").setExecutor(new SetHome());
-        main.getCommand("mounttest").setExecutor(new MountTest());
     }
 
     public FileConfiguration getBeanPassConfig() { return config; }

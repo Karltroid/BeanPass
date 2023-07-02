@@ -7,7 +7,6 @@ me\karltroid\beanpass\quests\QuestDifficulties$QuestDifficulty.class
 me\karltroid\beanpass\gui\Elements$BeanPassTitle.class
 me\karltroid\beanpass\gui\Elements.class
 me\karltroid\beanpass\gui\Elements$OpenGetPremiumPage.class
-me\karltroid\beanpass\command\MountTest.class
 me\karltroid\beanpass\gui\BeanPassGUI.class
 me\karltroid\beanpass\quests\Quests$LumberQuest.class
 me\karltroid\beanpass\Rewards\SkinReward.class
