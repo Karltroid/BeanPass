@@ -9,18 +9,30 @@ commands:
     usage: /beanpass
     permission: beanpass.user
     aliases: [ bp ]
-    executor: me.karltroid.beanpass.command.BeanPassCommand
   beanpass-addxp:
     description: Modify a player's BeanPass season XP
     usage: /beanpass addxp <player> <amount>
     permission: beanpass.admin
-    executor: me.karltroid.beanpass.command.BeanPassCommand
   quests:
-    description: View the player's active quests
+    description: View your active quests to complete
     usage: /quests
     permission: beanpass.user
     aliases: [ quest ]
-    executor: me.karltroid.beanpass.command.ViewQuests
+  mounts:
+    description: View and select your unlocked mounts
+    usage: /mounts
+    permission: beanpass.user
+    aliases: [ mount ]
+  hats:
+    description: View and select your unlocked hats
+    usage: /hats
+    permission: beanpass.user
+    aliases: [ hat ]
+  tools:
+    description: View and select your unlocked tool skins
+    usage: /tools
+    permission: beanpass.user
+    aliases: [ tool ]
   sethome:
     description: Set a home that you can teleport to with /home "<home nickname>" later
     usage: /sethome

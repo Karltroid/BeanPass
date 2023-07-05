@@ -3,15 +3,21 @@ package me.karltroid.beanpass.command;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.GUIMenu;
-import me.karltroid.beanpass.quests.Quests;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class ViewQuests implements CommandExecutor
+public class OpenBeanPassPage implements CommandExecutor
 {
+    GUIMenu menu;
+
+    public OpenBeanPassPage(GUIMenu menu)
+    {
+        this.menu = menu;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
@@ -29,7 +35,10 @@ public class ViewQuests implements CommandExecutor
             return false;
         }
 
-        new BeanPassGUI(senderPlayer, GUIMenu.Quests);
+        BeanPassGUI playerBeanPassGUI = BeanPass.getInstance().activeGUIs.get(senderPlayer);
+        if (playerBeanPassGUI != null) playerBeanPassGUI.loadMenu(menu);
+        else new BeanPassGUI(senderPlayer, menu);
+
         return true;
     }
 }

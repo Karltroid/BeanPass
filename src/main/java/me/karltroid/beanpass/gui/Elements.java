@@ -2,6 +2,7 @@ package me.karltroid.beanpass.gui;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.Skin;
+import me.karltroid.beanpass.mounts.Mount;
 import org.bukkit.Material;
 
 public class Elements
@@ -48,9 +49,37 @@ public class Elements
         }
     }
 
-    static class OpenSkinsPage extends ButtonElement implements Button
+    static class OpenHatsPage extends ButtonElement implements Button
     {
-        public OpenSkinsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        public OpenHatsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10014);
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.loadHatsMenu();
+        }
+    }
+
+    static class OpenMountsPage extends ButtonElement implements Button
+    {
+        public OpenMountsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10015);
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.loadMountsMenu();
+        }
+    }
+
+    static class OpenRewardsPage extends ButtonElement implements Button
+    {
+        public OpenRewardsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
             super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10004);
         }
@@ -58,7 +87,21 @@ public class Elements
         @Override
         public void click()
         {
-            beanPassGUI.loadSkinsMenu();
+            beanPassGUI.loadRewardsMenu();
+        }
+    }
+
+    static class OpenToolsPage extends ButtonElement implements Button
+    {
+        public OpenToolsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10016);
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.loadToolsMenu();
         }
     }
 
@@ -98,11 +141,35 @@ public class Elements
         }
     }
 
-    static class SkinsTitle extends VisualElement
+    static class RewardsTitle extends VisualElement
     {
-        public SkinsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        public RewardsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
             super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10009);
+        }
+    }
+
+    static class HatsTitle extends VisualElement
+    {
+        public HatsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10011);
+        }
+    }
+
+    static class MountsTitle extends VisualElement
+    {
+        public MountsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10012);
+        }
+    }
+
+    static class ToolsTitle extends VisualElement
+    {
+        public ToolsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10013);
         }
     }
 
@@ -137,6 +204,24 @@ public class Elements
         {
             beanPassGUI.playerData.equipSkin(skin, true);
             BeanPass.getInstance().skinManager.updateInventorySkins(beanPassGUI.player, beanPassGUI.player.getInventory());
+        }
+    }
+
+    static class EquipMount extends ButtonElement implements Button
+    {
+        Mount mount;
+
+        public EquipMount(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Mount mount)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, mount.getId());
+            this.mount = mount;
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.playerData.equipMount(mount, true);
+            BeanPass.getInstance().mountManager.changeActiveMount(beanPassGUI.player, mount);
         }
     }
 }

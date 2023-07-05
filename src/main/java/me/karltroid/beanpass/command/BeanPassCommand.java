@@ -40,7 +40,10 @@ public class BeanPassCommand implements CommandExecutor
                 return false;
             }
 
-            new BeanPassGUI(senderPlayer, GUIMenu.BeanPass);
+            BeanPassGUI playerBeanPassGUI = BeanPass.getInstance().activeGUIs.get(senderPlayer);
+            if (playerBeanPassGUI != null) playerBeanPassGUI.loadMenu(GUIMenu.BeanPass);
+            else new BeanPassGUI(senderPlayer, GUIMenu.BeanPass);
+
             return true;
         }
         else if (args[0].equalsIgnoreCase("addxp"))

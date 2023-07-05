@@ -441,3 +441,8 @@ Skins:
   hard_hat:
     Material: CARVED_PUMPKIN
     ID: 10011
+
+Mounts:
+  lamborghini_jalpa:
+    Entity: HORSE
+    ID: 10012

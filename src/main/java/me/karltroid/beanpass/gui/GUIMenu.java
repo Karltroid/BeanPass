@@ -2,7 +2,10 @@ package me.karltroid.beanpass.gui;
 
 public enum GUIMenu
 {
-    BeanPass,
+    BeanPass, // main home page of bean pass menu, displaying season level rewards
     Quests,
-    Skins
+    Rewards,
+    Hats,
+    Tools,
+    Mounts
 }

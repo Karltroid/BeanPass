@@ -1,19 +1,19 @@
 package me.karltroid.beanpass.gui;
 
 import me.karltroid.beanpass.BeanPass;
-import me.karltroid.beanpass.Rewards.MoneyReward;
-import me.karltroid.beanpass.Rewards.Reward;
-import me.karltroid.beanpass.Rewards.SetHomeReward;
-import me.karltroid.beanpass.Rewards.SkinReward;
+import me.karltroid.beanpass.Rewards.*;
 import me.karltroid.beanpass.data.Level;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.data.Skin;
 import me.karltroid.beanpass.gui.Elements.*;
+import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.quests.Quests;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -60,31 +60,22 @@ public class BeanPassGUI implements Listener
 
         player.setGameMode(GameMode.ADVENTURE);
 
-        switch (guiMenu)
-        {
-            case BeanPass:
-                loadBeanPassMenu();
-                break;
-            case Quests:
-                loadQuestsMenu();
-                break;
-            default:
-                Bukkit.getLogger().warning("gui menu does not exist, loading BeanPass menu.");
-                loadBeanPassMenu();
-                break;
-        }
-
+        loadMenu(guiMenu);
 
         BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
-
         BeanPass.getInstance().activeGUIs.put(player, this);
 
         this.interactionLoop = new BukkitRunnable()
         {
             public void run()
             {
-                Location playerLocation = player.getLocation();
-                playerLocation.add(0, player.getEyeHeight(), 0);
+                if (allElements.size() == 0 || BeanPass.getInstance().getEssentials().getUser(player).isAfk())
+                {
+                    closeEntireGUI();
+                    return;
+                }
+
+                Location playerLocation = player.getEyeLocation();
 
                 Location firstElementLocation = allElements.get(0).location;
                 double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
@@ -112,7 +103,36 @@ public class BeanPassGUI implements Listener
                 if (selectedButtonElement != null) selectedButtonElement.select();
 
             }
-        }.runTaskTimer(BeanPass.getInstance(),0,0);
+        }.runTaskTimer(BeanPass.getInstance(),0,2);
+    }
+
+    public void loadMenu(GUIMenu menu)
+    {
+        switch (menu)
+        {
+            case BeanPass:
+                loadBeanPassMenu();
+                break;
+            case Quests:
+                loadQuestsMenu();
+                break;
+            case Rewards:
+                loadRewardsMenu();
+                break;
+            case Mounts:
+                loadMountsMenu();
+                break;
+            case Hats:
+                loadHatsMenu();
+                break;
+            case Tools:
+                loadToolsMenu();
+                break;
+            default:
+                Bukkit.getLogger().warning("gui menu does not exist, loading BeanPass menu.");
+                loadBeanPassMenu();
+                break;
+        }
     }
 
     void loadBeanPassMenu()
@@ -147,12 +167,30 @@ public class BeanPassGUI implements Listener
         displayNavigationButtons();
     }
 
-    public void loadSkinsMenu()
+    public void loadRewardsMenu()
     {
-        this.currentMenu = GUIMenu.Skins;
+        this.currentMenu = GUIMenu.Rewards;
         closeElementList(allElements);
 
-        loadElement(new SkinsTitle(this, true, 3.1, 0, 25, 1f), null);
+        loadElement(new RewardsTitle(this, true, 3.1, 0, 25, 1f), null);
+
+        loadElement(new TextElement(this, false, 3, 0, 15, 0.75f, ChatColor.GREEN + "Balance: $" + BeanPass.getInstance().getEconomy().getBalance(player)), null);
+        loadElement(new TextElement(this, false, 3, 0, 10, 0.75f, ChatColor.YELLOW + "Homes: " + BeanPass.getInstance().getEssentials().getUser(player.getUniqueId()).getHomes().size() + " / " + playerData.getMaxHomes() + " used"), null);
+
+
+        loadElement(new OpenMountsPage(this, false,3, -25, 0, 0.50f), null);
+        loadElement(new OpenHatsPage(this, false,3, 0, 0, 0.50f), null);
+        loadElement(new OpenToolsPage(this, false,3, 25, 0, 0.50f), null);
+
+        displayNavigationButtons();
+    }
+
+    public void loadHatsMenu()
+    {
+        this.currentMenu = GUIMenu.Hats;
+        closeElementList(allElements);
+
+        loadElement(new HatsTitle(this, true, 3.1, 0, 25, 1f), null);
 
         Material[] categories = new Material[] { Material.CARVED_PUMPKIN, Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE };
         List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
@@ -197,6 +235,68 @@ public class BeanPassGUI implements Listener
         displayNavigationButtons();
     }
 
+    public void loadMountsMenu()
+    {
+        this.currentMenu = GUIMenu.Mounts;
+        closeElementList(allElements);
+
+        loadElement(new MountsTitle(this, true, 3.1, 0, 25, 1f), null);
+
+        loadElement(new EquipMount(this, false, 3, 0, 0, 0.3f, new Mount("lambo", 10010, EntityType.HORSE)), null);
+
+        displayNavigationButtons();
+    }
+
+    public void loadToolsMenu()
+    {
+        this.currentMenu = GUIMenu.Tools;
+        closeElementList(allElements);
+
+        loadElement(new ToolsTitle(this, true, 3.1, 0, 25, 1f), null);
+
+        Material[] categories = new Material[] { Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE, Material.BOW, Material.CROSSBOW };
+        List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
+
+        double firstRowYPosition = 10.0;
+        double firstColumnXPosition = -35.0;
+        double columnSpacing = Math.abs((firstColumnXPosition * 2)/(categories.length - 1));
+        int skinsPerColumn = 4;
+        double rowSpacing = Math.abs((firstRowYPosition * 1.7)/(skinsPerColumn - 1));
+        for(int x = 0; x < categories.length; x++)
+        {
+            double columnXPosition = firstColumnXPosition + (x * columnSpacing);
+            loadElement(new VisualElement(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, categories[x], 0), null);
+            List<Skin> ownedSkinsInCategory = new ArrayList<>();
+            for (Integer skinId : ownedSkins)
+            {
+                Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
+                if (skin.getSkinApplicant() == categories[x])
+                    ownedSkinsInCategory.add(skin);
+            }
+
+            for(int y = 0; y < skinsPerColumn; y++)
+            {
+                // for loop through players skins of this material
+                double columnYPosition = firstRowYPosition - (y * rowSpacing);
+
+                Skin skin = null;
+                try
+                {
+                    skin = ownedSkinsInCategory.get(y);
+                }
+                catch (Exception e)
+                {
+                    // do nothing
+                }
+
+                if (skin == null) loadElement(new VisualElement(this, false, 3, columnXPosition, columnYPosition, 0.25f, Material.BARRIER, 0), null);
+                else loadElement(new EquipSkin(this, false, 3, columnXPosition, columnYPosition, 0.25f, skin), null);
+            }
+        }
+
+        displayNavigationButtons();
+    }
+
     public void reloadLevelElements()
     {
         if (allLevelRewardElements.isEmpty()) return;
@@ -217,7 +317,7 @@ public class BeanPassGUI implements Listener
     {
         loadElement(new OpenBeanPassPage(this, true,3, -29, -27, 0.48f), null);
         loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
-        loadElement(new OpenSkinsPage(this, true,3, 29, -27, 0.48f), null);
+        loadElement(new OpenRewardsPage(this, true,3, 29, -27, 0.48f), null);
     }
 
     void displayLevelData()
@@ -272,6 +372,13 @@ public class BeanPassGUI implements Listener
                     if (skin == null) continue;
                     loadElement(new VisualElement(this, false, 3, xAngle, -6, 0.5f, skin.getSkinApplicant(), skin.getId()), allLevelRewardElements);
                 }
+                else if (premiumReward instanceof MountReward)
+                {
+                    MountReward mountReward = (MountReward) premiumReward;
+                    Mount mount = mountReward.getMount();
+                    if (mount == null) continue;
+                    //loadElement(new VisualElement(this, false, 3, xAngle, -6, 0.5f, mount.getMountApplicant(), mount.getId()), allLevelRewardElements);
+                }
             }
         }
     }
@@ -318,6 +425,7 @@ public class BeanPassGUI implements Listener
 
         interactionLoop.cancel();
         interactionLoop = null;
+        HandlerList.unregisterAll(this);
         BeanPass.getInstance().activeGUIs.remove(player);
     }
 

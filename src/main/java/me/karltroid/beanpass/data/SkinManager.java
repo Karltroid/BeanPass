@@ -85,8 +85,10 @@ public class SkinManager implements Listener
         if (inventory instanceof PlayerInventory) playerEquippedSkins = BeanPass.getInstance().getPlayerData(player.getUniqueId()).equippedSkins;
 
         int skinId = -1;
-        for (Skin skin : playerEquippedSkins) {
-            if (skin.getSkinApplicant() == item.getType()) {
+        for (Skin skin : playerEquippedSkins)
+        {
+            if (skin.getSkinApplicant() == item.getType())
+            {
                 skinId = skin.getId();
                 break;
             }
@@ -164,7 +166,6 @@ public class SkinManager implements Listener
     public Skin getSkinByName(String name)
     {
         Skin foundSkin = null;
-        System.out.println(skins.size() + "\n" + skins);
         for(Skin skin : skins)
         {
             if (!skin.getName().equals(name.toLowerCase())) continue;

@@ -3,15 +3,11 @@ package me.karltroid.beanpass;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
-import me.karltroid.beanpass.Rewards.MoneyReward;
-import me.karltroid.beanpass.Rewards.Reward;
-import me.karltroid.beanpass.Rewards.SetHomeReward;
-import me.karltroid.beanpass.Rewards.SkinReward;
-import me.karltroid.beanpass.command.BeanPassCommand;
-import me.karltroid.beanpass.command.SetHome;
-import me.karltroid.beanpass.command.ViewQuests;
+import me.karltroid.beanpass.Rewards.*;
+import me.karltroid.beanpass.command.*;
 import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.mounts.MountManager;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
@@ -133,6 +129,10 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     String skinName = freeSection.getString("Skin");
                                     freeReward = new SkinReward(skinManager.getSkinByName(skinName.toLowerCase()));
                                     break;
+                                case "MOUNT":
+                                    String mountName = freeSection.getString("Mount");
+                                    freeReward = new MountReward(mountManager.getMountByName(mountName.toLowerCase()));
+                                    break;
                             }
                         }
 
@@ -155,7 +155,11 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                                 case "SKIN":
                                     String skinName = paidSection.getString("Skin");
-                                    premiumReward = new SkinReward(skinManager.getSkinByName(skinName));
+                                    premiumReward = new SkinReward(skinManager.getSkinByName(skinName.toLowerCase()));
+                                    break;
+                                case "MOUNT":
+                                    String mountName = freeSection.getString("Mount");
+                                    premiumReward = new MountReward(mountManager.getMountByName(mountName.toLowerCase()));
                                     break;
                             }
                         }
@@ -180,7 +184,10 @@ public final class BeanPass extends JavaPlugin implements Listener
 
         // register the commands for the plugin instance
         main.getCommand("beanpass").setExecutor(new BeanPassCommand());
-        main.getCommand("quests").setExecutor(new ViewQuests());
+        main.getCommand("quests").setExecutor(new OpenBeanPassPage(GUIMenu.Quests));
+        main.getCommand("mounts").setExecutor(new OpenBeanPassPage(GUIMenu.Mounts));
+        main.getCommand("hats").setExecutor(new OpenBeanPassPage(GUIMenu.Hats));
+        main.getCommand("tools").setExecutor(new OpenBeanPassPage(GUIMenu.Tools));
         main.getCommand("sethome").setExecutor(new SetHome());
     }
 
@@ -194,6 +201,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         {
             dataManager.savePlayerData(player.getUniqueId());
             if (activeGUIs.containsKey(player)) activeGUIs.get(player).closeEntireGUI();
+            mountManager.destroyMountInstance(player);
         }
 
         // save config settings

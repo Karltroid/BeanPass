@@ -5,6 +5,7 @@ import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.Button;
+import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.quests.Quests;
 import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.*;
@@ -23,8 +24,10 @@ public class PlayerData
 {
     OfflinePlayer player;
     Boolean premium;
-    List<Integer> skins;
+    List<Integer> ownedSkins;
+    List<Integer> ownedMounts;
     List<Skin> equippedSkins = new ArrayList<>();
+    List<Mount> equippedMounts = new ArrayList<>();
 
     // current season data
     double xp;
@@ -32,11 +35,12 @@ public class PlayerData
     int maxHomes;
     List<Quest> quests = new ArrayList<>();
 
-    public PlayerData(UUID UUID, boolean premium, List<Integer> skins, double xp, int lastKnownLevel, int maxHomes)
+    public PlayerData(UUID UUID, boolean premium, List<Integer> ownedSkins, List<Integer> ownedMounts, double xp, int lastKnownLevel, int maxHomes)
     {
         this.player = Bukkit.getOfflinePlayer(UUID);
         this.premium = premium;
-        this.skins = skins;
+        this.ownedSkins = ownedSkins;
+        this.ownedMounts = ownedMounts;
         this.xp = xp;
         this.lastKnownLevel = lastKnownLevel;
         this.maxHomes = maxHomes;
@@ -45,13 +49,23 @@ public class PlayerData
     public void setPremiumPass(boolean hasPass) { this.premium = hasPass; }
     public void giveSkin(Skin skin, boolean alert)
     {
-        if (skins.contains(skin.getId()))
+        if (ownedSkins.contains(skin.getId()))
         {
             if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + skin.getName() + " but you already own this skin.");
             return;
         }
         if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "You were given a " + skin.getName() + "! Equip it in the /skins menu!");
-        skins.add(skin.getId());
+        ownedSkins.add(skin.getId());
+    }
+    public void giveMount(Mount mount, boolean alert)
+    {
+        if (ownedMounts.contains(mount.getId()))
+        {
+            if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + mount.getName() + " but you already own this mount.");
+            return;
+        }
+        if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "You were given a " + mount.getName() + "! Equip it in the /mounts menu!");
+        ownedMounts.add(mount.getId());
     }
     public void giveSkinById(Integer skinId, boolean alert)
     {
@@ -61,13 +75,23 @@ public class PlayerData
             if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + skin.getName() + " but you already own this skin.");
             return;
         }
-        skins.add(skinId);
+        ownedSkins.add(skinId);
+    }
+    public void giveMountById(Integer mountId, boolean alert)
+    {
+        Mount mount = BeanPass.getInstance().mountManager.getMountById(mountId);
+        if (hasMount(mountId))
+        {
+            if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + mount.getName() + " but you already own this mount.");
+            return;
+        }
+        ownedMounts.add(mountId);
     }
     public void equipSkin(Skin skin, boolean alert)
     {
         for (Skin equippedSkin : equippedSkins)
         {
-            if (equippedSkin.getSkinApplicant() == skin.getSkinApplicant())
+            if (equippedSkin.getSkinApplicant().equals(skin.getSkinApplicant()))
             {
                 unequipSkin(equippedSkin);
                 break;
@@ -77,16 +101,36 @@ public class PlayerData
         if (alert) BeanPass.sendMessage(player, "Equipped skin! The " + skin.getName().toLowerCase().replace("_", " ") + " will appear on any " + skin.skinApplicant.name().toLowerCase().replace("_", " ") + " you equip now.");
         equippedSkins.add(skin);
     }
+    public void equipMount(Mount mount, boolean alert)
+    {
+        for (Mount equippedMount : equippedMounts)
+        {
+            if (equippedMount.getMountApplicant().equals(mount.getMountApplicant()))
+            {
+                unequipMount(equippedMount);
+                break;
+            }
+        }
+
+        if (alert) BeanPass.sendMessage(player, "Equipped mount! The " + mount.getName().toLowerCase().replace("_", " ") + " mount will appear instead for any " + mount.getMountApplicant().name().toLowerCase().replace("_", " ") + " you ride now.");
+        equippedMounts.add(mount);
+    }
     public void unequipSkin(Skin skin)
     {
         equippedSkins.remove(skin);
     }
+    public void unequipMount(Mount mount)
+    {
+        equippedMounts.remove(mount);
+    }
     public List<Integer> getAllOwnedSkinIds()
     {
-        return skins;
+        return ownedSkins;
     }
-    public void removeSkin(int skinID) { this.skins.removeIf( hat -> hat.equals(skinID)); }
-    public boolean hasSkin(int skinID) { return skins.contains(skinID); }
+    public void removeSkin(int skinID) { this.ownedSkins.removeIf( hat -> hat.equals(skinID)); }
+    public void removeMount(int mountID) { this.ownedMounts.removeIf( mount -> mount.equals(mountID)); }
+    public boolean hasSkin(int skinID) { return ownedSkins.contains(skinID); }
+    public boolean hasMount(int mountID) { return ownedMounts.contains(mountID); }
     public int getLevel() // calculate and return the players level based on their xp and each levels required xp
     {
         double playerXP = getXp();
@@ -134,6 +178,8 @@ public class PlayerData
     {
         return maxHomes;
     }
+
+    public List<Mount> getEquippedMounts() { return equippedMounts; }
 
     public double getXpNeededForNextLevel()
     {
