@@ -64,7 +64,6 @@ public abstract class Element
             z = newPosition.getZ();
 
             // calculate the yaw and pitch rotation of the element, so it faces towards the player head
-
         }
 
         this.location = new Location(playerLocation.getWorld(), x, y, z, Float.isFinite(yawRotation) ? yawRotation : 0.0f, Float.isFinite(pitchRotation) ? pitchRotation : 0.0f);

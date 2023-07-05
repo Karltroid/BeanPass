@@ -192,45 +192,54 @@ public class BeanPassGUI implements Listener
 
         loadElement(new HatsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        Material[] categories = new Material[] { Material.CARVED_PUMPKIN, Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE };
         List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
-        
-        double firstRowYPosition = 10.0;
+
+        double firstRowYPosition = 16.75;
         double firstColumnXPosition = -35.0;
-        double columnSpacing = Math.abs((firstColumnXPosition * 2)/(categories.length - 1));
         int skinsPerColumn = 4;
-        double rowSpacing = Math.abs((firstRowYPosition * 1.7)/(skinsPerColumn - 1));
-        for(int x = 0; x < categories.length; x++)
+        int skinsPerRow = 6;
+        double columnSpacing = Math.abs((firstColumnXPosition * 2) / (skinsPerRow - 1));
+        double rowSpacing = Math.abs((firstRowYPosition * 1.8) / skinsPerColumn);
+        int ownedSkinsAmount = ownedSkins.size();
+
+        boolean predeterminedItemPlaced = false;
+        int totalSkinsDisplayed = skinsPerRow * skinsPerColumn;
+
+
+        // Loop through the items and display them
+        for (int i = 0; i < totalSkinsDisplayed; i++)
         {
-            double columnXPosition = firstColumnXPosition + (x * columnSpacing);
-            loadElement(new VisualElement(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, categories[x], 0), null);
-            List<Skin> ownedSkinsInCategory = new ArrayList<>();
-            for (Integer skinId : ownedSkins)
+
+            if (i == 0 && !predeterminedItemPlaced)
             {
-                Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
-                if (skin.getSkinApplicant() == categories[x])
-                    ownedSkinsInCategory.add(skin);
+                // Place the predetermined item at slot 0,0
+                loadElement(new VisualElement(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, Material.CARVED_PUMPKIN, 0), null);
+                predeterminedItemPlaced = true;
             }
-            
-            for(int y = 0; y < skinsPerColumn; y++)
+
+            int row = i / skinsPerRow;
+            int column = i % skinsPerRow;
+            if (predeterminedItemPlaced)
             {
-                // for loop through players skins of this material
-                double columnYPosition = firstRowYPosition - (y * rowSpacing);
+                if (i == totalSkinsDisplayed - 1) continue;
+                row = (i+1) / skinsPerRow;
+                column = (i+1) % skinsPerRow;
+            }
 
-                Skin skin = null;
-                try
-                {
-                    skin = ownedSkinsInCategory.get(y);
-                }
-                catch (Exception e)
-                {
-                    // do nothing
-                }
+            double xPos = firstColumnXPosition + (column * columnSpacing);
+            double yPos = firstRowYPosition - (row * rowSpacing);
 
-                if (skin == null) loadElement(new VisualElement(this, false, 3, columnXPosition, columnYPosition, 0.25f, Material.BARRIER, 0), null);
-                else loadElement(new EquipSkin(this, false, 3, columnXPosition, columnYPosition, 0.25f, skin), null);
+            if (i < ownedSkinsAmount) {
+                int skinId = ownedSkins.get(i);
+                Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
+                if (skin != null) {
+                    loadElement(new EquipSkin(this, false, 3, xPos, yPos, 0.3f, skin), null);
+                }
+            } else {
+                loadElement(new VisualElement(this, false, 3, xPos, yPos, 0.25f, Material.BARRIER, 0), null);
             }
         }
+
 
         displayNavigationButtons();
     }
