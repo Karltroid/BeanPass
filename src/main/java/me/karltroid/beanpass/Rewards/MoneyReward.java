@@ -1,6 +1,8 @@
 package me.karltroid.beanpass.Rewards;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.TextElement;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -34,5 +36,11 @@ public class MoneyReward implements Reward
     public double getAmount()
     {
         return amount;
+    }
+
+    @Override
+    public void displayReward(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double xAngle, double yAngle, float displayScale)
+    {
+        beanPassGUI.loadElement(new TextElement(beanPassGUI, spherePlacement, distance, xAngle, yAngle, displayScale, net.md_5.bungee.api.ChatColor.GREEN + "$" + getAmount()), beanPassGUI.allLevelRewardElements);
     }
 }

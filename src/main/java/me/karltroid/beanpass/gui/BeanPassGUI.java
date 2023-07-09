@@ -35,7 +35,7 @@ public class BeanPassGUI implements Listener
     PlayerData playerData;
     private List<Element> allElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
-    private List<Element> allLevelRewardElements = new ArrayList<>();
+    public List<Element> allLevelRewardElements = new ArrayList<>();
     ButtonElement selectedButtonElement;
     ButtonElement previousButtonElement;
     int rewardPage = 0;
@@ -194,7 +194,7 @@ public class BeanPassGUI implements Listener
 
         List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
 
-        double firstRowYPosition = 16.75;
+        double firstRowYPosition = 16.5;
         double firstColumnXPosition = -35.0;
         int skinsPerColumn = 4;
         int skinsPerRow = 6;
@@ -251,7 +251,51 @@ public class BeanPassGUI implements Listener
 
         loadElement(new MountsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        loadElement(new EquipMount(this, false, 3, 0, 0, 0.3f, new Mount("lambo", 10010, EntityType.HORSE)), null);
+        List<Integer> ownedMounts = playerData.getAllOwnedMountIds();
+
+        double firstRowYPosition = 16.5;
+        double firstColumnXPosition = -35.0;
+        int mountsPerColumn = 4;
+        int mountsPerRow = 6;
+        double columnSpacing = Math.abs((firstColumnXPosition * 2) / (mountsPerRow - 1));
+        double rowSpacing = Math.abs((firstRowYPosition * 1.8) / mountsPerColumn);
+        int ownedMountsAmount = ownedMounts.size();
+
+        boolean predeterminedItemPlaced = false;
+        int totalMountsDisplayed = mountsPerRow * mountsPerColumn;
+
+
+        // Loop through the items and display them
+        for (int i = 0; i < totalMountsDisplayed; i++)
+        {
+
+            if (i == 0 && !predeterminedItemPlaced)
+            {
+                // Place the predetermined item at slot 0,0
+                loadElement(new VisualElement(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, Material.LEATHER_HORSE_ARMOR, 0), null);
+                predeterminedItemPlaced = true;
+            }
+
+            int row = i / mountsPerRow;
+            int column = i % mountsPerRow;
+            if (predeterminedItemPlaced)
+            {
+                if (i == totalMountsDisplayed - 1) continue;
+                row = (i+1) / mountsPerRow;
+                column = (i+1) % mountsPerRow;
+            }
+
+            double xPos = firstColumnXPosition + (column * columnSpacing);
+            double yPos = firstRowYPosition - (row * rowSpacing);
+
+            if (i < ownedMountsAmount)
+            {
+                int mountId = ownedMounts.get(i);
+                Mount mount = BeanPass.getInstance().getMountManager().getMountById(mountId);
+                if (mount != null) loadElement(new EquipMount(this, false, 3, xPos, yPos, 0.3f, mount), null);
+            }
+            else loadElement(new VisualElement(this, false, 3, xPos, yPos, 0.25f, Material.BARRIER, 0), null);
+        }
 
         displayNavigationButtons();
     }
@@ -345,50 +389,18 @@ public class BeanPassGUI implements Listener
             double angleIncrement = 14.5;
             double xAngle = (angleIncrement * -2) + (angleIncrement * (i-1));
 
-            if (playerLevel == levelNumber)
-            {
-                loadElement(new TextElement(this, false, 3, xAngle, 0, 0.7f, ChatColor.GOLD + "" + ChatColor.BOLD + "LVL" + levelNumber), allLevelRewardElements);
-            }
-            else if (playerLevel > levelNumber)
-            {
-                loadElement(new TextElement(this, false, 3, xAngle, 0, 0.6f, ChatColor.BOLD + "LVL" + levelNumber), allLevelRewardElements);
-            }
+            if (playerLevel == levelNumber) loadElement(new TextElement(this, false, 3, xAngle, 0, 0.7f, ChatColor.GOLD + "" + ChatColor.BOLD + "LVL" + levelNumber), allLevelRewardElements);
+            else if (playerLevel > levelNumber) loadElement(new TextElement(this, false, 3, xAngle, 0, 0.6f, ChatColor.BOLD + "LVL" + levelNumber), allLevelRewardElements);
             else loadElement(new TextElement(this, false, 3, xAngle, 0, 0.50f, ChatColor.GRAY + "LVL" + levelNumber), allLevelRewardElements);
 
             Level level = beanpassLevels.get(levelNumber);
             if (level == null) continue;
 
             Reward freeReward = level.getFreeReward();
-            if (freeReward != null)
-            {
-                if (freeReward instanceof MoneyReward)
-                {
-                    loadElement(new TextElement(this, false, 3, xAngle, 6, 0.5f, ChatColor.GREEN + "$" + ((MoneyReward) level.getFreeReward()).getAmount()), allLevelRewardElements);
-                }
-                else if (freeReward instanceof SetHomeReward)
-                {
-                    loadElement(new TextElement(this, false, 3, xAngle, 6, 0.5f, "+" + ((SetHomeReward) level.getFreeReward()).getAmount() + " home"), allLevelRewardElements);
-                }
-            }
+            if (freeReward != null) freeReward.displayReward(this, false, 3, xAngle, 6, 0.5f);
 
             Reward premiumReward = level.getPremiumReward();
-            if (premiumReward != null)
-            {
-                if (premiumReward instanceof SkinReward)
-                {
-                    SkinReward skinReward = (SkinReward) premiumReward;
-                    Skin skin = skinReward.getSkin();
-                    if (skin == null) continue;
-                    loadElement(new VisualElement(this, false, 3, xAngle, -6, 0.5f, skin.getSkinApplicant(), skin.getId()), allLevelRewardElements);
-                }
-                else if (premiumReward instanceof MountReward)
-                {
-                    MountReward mountReward = (MountReward) premiumReward;
-                    Mount mount = mountReward.getMount();
-                    if (mount == null) continue;
-                    //loadElement(new VisualElement(this, false, 3, xAngle, -6, 0.5f, mount.getMountApplicant(), mount.getId()), allLevelRewardElements);
-                }
-            }
+            if (premiumReward != null) premiumReward.displayReward(this, false, 3, xAngle, -6, 0.5f);
         }
     }
 

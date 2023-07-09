@@ -158,9 +158,11 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     premiumReward = new SkinReward(skinManager.getSkinByName(skinName.toLowerCase()));
                                     break;
                                 case "MOUNT":
-                                    String mountName = freeSection.getString("Mount");
+                                    String mountName = paidSection.getString("Mount");
                                     premiumReward = new MountReward(mountManager.getMountByName(mountName.toLowerCase()));
                                     break;
+                                default:
+                                    continue;
                             }
                         }
 

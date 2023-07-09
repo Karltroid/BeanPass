@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.EulerAngle;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class HorseMount implements IMount
         Tadpole customModelRotationBuffer = (Tadpole)world.spawnEntity(mountOwnerLocation, EntityType.TADPOLE);
         customModelRotationBuffer.setAI(false);
         customModelRotationBuffer.setInvisible(true);
+        customModelRotationBuffer.setInvulnerable(true);
         customModelRotationBuffer.setSilent(true);
         customModelRotationBuffer.setInvulnerable(true);
         customModelRotationBuffer.setRotation(0,0);
@@ -53,6 +55,7 @@ public class HorseMount implements IMount
         armorStand.setMarker(true);
         armorStand.setInvisible(true);
         armorStand.setRotation(0,0);
+        armorStand.setInvulnerable(true);
         ItemStack customModel = new ItemStack(Material.GLASS_BOTTLE);
         ItemMeta customModelMeta = customModel.getItemMeta();
         customModelMeta.setCustomModelData(mount.getId());

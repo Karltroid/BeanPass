@@ -427,6 +427,39 @@ SeasonLevels:
       Free:
         Type: MONEY
         Amount: 90
+  21:
+    XP: 450
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  22:
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 120
+  23:
+    XP: 600
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+      Paid:
+        Type: MOUNT
+        Mount: lamborghini_jalpa
+  24:
+    XP: 700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+  25:
+    XP: 800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
 
 Skins:
   witch_hat:
@@ -445,4 +478,4 @@ Skins:
 Mounts:
   lamborghini_jalpa:
     Entity: HORSE
-    ID: 10012
+    ID: 10010

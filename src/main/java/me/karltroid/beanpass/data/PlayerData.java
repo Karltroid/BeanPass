@@ -127,6 +127,10 @@ public class PlayerData
     {
         return ownedSkins;
     }
+    public List<Integer> getAllOwnedMountIds()
+    {
+        return ownedMounts;
+    }
     public void removeSkin(int skinID) { this.ownedSkins.removeIf( hat -> hat.equals(skinID)); }
     public void removeMount(int mountID) { this.ownedMounts.removeIf( mount -> mount.equals(mountID)); }
     public boolean hasSkin(int skinID) { return ownedSkins.contains(skinID); }

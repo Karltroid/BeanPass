@@ -5,7 +5,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,14 +14,15 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class MountManager implements Listener
 {
     List<Mount> mounts = new ArrayList<>();
     List<EntityType> mountTypes = new ArrayList<>();
-
     Map<UUID, IMount> mountInstances = new HashMap<>();
+    DecimalFormat decimalFormat = new DecimalFormat("#.0");
 
     public MountManager()
     {
@@ -45,8 +45,11 @@ public class MountManager implements Listener
                     EntityType entityType = null;
                     for (EntityType type : EntityType.values())
                     {
-                        if (type.name().equalsIgnoreCase(entityName)) entityType = type;
-                        break;
+                        if (type.name().equalsIgnoreCase(entityName))
+                        {
+                            entityType = type;
+                            break;
+                        }
                     }
                     if (entityType == null)
                     {
@@ -71,7 +74,7 @@ public class MountManager implements Listener
                 if (mountInstances.size() == 0) return;
                 for (IMount mountInstance : mountInstances.values()) mountInstance.updateMountModelRotation();
             }
-        }.runTaskTimer(BeanPass.getInstance(), 0L, 2L);
+        }.runTaskTimer(BeanPass.getInstance(), 0L, 0L);
     }
 
     @EventHandler
