@@ -6,7 +6,6 @@
 # |____/  \___| \__,_||_| |_||_|    \__,_||___/|___/
 
 # General Settings
-QuestsPerPlayer: 5
 
 # Quest Difficulties To Be Set For Individual Quests
 Difficulties:
@@ -39,9 +38,109 @@ Difficulties:
     max_unit_multiplier: 1
     xp_per_unit: 150
 
+CommanderKillingQuests:
+  BLAZE:
+    difficulty: HARD
+  CAVE_SPIDER:
+    difficulty: NORMAL
+  CREEPER:
+    difficulty: NORMAL
+  DROWNED:
+    difficulty: NORMAL
+  ELDER_GUARDIAN:
+    difficulty: SUPER_HARD
+  ENDER_DRAGON:
+    difficulty: SUPER_HARD
+  ENDERMAN:
+    difficulty: HARD
+  ENDERMITE:
+    difficulty: HARD
+  EVOKER:
+    difficulty: VERY_HARD
+  GHAST:
+    difficulty: HARD
+  GUARDIAN:
+    difficulty: HARD
+  HOGLIN:
+    difficulty: HARD
+  HUSK:
+    difficulty: HARD
+  MAGMA_CUBE:
+    difficulty: HARD
+  PHANTOM:
+    difficulty: HARD
+  PIGLIN:
+    difficulty: NORMAL
+  PIGLIN_BRUTE:
+    difficulty: VERY_HARD
+  PILLAGER:
+    difficulty: HARD
+  RAVAGER:
+    difficulty: VERY_HARD
+  SHULKER:
+    difficulty: HARD
+  SILVERFISH:
+    difficulty: HARD
+  SKELETON:
+    difficulty: NORMAL
+  SLIME:
+    difficulty: NORMAL
+  SPIDER:
+    difficulty: NORMAL
+  SQUID:
+    difficulty: EASY
+  STRAY:
+    difficulty: HARD
+  VEX:
+    difficulty: VERY_HARD
+  VINDICATOR:
+    difficulty: VERY_HARD
+  WARDEN:
+    difficulty: SUPER_HARD
+  WITCH:
+    difficulty: HARD
+  WITHER:
+    difficulty: SUPER_HARD
+  WITHER_SKELETON:
+    difficulty: VERY_HARD
+  ZOGLIN:
+    difficulty: HARD
+  ZOMBIE:
+    difficulty: NORMAL
+  ZOMBIFIED_PIGLIN:
+    difficulty: HARD
+
 # All Possible Mining Quests And Its Respective Difficulty
-MiningQuestDifficulties:
+MinerMiningQuests:
+  COAL_ORE:
+    difficulty: EASY
+  COPPER_ORE:
+    difficulty: NORMAL
+  IRON_ORE:
+    difficulty: NORMAL
+  NETHER_QUARTZ_ORE:
+    difficulty: NORMAL
+  MOSSY_COBBLESTONE:
+    difficulty: HARD
+  LAPIS_ORE:
+    difficulty: HARD
+  REDSTONE_ORE:
+    difficulty: HARD
+  GOLD_ORE: #NETHER_GOLD_ORE, DEEPSLATE_GOLD_ORE
+    difficulty: HARD
+  EMERALD_ORE:
+    difficulty: VERY_HARD
+  DIAMOND_ORE:
+    difficulty: VERY_HARD
+  ANCIENT_DEBRIS:
+    difficulty: SUPER_HARD
+
+BuilderMiningQuests:
   STONE:
+    difficulty: SUPER_EASY
+  SAND:
+    difficulty: SUPER_EASY
+  DIRT:
     difficulty: SUPER_EASY
   DEEPSLATE:
     difficulty: SUPER_EASY
@@ -57,55 +156,13 @@ MiningQuestDifficulties:
     difficulty: VERY_EASY
   CLAY:
     difficulty: EASY
-  COAL_ORE:
-    difficulty: EASY
-  DEEPSLATE_COAL_ORE:
-    difficulty: EASY
-  COPPER_ORE:
-    difficulty: NORMAL
-  DEEPSLATE_COPPER_ORE:
-    difficulty: NORMAL
-  IRON_ORE:
-    difficulty: NORMAL
-  DEEPSLATE_IRON_ORE:
-    difficulty: NORMAL
-  NETHER_GOLD_ORE:
-    difficulty: NORMAL
-  NETHER_QUARTZ_ORE:
-    difficulty: NORMAL
   DRIPSTONE_BLOCK:
     difficulty: NORMAL
-  SCULK:
-    difficulty: NORMAL
-  SCULK_SENSOR:
-    difficulty: HARD
   MOSSY_COBBLESTONE:
     difficulty: HARD
-  LAPIS_ORE:
-    difficulty: HARD
-  DEEPSLATE_LAPIS_ORE:
-    difficulty: HARD
-  REDSTONE_ORE:
-    difficulty: HARD
-  DEEPSLATE_REDSTONE_ORE:
-    difficulty: HARD
-  GOLD_ORE:
-    difficulty: HARD
-  DEEPSLATE_GOLD_ORE:
-    difficulty: HARD
-  EMERALD_ORE:
-    difficulty: VERY_HARD
-  DEEPSLATE_EMERALD_ORE:
-    difficulty: VERY_HARD
-  DIAMOND_ORE:
-    difficulty: VERY_HARD
-  DEEPSLATE_DIAMOND_ORE:
-    difficulty: VERY_HARD
-  ANCIENT_DEBRIS:
-    difficulty: SUPER_HARD
 
 # All Possible Lumber Quests And Its Respective Difficulty
-LumberQuestDifficulties:
+LumberjackMiningQuests:
   OAK_LOG:
     difficulty: VERY_EASY
   SPRUCE_LOG:

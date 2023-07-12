@@ -28,6 +28,7 @@ public class PlayerData
     List<Integer> ownedMounts;
     List<Skin> equippedSkins = new ArrayList<>();
     List<Mount> equippedMounts = new ArrayList<>();
+    public Boolean lastQuestionAnswer;
 
     // current season data
     double xp;
@@ -254,11 +255,10 @@ public class PlayerData
 
     public UUID getUUID() { return player.getUniqueId(); }
 
-    public Quest giveQuest(Quest quest)
+    public Quest giveQuest(Quest quest, boolean alert)
     {
-        if (quest == null) quest = Quests.getRandomQuestType( getUUID().toString());
-
         quests.add(quest);
+        if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "" + ChatColor.BOLD + "NEW QUEST: " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.ITALIC + quest.getRewardDescription());
         return quest;
     }
 

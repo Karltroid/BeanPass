@@ -18,6 +18,11 @@ commands:
     usage: /quests
     permission: beanpass.user
     aliases: [ quest ]
+  rewards:
+    description: View and select your rewards earned from BeanPass
+    usage: /rewards
+    permission: beanpass.user
+    aliases: [ reward ]
   mounts:
     description: View and select your unlocked mounts
     usage: /mounts
@@ -39,3 +44,8 @@ commands:
     permission: beanpass.user
     aliases: [ esethome, createhome, ecreatehome ]
     executor: me.karltroid.beanpass.command.ViewQuests
+  givequest:
+    description: Give a player a quest from a NPC
+    usage: /givequest <npc> <player>
+    permission: beanpass.admin
+    aliases: [ gq, gquest ]

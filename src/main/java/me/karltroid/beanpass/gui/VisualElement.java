@@ -21,8 +21,11 @@ public class VisualElement extends Element
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setCustomModelData(customModelData);
-        itemStack.setItemMeta(itemMeta);
+        if (customModelData != -1)
+        {
+            itemMeta.setCustomModelData(customModelData);
+            itemStack.setItemMeta(itemMeta);
+        }
 
         this.displayScale = displayScale;
 

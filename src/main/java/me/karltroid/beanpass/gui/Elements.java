@@ -224,4 +224,32 @@ public class Elements
             BeanPass.getInstance().mountManager.changeActiveMount(beanPassGUI.player, mount);
         }
     }
+
+    static class YesButton extends ButtonElement implements Button
+    {
+        public YesButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.EMERALD_BLOCK, -1);
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.playerData.lastQuestionAnswer = true;
+        }
+    }
+
+    static class NoButton extends ButtonElement implements Button
+    {
+        public NoButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.REDSTONE_BLOCK, -1);
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.playerData.lastQuestionAnswer = false;
+        }
+    }
 }

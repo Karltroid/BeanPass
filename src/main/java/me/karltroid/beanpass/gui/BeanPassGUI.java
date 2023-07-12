@@ -50,6 +50,7 @@ public class BeanPassGUI implements Listener
         BeanPassGUI alreadyOpenGUI = BeanPass.getInstance().activeGUIs.get(player);
         if (alreadyOpenGUI != null) alreadyOpenGUI.closeEntireGUI();
 
+        System.out.println("!!!");
         this.player = player;
         this.world = player.getWorld();
         this.playerLocation = player.getEyeLocation();
@@ -58,8 +59,11 @@ public class BeanPassGUI implements Listener
         this.originalGamemode = player.getGameMode();
         this.currentMenu = guiMenu;
 
+        System.out.println("???");
+        System.out.println(player.getGameMode());
         player.setGameMode(GameMode.ADVENTURE);
 
+        System.out.println("time to load");
         loadMenu(guiMenu);
 
         BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
@@ -108,6 +112,7 @@ public class BeanPassGUI implements Listener
 
     public void loadMenu(GUIMenu menu)
     {
+        System.out.println("loadmenu");
         switch (menu)
         {
             case BeanPass:
@@ -128,11 +133,27 @@ public class BeanPassGUI implements Listener
             case Tools:
                 loadToolsMenu();
                 break;
+            case YesNoQuestion:
+                System.out.println("YesNoSelected");
+                loadYesNoQuestionMenu();
+                break;
             default:
                 Bukkit.getLogger().warning("gui menu does not exist, loading BeanPass menu.");
                 loadBeanPassMenu();
                 break;
         }
+    }
+
+    void loadYesNoQuestionMenu()
+    {
+        System.out.println("Loading yes no");
+        this.currentMenu = GUIMenu.YesNoQuestion;
+        closeElementList(allElements);
+
+        loadElement(new TextElement(this, true, 1.5, -10, -8, 0.5f, "no"), null);
+        loadElement(new NoButton(this, true, 1.5, -10, -10, 0.5f), null);
+        loadElement(new TextElement(this, true, 1.5, 10, -8, 0.5f, "yes"), null);
+        loadElement(new YesButton(this, true, 1.5, 10, -10, 0.5f), null);
     }
 
     void loadBeanPassMenu()
@@ -448,6 +469,7 @@ public class BeanPassGUI implements Listener
         interactionLoop = null;
         HandlerList.unregisterAll(this);
         BeanPass.getInstance().activeGUIs.remove(player);
+        playerData.lastQuestionAnswer = null;
     }
 
     @EventHandler

@@ -2,6 +2,7 @@ package me.karltroid.beanpass.quests;
 
 import me.karltroid.beanpass.BeanPass;
 
+import me.karltroid.beanpass.npcs.NPC;
 import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -12,18 +13,6 @@ import java.util.*;
 
 public class Quests
 {
-    public static Quest getRandomQuestType(String uuid)
-    {
-        Quest[] quests = {
-                new MiningQuest(uuid, -1, null, -1, 0),
-                new LumberQuest(uuid, -1, null, -1, 0),
-                new KillingQuest(uuid, -1, null, -1, 0)
-        };
-
-        Random random = new Random();
-        return quests[random.nextInt(quests.length)];
-    }
-
     public static abstract class Quest
     {
         public String playerUUID;
@@ -32,14 +21,16 @@ public class Quests
         public int playerCount;
         String questVerb = "";
         String goalName = "";
+        NPC questGiver;
 
-        Quest(String playerUUID, double xpReward, int goalCount, int playerCount, String questVerb)
+        Quest(String playerUUID, double xpReward, int goalCount, int playerCount, String questVerb, NPC questGiver)
         {
             this.playerUUID = playerUUID;
             this.goalCount = goalCount;
             this.xpReward = xpReward;
             this.playerCount = playerCount;
             this.questVerb = questVerb;
+            this.questGiver = questGiver;
         }
 
         public void setGoalName(String goalName)
@@ -68,16 +59,17 @@ public class Quests
         public boolean isCompleted() { return playerCount >= goalCount; }
         public void incrementPlayerCount() { playerCount++; }
         public double getXPReward() { return xpReward; }
+        public NPC getQuestGiver() { return questGiver; }
     }
 
     public static class MiningQuest extends Quest
     {
         private final Material goalBlockType;
 
-        public MiningQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
+        public MiningQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount, NPC questGiver)
         {
-            super(playerUUID, xpReward, goalBlockCount, playerBlockCount, "Mine");
-            HashMap<Material, String> miningQuestDifficulties = BeanPass.getInstance().questManager.getMiningQuestDifficulties();
+            super(playerUUID, xpReward, goalBlockCount, playerBlockCount, "Mine", questGiver);
+            HashMap<Material, String> miningQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!miningQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
@@ -118,10 +110,10 @@ public class Quests
     {
         EntityType goalEntityType;
 
-        public KillingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount)
+        public KillingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount, NPC questGiver)
         {
-            super(playerUUID, xpReward, goalKillCount, playerKillCount, "Kill");
-            HashMap<EntityType, String> killingQuestDifficulties = BeanPass.getInstance().questManager.getKillingQuestDifficulties();
+            super(playerUUID, xpReward, goalKillCount, playerKillCount, "Kill", questGiver);
+            HashMap<EntityType, String> killingQuestDifficulties = (HashMap<EntityType, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!killingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
@@ -138,7 +130,7 @@ public class Quests
             {
                 List<Map.Entry<EntityType, String>> matchingDifficultyEntity = new ArrayList<>();
 
-                for (Map.Entry<EntityType, String> entry : BeanPass.getInstance().questManager.getKillingQuestDifficulties().entrySet()) {
+                for (Map.Entry<EntityType, String> entry : killingQuestDifficulties.entrySet()) {
                     if (entry.getValue().equals(questDifficultyKey)) {
                         matchingDifficultyEntity.add(entry);
                     }
@@ -158,13 +150,13 @@ public class Quests
         public EntityType getGoalEntityType() { return goalEntityType; }
     }
 
-    public static class ExplorationQuest extends Quest
+    /*public static class ExplorationQuest extends Quest
     {
         final Structure GOAL_STRUCTURE_TYPE;
 
-        public ExplorationQuest(String playerUUID, double xpReward, Structure goalStructureType, int goalChestCount, int playerChestCount)
+        public ExplorationQuest(String playerUUID, double xpReward, Structure goalStructureType, int goalChestCount, int playerChestCount, NPC questGiver)
         {
-            super(playerUUID, xpReward, goalChestCount, playerChestCount, "Loot");
+            super(playerUUID, xpReward, goalChestCount, playerChestCount, "Loot", questGiver);
             this.GOAL_STRUCTURE_TYPE = goalStructureType;
         }
 
@@ -174,7 +166,7 @@ public class Quests
         }
 
         public Structure getGoalStructureType() { return GOAL_STRUCTURE_TYPE; }
-    }
+    }*/
 
     // Breeding Quest
 
@@ -183,51 +175,4 @@ public class Quests
     // Farming Quest
 
     // Brewing Quest
-
-    public static class LumberQuest extends Quest
-    {
-
-        private final Material goalBlockType;
-
-        public LumberQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount)
-        {
-            super(playerUUID, xpReward, goalBlockCount, playerBlockCount, "Chop down");
-            HashMap<Material, String> lumberQuestDifficulties = BeanPass.getInstance().questManager.getLumberQuestDifficulties();
-            String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
-            while (!lumberQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
-            QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
-
-            this.goalCount = (goalBlockCount <= 0 ? questDifficulty.generateUnitAmount() : goalBlockCount);
-            this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
-
-            if (goalBlockType != null)
-            {
-                this.goalBlockType = goalBlockType;
-            }
-            else
-            {
-                List<Map.Entry<Material, String>> matchingDifficultyMaterials = new ArrayList<>();
-
-                for (Map.Entry<Material, String> entry : lumberQuestDifficulties.entrySet())
-                {
-                    if (entry.getValue().equals(questDifficultyKey)) {
-                        matchingDifficultyMaterials.add(entry);
-                    }
-                }
-
-                Random random = new Random();
-                int randomIndex = random.nextInt(matchingDifficultyMaterials.size());
-
-                Map.Entry<Material, String> randomEntry = matchingDifficultyMaterials.get(randomIndex);
-
-                this.goalBlockType = randomEntry.getKey();
-            }
-
-            setGoalName(this.goalBlockType.name());
-        }
-
-        public Material getGoalBlockType() { return goalBlockType; }
-    }
-
-    // Lumber Quest (same as mining quest but specifically for wood)
 }

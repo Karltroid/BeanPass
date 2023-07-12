@@ -9,6 +9,7 @@ import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.mounts.MountManager;
+import me.karltroid.beanpass.npcs.NPCManager;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
 import net.milkbowl.vault.economy.Economy;
@@ -36,6 +37,7 @@ public final class BeanPass extends JavaPlugin implements Listener
     HashMap<UUID, PlayerData> playerData = new HashMap<>();
     Season season;
     public QuestDifficulties questDifficulties;
+    private NPCManager npcManager;
     public QuestManager questManager;
     PlayerDataManager dataManager;
     public static BeanPass getInstance(){ return main; }
@@ -174,9 +176,10 @@ public final class BeanPass extends JavaPlugin implements Listener
         int seasonNumber = config.getInt("Season", 1);
         season = new Season(seasonNumber, seasonLevels);
 
+        npcManager = new NPCManager();
         dataManager = new PlayerDataManager();
         questDifficulties = new QuestDifficulties();
-        questManager = new QuestManager(config.getInt("QuestsPerPlayer", 5));
+        questManager = new QuestManager();
 
         // register event listeners to the plugin instance
         pluginManager.registerEvents(dataManager, this);
@@ -187,10 +190,12 @@ public final class BeanPass extends JavaPlugin implements Listener
         // register the commands for the plugin instance
         main.getCommand("beanpass").setExecutor(new BeanPassCommand());
         main.getCommand("quests").setExecutor(new OpenBeanPassPage(GUIMenu.Quests));
+        main.getCommand("rewards").setExecutor(new OpenBeanPassPage(GUIMenu.Rewards));
         main.getCommand("mounts").setExecutor(new OpenBeanPassPage(GUIMenu.Mounts));
         main.getCommand("hats").setExecutor(new OpenBeanPassPage(GUIMenu.Hats));
         main.getCommand("tools").setExecutor(new OpenBeanPassPage(GUIMenu.Tools));
         main.getCommand("sethome").setExecutor(new SetHome());
+        main.getCommand("givequest").setExecutor(new GiveQuest());
     }
 
     public FileConfiguration getBeanPassConfig() { return config; }
@@ -206,8 +211,6 @@ public final class BeanPass extends JavaPlugin implements Listener
             mountManager.destroyMountInstance(player);
         }
 
-        // save config settings
-        config.set("QuestsPerPlayer", questManager.getQuestsPerPlayer());
         saveConfig();
     }
 
@@ -269,4 +272,5 @@ public final class BeanPass extends JavaPlugin implements Listener
     public MountManager getMountManager() {
         return mountManager;
     }
+    public NPCManager getNpcManager() { return npcManager; }
 }

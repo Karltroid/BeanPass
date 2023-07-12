@@ -7,5 +7,6 @@ public enum GUIMenu
     Rewards,
     Hats,
     Tools,
-    Mounts
+    Mounts,
+    YesNoQuestion
 }
