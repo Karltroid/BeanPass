@@ -38,6 +38,11 @@ commands:
     usage: /tools
     permission: beanpass.user
     aliases: [ tool ]
+  yesno:
+    description: testing for yes no display
+    usage: /yesno
+    permission: beanpass.admin
+    aliases: [ yn ]
   sethome:
     description: Set a home that you can teleport to with /home "<home nickname>" later
     usage: /sethome

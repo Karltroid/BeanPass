@@ -1,4 +1,5 @@
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\gui\GUIMenu.java
+C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\npcs\MinerNPC.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\command\OpenBeanPassPage.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\gui\ButtonElement.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\gui\Elements.java
@@ -22,9 +23,15 @@ C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\data\Sk
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\Rewards\MoneyReward.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\quests\Quests.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\data\PlayerData.java
+C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\npcs\CommanderNPC.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\quests\QuestManager.java
+C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\npcs\NPC.java
+C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\npcs\NPCManager.java
+C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\command\GiveQuest.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\gui\BeanPassGUI.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\command\SetHome.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\data\PlayerDataManager.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\mounts\HorseMount.java
 C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\mounts\Mount.java
+C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\npcs\LumberjackNPC.java
+C:\Users\Karl Palmer\Github\BeanPass\src\main\java\me\karltroid\beanpass\npcs\INPC.java

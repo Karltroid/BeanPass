@@ -229,13 +229,14 @@ public class Elements
     {
         public YesButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.EMERALD_BLOCK, -1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.LIME_STAINED_GLASS_PANE, -1);
         }
 
         @Override
         public void click()
         {
-            beanPassGUI.playerData.lastQuestionAnswer = true;
+            beanPassGUI.playerData.responseFuture.complete(true);
+            beanPassGUI.closeEntireGUI();
         }
     }
 
@@ -243,13 +244,14 @@ public class Elements
     {
         public NoButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.REDSTONE_BLOCK, -1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.RED_STAINED_GLASS_PANE, -1);
         }
 
         @Override
         public void click()
         {
-            beanPassGUI.playerData.lastQuestionAnswer = false;
+            beanPassGUI.playerData.responseFuture.complete(false);
+            beanPassGUI.closeEntireGUI();
         }
     }
 }

@@ -60,7 +60,6 @@ public class BeanPassGUI implements Listener
         this.currentMenu = guiMenu;
 
         System.out.println("???");
-        System.out.println(player.getGameMode());
         player.setGameMode(GameMode.ADVENTURE);
 
         System.out.println("time to load");
@@ -150,10 +149,10 @@ public class BeanPassGUI implements Listener
         this.currentMenu = GUIMenu.YesNoQuestion;
         closeElementList(allElements);
 
-        loadElement(new TextElement(this, true, 1.5, -10, -8, 0.5f, "no"), null);
-        loadElement(new NoButton(this, true, 1.5, -10, -10, 0.5f), null);
-        loadElement(new TextElement(this, true, 1.5, 10, -8, 0.5f, "yes"), null);
-        loadElement(new YesButton(this, true, 1.5, 10, -10, 0.5f), null);
+        loadElement(new TextElement(this, true, 1.5, -12, -7, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
+        loadElement(new NoButton(this, true, 1.5, -12, -14, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.5, 12, -7, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
+        loadElement(new YesButton(this, true, 1.5, 12, -14, 0.4f), null);
     }
 
     void loadBeanPassMenu()

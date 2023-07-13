@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class NPC implements INPC
 {
@@ -22,14 +23,15 @@ public abstract class NPC implements INPC
         player.sendMessage(npcTag + ChatColor.YELLOW + " " + ChatColor.BOLD + name + " " + ChatColor.RESET + message);
     }
 
-    CompletableFuture<Boolean> AskPlayer(Player player)
+    void AskPlayer(Player player)
     {
         System.out.println("!");
         PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
         System.out.println("@");
         BeanPassGUI beanPassGUI = new BeanPassGUI(player, GUIMenu.YesNoQuestion);
 
-        System.out.println("#");
+        /*System.out.println("#");
+        playerData.lastQuestionAnswer = new AtomicBoolean();
         CompletableFuture<Boolean> answer = new CompletableFuture<>();
         System.out.println("$");
         new BukkitRunnable()
@@ -38,16 +40,18 @@ public abstract class NPC implements INPC
             public void run()
             {
                 System.out.println("%");
-                if(playerData.lastQuestionAnswer != null)
+                if(playerData.lastQuestionAnswer.get())
                 {
-                    System.out.println("^");
-                    answer.complete(playerData.lastQuestionAnswer);
+                    answer.complete(true);
+                    playerData.lastQuestionAnswer = new AtomicBoolean();
                     beanPassGUI.closeEntireGUI();
                     cancel();
                 }
             }
         }.runTaskTimer(BeanPass.getInstance(), 0L, 10L);
 
-        return answer;
+        CompletableFuture<Boolean> answer = new CompletableFuture<>();
+        answer.complete(true);
+        return answer;*/
     }
 }

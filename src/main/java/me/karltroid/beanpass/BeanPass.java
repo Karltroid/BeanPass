@@ -194,6 +194,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("mounts").setExecutor(new OpenBeanPassPage(GUIMenu.Mounts));
         main.getCommand("hats").setExecutor(new OpenBeanPassPage(GUIMenu.Hats));
         main.getCommand("tools").setExecutor(new OpenBeanPassPage(GUIMenu.Tools));
+        main.getCommand("yesno").setExecutor(new OpenBeanPassPage(GUIMenu.YesNoQuestion));
         main.getCommand("sethome").setExecutor(new SetHome());
         main.getCommand("givequest").setExecutor(new GiveQuest());
     }

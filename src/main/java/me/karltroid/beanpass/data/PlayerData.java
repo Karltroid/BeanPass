@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.data;
 
 import com.earth2me.essentials.User;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
@@ -19,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerData
 {
@@ -28,7 +31,8 @@ public class PlayerData
     List<Integer> ownedMounts;
     List<Skin> equippedSkins = new ArrayList<>();
     List<Mount> equippedMounts = new ArrayList<>();
-    public Boolean lastQuestionAnswer;
+    public AtomicBoolean lastQuestionAnswer = new AtomicBoolean();
+    public CompletableFuture<Boolean> responseFuture;
 
     // current season data
     double xp;
@@ -260,6 +264,14 @@ public class PlayerData
         quests.add(quest);
         if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "" + ChatColor.BOLD + "NEW QUEST: " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.ITALIC + quest.getRewardDescription());
         return quest;
+    }
+
+    public void removeQuest(Quest quest, boolean alert)
+    {
+        if (!quests.contains(quest)) return;
+
+        quests.remove(quest);
+        if (alert) BeanPass.sendMessage(player, ChatColor.RED + "" + ChatColor.BOLD + "REMOVED QUEST: " + ChatColor.RED + quest.getGoalDescription());
     }
 
     public List<Quest> getQuests() { return quests; }

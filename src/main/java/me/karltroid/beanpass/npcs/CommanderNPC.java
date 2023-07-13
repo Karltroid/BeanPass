@@ -81,31 +81,40 @@ public class CommanderNPC extends NPC
 
         MessagePlayer(player, "Greetings soldier.");
 
-        Quests.KillingQuest givenQuest = null;
-        for (Quests.Quest quest : playerData.getQuests())
-        {
-            if (!quest.getQuestGiver().name.equals(this.name)) continue;
+        Quests.KillingQuest previousQuest = (Quests.KillingQuest) playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
 
-            givenQuest = (Quests.KillingQuest) quest;
-            break;
-        }
-
-        if (givenQuest == null) MessagePlayer(player, "Are you looking to help us \"eliminate\" a few targets? We could use your help.");
-        else MessagePlayer(player, "You've already got your orders. " + givenQuest.getGoalDescription() + ". Or is that too tough, do you want a new order?");
+        if (previousQuest == null) MessagePlayer(player, "Are you looking to help us take down a few targets? We could use your help.");
+        else MessagePlayer(player, "You've already got your orders. " + previousQuest.getGoalDescription() + ". Or is that too tough, do you want a new order?");
 
         System.out.println("a");
-        CompletableFuture.runAsync(() -> AskPlayer(player).thenAccept(wantNewQuest ->
-        {
-            System.out.println("b");
+
+        playerData.responseFuture = new CompletableFuture<>();
+        AskPlayer(player);
+
+        playerData.responseFuture.thenAccept(wantNewQuest -> {
             if (wantNewQuest)
             {
-                // future me: ask if they want a easy, normal, or hard quest
-                System.out.println("c");
+                if (previousQuest != null) playerData.removeQuest(previousQuest, true);
+
                 Quests.KillingQuest killingQuest = new Quests.KillingQuest(player.getUniqueId().toString(), -1, null, -1, 0, this);
                 playerData.giveQuest(killingQuest, true);
             }
 
             MessagePlayer(player, "Till next time, see you on the battlefield.");
-        }));
+        });
+
+        /*CompletableFuture.supplyAsync(() -> AskPlayer(player))
+            .thenCompose(wantNewQuestFuture -> wantNewQuestFuture.thenApply(wantNewQuest -> {
+                if (wantNewQuest) {
+                    // future me: ask if they want an easy, normal, or hard quest
+                    Quests.KillingQuest killingQuest = new Quests.KillingQuest(player.getUniqueId().toString(), -1, null, -1, 0, this);
+                    playerData.giveQuest(killingQuest, true);
+                }
+                return wantNewQuest;
+            }))
+            .thenAccept(wantNewQuest -> {
+                System.out.println("b");
+                MessagePlayer(player, "Till next time, see you on the battlefield.");
+            });*/
     }
 }

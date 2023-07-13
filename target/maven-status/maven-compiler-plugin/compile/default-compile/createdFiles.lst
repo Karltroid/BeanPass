@@ -55,7 +55,6 @@ me\karltroid\beanpass\quests\QuestManager.class
 me\karltroid\beanpass\gui\Elements$OpenBeanPassPage.class
 me\karltroid\beanpass\gui\Elements$OpenQuestsPage.class
 me\karltroid\beanpass\npcs\CommanderNPC.class
-me\karltroid\beanpass\npcs\NPC$1.class
 me\karltroid\beanpass\quests\Quests$KillingQuest.class
 me\karltroid\beanpass\npcs\MinerNPC.class
 me\karltroid\beanpass\gui\Elements$BeanPassBackground.class
