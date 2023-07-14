@@ -4,8 +4,6 @@ import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.npcs.NPC;
 import me.karltroid.beanpass.quests.Quests.*;
-import org.bukkit.Material;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,8 +23,7 @@ public class PlayerDataManager implements Listener
 {
     private static final String DATABASE_NAME = "database.db";
     private static final String PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.getInstance().getSeason().getId() + "_data";
-    private static final String PLAYER_SKINS_TABLE_NAME = "player_skins";
-    private static final String PLAYER_MOUNTS_TABLE_NAME = "player_mounts";
+    private static final String PLAYER_REWARDS_TABLE_NAME = "player_rewards";
     private static final String PLAYER_QUESTS_TABLE_NAME = "player_quests";
 
     public PlayerDataManager()
@@ -57,19 +54,11 @@ public class PlayerDataManager implements Listener
                             + ")"
             );
             stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_SKINS_TABLE_NAME + " ("
+                    "CREATE TABLE IF NOT EXISTS " + PLAYER_REWARDS_TABLE_NAME + " ("
                             + "uuid VARCHAR(36) NOT NULL,"
-                            + "skin_id VARCHAR(16) NOT NULL,"
-                            + "equipped BOOLEAN NOT NULL DEFAULT FALSE,"
-                            + "PRIMARY KEY (uuid, skin_id)"
-                            + ")"
-            );
-            stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_MOUNTS_TABLE_NAME + " ("
-                            + "uuid VARCHAR(36) NOT NULL,"
-                            + "mount_id VARCHAR(16) NOT NULL,"
-                            + "equipped BOOLEAN NOT NULL DEFAULT FALSE,"
-                            + "PRIMARY KEY (uuid, mount_id)"
+                            + "reward_type VARCHAR(36) NOT NULL,"
+                            + "reward_id VARCHAR(16) NOT NULL,"
+                            + "equipped BOOLEAN NOT NULL DEFAULT FALSE"
                             + ")"
             );
             stmt.executeUpdate(
@@ -115,34 +104,35 @@ public class PlayerDataManager implements Listener
             BeanPass.getInstance().addPlayerData(uuid, playerData);
             if (lastKnownLevel < playerData.getLevel()) playerData.leveledUp(); // level up player if they got xp while offline
 
-            try (PreparedStatement playerSkinsStatement = conn.prepareStatement("SELECT * FROM player_skins WHERE uuid = ?"))
+            try (PreparedStatement playerRewardsStatement = conn.prepareStatement("SELECT * FROM player_rewards WHERE uuid = ?"))
             {
-                playerSkinsStatement.setString(1, uuid.toString());
+                playerRewardsStatement.setString(1, uuid.toString());
 
-                try (ResultSet playerSkinsResult = playerSkinsStatement.executeQuery())
+                try (ResultSet playerRewardsResult = playerRewardsStatement.executeQuery())
                 {
-                    while (playerSkinsResult.next())
+                    while (playerRewardsResult.next())
                     {
-                        int skinID = Integer.parseInt(playerSkinsResult.getString("skin_id"));
-                        Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinID);
-                        if (playerSkinsResult.getBoolean("equipped")) playerData.equipSkin(skin, false);
-                        playerData.giveSkin(skin, false);
-                    }
-                }
-            }
+                        String rewardType = playerRewardsResult.getString("reward_type");
+                        int rewardID = Integer.parseInt(playerRewardsResult.getString("reward_id"));
+                        boolean equipped = playerRewardsResult.getBoolean("equipped");
 
-            try (PreparedStatement playerMountsStatement = conn.prepareStatement("SELECT * FROM player_mounts WHERE uuid = ?"))
-            {
-                playerMountsStatement.setString(1, uuid.toString());
+                        switch (rewardType)
+                        {
+                            case "SKIN":
 
-                try (ResultSet playerMountsResult = playerMountsStatement.executeQuery())
-                {
-                    while (playerMountsResult.next())
-                    {
-                        int mountID = Integer.parseInt(playerMountsResult.getString("mount_id"));
-                        Mount mount = BeanPass.getInstance().mountManager.getMountById(mountID);
-                        if (playerMountsResult.getBoolean("equipped")) playerData.equipMount(mount, false);
-                        playerData.giveMount(mount, false);
+                                Skin skin = BeanPass.getInstance().skinManager.getSkinById(rewardID);
+                                playerData.giveSkin(skin, false);
+                                if (equipped) playerData.equipSkin(skin, false);
+                                break;
+                            case "MOUNT":
+                                Mount mount = BeanPass.getInstance().mountManager.getMountById(rewardID);
+                                playerData.giveMount(mount, false);
+                                if (equipped) playerData.equipMount(mount, false);
+                                break;
+                            default:
+                                BeanPass.getInstance().getLogger().warning("Problem loading " + playerData.player.getName() + "'s reward data: Reward type does not exist");
+                                break;
+                        }
                     }
                 }
             }
@@ -185,22 +175,17 @@ public class PlayerDataManager implements Listener
                      "INSERT INTO " + PLAYER_SEASON_DATA_TABLE_NAME + " (uuid, xp, premium, last_known_level, max_homes) VALUES (?, ?, ?, ?, ?) " +
                              "ON CONFLICT(uuid) DO UPDATE SET xp = excluded.xp, premium = excluded.premium, last_known_level = excluded.last_known_level, max_homes = excluded.max_homes"
              );
-             PreparedStatement deletePlayerSkinsStatement = conn.prepareStatement(
-                     "DELETE FROM player_skins WHERE uuid = ?"
+             PreparedStatement deletePlayerRewardsStatement = conn.prepareStatement(
+                     "DELETE FROM player_rewards WHERE uuid = ?"
              );
-             PreparedStatement insertPlayerSkinStatement = conn.prepareStatement(
-                     "INSERT INTO player_skins (uuid, skin_id, equipped) VALUES (?, ?, ?)"
+             PreparedStatement insertPlayerRewardsStatement = conn.prepareStatement(
+                     "INSERT INTO player_rewards (uuid, reward_type, reward_id, equipped) VALUES (?, ?, ?, ?)"
              );
-             PreparedStatement deletePlayerMountsStatement = conn.prepareStatement(
-                     "DELETE FROM player_mounts WHERE uuid = ?"
-             );
-             PreparedStatement insertPlayerMountStatement = conn.prepareStatement(
-                     "INSERT INTO player_mounts (uuid, mount_id, equipped) VALUES (?, ?, ?)"
-             );
-             PreparedStatement insertPlayerMaterialQuestsStatement = conn.prepareStatement(
+
+             PreparedStatement insertPlayerQuestsStatement = conn.prepareStatement(
                      "INSERT INTO " + PLAYER_QUESTS_TABLE_NAME + " (uuid, quest_giver, goal_type, goal_count, player_count, xp_reward) VALUES (?, ?, ?, ?, ?, ?)" +
                              "ON CONFLICT(uuid, quest_giver, goal_type, goal_count) DO UPDATE SET player_count = excluded.player_count"
-             );
+             )
 
         ) {
             // Insert or update player_season_data table
@@ -212,43 +197,43 @@ public class PlayerDataManager implements Listener
             playerSeasonDataStatement.executeUpdate();
 
             // Delete all player_skins and player_mounts for the player
-            deletePlayerSkinsStatement.setString(1, uuid.toString());
-            deletePlayerSkinsStatement.executeUpdate();
-            deletePlayerMountsStatement.setString(1, uuid.toString());
-            deletePlayerMountsStatement.executeUpdate();
+            deletePlayerRewardsStatement.setString(1, uuid.toString());
+            deletePlayerRewardsStatement.executeUpdate();
 
             // Insert new player_skins for the player
             for (Integer skinID : playerData.ownedSkins)
             {
-                insertPlayerSkinStatement.setString(1, uuid.toString());
-                insertPlayerSkinStatement.setString(2, skinID.toString());
-                insertPlayerSkinStatement.setBoolean(3, playerData.equippedSkins.contains(BeanPass.getInstance().skinManager.getSkinById(skinID)));
-                insertPlayerSkinStatement.addBatch();
+                insertPlayerRewardsStatement.setString(1, uuid.toString());
+                insertPlayerRewardsStatement.setString(2, "SKIN");
+                insertPlayerRewardsStatement.setString(3, skinID.toString());
+                insertPlayerRewardsStatement.setBoolean(4, playerData.equippedSkins.contains(BeanPass.getInstance().skinManager.getSkinById(skinID)));
+                insertPlayerRewardsStatement.addBatch();
             }
-            insertPlayerSkinStatement.executeBatch();
+            insertPlayerRewardsStatement.executeBatch();
 
             // Insert new player_mounts for the player
             for (Integer mountID : playerData.ownedMounts)
             {
-                insertPlayerMountStatement.setString(1, uuid.toString());
-                insertPlayerMountStatement.setString(2, mountID.toString());
-                insertPlayerMountStatement.setBoolean(3, playerData.equippedMounts.contains(BeanPass.getInstance().mountManager.getMountById(mountID)));
-                insertPlayerMountStatement.addBatch();
+                insertPlayerRewardsStatement.setString(1, uuid.toString());
+                insertPlayerRewardsStatement.setString(2, "MOUNT");
+                insertPlayerRewardsStatement.setString(3, mountID.toString());
+                insertPlayerRewardsStatement.setBoolean(4, playerData.equippedMounts.contains(BeanPass.getInstance().mountManager.getMountById(mountID)));
+                insertPlayerRewardsStatement.addBatch();
             }
-            insertPlayerMountStatement.executeBatch();
+            insertPlayerRewardsStatement.executeBatch();
 
             for (Quest quest : playerData.getQuests())
             {
                 NPC questGiver = quest.getQuestGiver();
-                insertPlayerMaterialQuestsStatement.setString(1, quest.playerUUID);
-                insertPlayerMaterialQuestsStatement.setString(2, BeanPass.getInstance().getNpcManager().getNPCTypeNameFromObject(questGiver));
-                insertPlayerMaterialQuestsStatement.setString(3, questGiver.getQuestGoalType(quest));
-                insertPlayerMaterialQuestsStatement.setInt(4, quest.goalCount);
-                insertPlayerMaterialQuestsStatement.setInt(5, quest.playerCount);
-                insertPlayerMaterialQuestsStatement.setDouble(6, quest.xpReward);
-                insertPlayerMaterialQuestsStatement.addBatch();
+                insertPlayerQuestsStatement.setString(1, quest.playerUUID);
+                insertPlayerQuestsStatement.setString(2, BeanPass.getInstance().getNpcManager().getNPCTypeNameFromObject(questGiver));
+                insertPlayerQuestsStatement.setString(3, questGiver.getQuestGoalType(quest));
+                insertPlayerQuestsStatement.setInt(4, quest.goalCount);
+                insertPlayerQuestsStatement.setInt(5, quest.playerCount);
+                insertPlayerQuestsStatement.setDouble(6, quest.xpReward);
+                insertPlayerQuestsStatement.addBatch();
             }
-            insertPlayerMaterialQuestsStatement.executeBatch();
+            insertPlayerQuestsStatement.executeBatch();
         }
         catch (SQLException e)
         {
