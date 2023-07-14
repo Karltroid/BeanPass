@@ -4,9 +4,6 @@ import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -60,12 +57,25 @@ public class LumberjackNPC extends NPC
             if (wantNewQuest)
             {
                 if (previousQuest != null) playerData.removeQuest(previousQuest, true);
-
-                Quests.MiningQuest miningQuest = new Quests.MiningQuest(player.getUniqueId().toString(), -1, null, -1, 0, this);
-                playerData.giveQuest(miningQuest, true);
+                giveQuest(playerData, null, -1, 0, -1, true);
             }
 
             MessagePlayer(player, getRandomMessage(farewells));
         });
+    }
+
+    @Override
+    public String getQuestGoalType(Quests.Quest quest)
+    {
+        Quests.MiningQuest miningQuest = (Quests.MiningQuest) quest;
+        return miningQuest.getGoalBlockType().name();
+    }
+
+    @Override
+    public void giveQuest(PlayerData playerData, String goalType, int goalCount, int playerCount, double xpReward, boolean alert)
+    {
+        Material goalMaterial = null;
+        if (goalType != null) goalMaterial = Material.valueOf(goalType);
+        playerData.giveQuest(new Quests.MiningQuest(playerData.getUUID().toString(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
     }
 }

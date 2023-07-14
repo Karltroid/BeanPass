@@ -57,12 +57,35 @@ public class ButcherNPC extends NPC
             if (wantNewQuest)
             {
                 if (previousQuest != null) playerData.removeQuest(previousQuest, true);
-
-                Quests.KillingQuest killingQuest = new Quests.KillingQuest(player.getUniqueId().toString(), -1, null, -1, 0, this);
-                playerData.giveQuest(killingQuest, true);
+                giveQuest(playerData, null, -1, 0, -1, true);
             }
 
             MessagePlayer(player, getRandomMessage(farewells));
         });
+    }
+
+    @Override
+    public String getQuestGoalType(Quests.Quest quest)
+    {
+        Quests.KillingQuest killingQuest = (Quests.KillingQuest) quest;
+        return killingQuest.getGoalEntityType().name();
+    }
+
+    @Override
+    public void giveQuest(PlayerData playerData, String goalType, int goalCount, int playerCount, double xpReward, boolean alert)
+    {
+        EntityType goalEntityType = null;
+        if (goalType != null)
+        {
+            for (EntityType type : EntityType.values())
+            {
+                if (!type.name().equalsIgnoreCase(goalType)) continue;
+
+                goalEntityType = type;
+                break;
+            }
+        }
+
+        playerData.giveQuest(new Quests.KillingQuest(playerData.getUUID().toString(), this, goalEntityType, goalCount, playerCount, xpReward), alert);
     }
 }

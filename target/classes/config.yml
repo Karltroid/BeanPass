@@ -160,12 +160,12 @@ BuilderQuests:
     difficulty: HARD
 
 FisherQuests:
-  RAW_COD:
+  COD:
     difficulty: EASY
-  RAW_SALMON:
+  SALMON:
     difficulty: NORMAL
   PUFFERFISH:
-    difficulty: HARD
+    difficulty: VERY_HARD
   TROPICAL_FISH:
     difficulty: SUPER_HARD
 

@@ -17,21 +17,21 @@ public class Quests
     public static abstract class Quest
     {
         public String playerUUID;
-        public double xpReward;
+        NPC questGiver;
+        String goalName = "";
+        String questVerb = "";
         public int goalCount;
         public int playerCount;
-        String questVerb = "";
-        String goalName = "";
-        NPC questGiver;
+        public double xpReward;
 
-        Quest(String playerUUID, double xpReward, int goalCount, int playerCount, String questVerb, NPC questGiver)
+        Quest(String playerUUID, NPC questGiver, String questVerb, int goalCount, int playerCount, double xpReward)
         {
             this.playerUUID = playerUUID;
-            this.goalCount = goalCount;
-            this.xpReward = xpReward;
-            this.playerCount = playerCount;
-            this.questVerb = questVerb;
             this.questGiver = questGiver;
+            this.questVerb = questVerb;
+            this.goalCount = goalCount;
+            this.playerCount = playerCount;
+            this.xpReward = xpReward;
         }
 
         public void setGoalName(String goalName)
@@ -67,9 +67,9 @@ public class Quests
     {
         private final Material goalBlockType;
 
-        public MiningQuest(String playerUUID, double xpReward, Material goalBlockType, int goalBlockCount, int playerBlockCount, NPC questGiver)
+        public MiningQuest(String playerUUID, NPC questGiver, Material goalBlockType, int goalBlockCount, int playerBlockCount, double xpReward)
         {
-            super(playerUUID, xpReward, goalBlockCount, playerBlockCount, "Mine", questGiver);
+            super(playerUUID, questGiver, "Mine", goalBlockCount, playerBlockCount, xpReward);
             HashMap<Material, String> miningQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!miningQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
@@ -111,9 +111,9 @@ public class Quests
     {
         EntityType goalEntityType;
 
-        public KillingQuest(String playerUUID, double xpReward, EntityType goalEntityType, int goalKillCount, int playerKillCount, NPC questGiver)
+        public KillingQuest(String playerUUID, NPC questGiver, EntityType goalEntityType, int goalKillCount, int playerKillCount, double xpReward)
         {
-            super(playerUUID, xpReward, goalKillCount, playerKillCount, "Kill", questGiver);
+            super(playerUUID, questGiver, "Kill", goalKillCount, playerKillCount, xpReward);
             HashMap<EntityType, String> killingQuestDifficulties = (HashMap<EntityType, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!killingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
@@ -175,9 +175,9 @@ public class Quests
     {
         private final Material goalItemType;
 
-        public FishingQuest(String playerUUID, double xpReward, Material goalItemType, int goalItemCount, int playerItemCount, NPC questGiver)
+        public FishingQuest(String playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
         {
-            super(playerUUID, xpReward, goalItemCount, playerItemCount, "Fish", questGiver);
+            super(playerUUID, questGiver, "Fish", goalItemCount, playerItemCount, xpReward);
             HashMap<Material, String> fishingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!fishingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();

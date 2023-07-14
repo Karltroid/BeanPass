@@ -1,8 +1,11 @@
 package me.karltroid.beanpass.npcs;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.GUIMenu;
+import me.karltroid.beanpass.quests.Quests;
+import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -29,4 +32,6 @@ public interface INPC
     {
         new BeanPassGUI(player, GUIMenu.YesNoQuestion);
     }
+    void giveQuest(PlayerData playerData, String goalType, int goalCount, int playerCount, double xpReward, boolean alert);
+    String getQuestGoalType(Quest quest);
 }

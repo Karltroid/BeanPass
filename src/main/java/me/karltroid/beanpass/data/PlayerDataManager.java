@@ -27,8 +27,7 @@ public class PlayerDataManager implements Listener
     private static final String PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.getInstance().getSeason().getId() + "_data";
     private static final String PLAYER_SKINS_TABLE_NAME = "player_skins";
     private static final String PLAYER_MOUNTS_TABLE_NAME = "player_mounts";
-    private static final String PLAYER_MATERIAL_QUESTS_TABLE_NAME = "player_material_quests";
-    private static final String PLAYER_ENTITY_QUESTS_TABLE_NAME = "player_entity_quests";
+    private static final String PLAYER_QUESTS_TABLE_NAME = "player_quests";
 
     public PlayerDataManager()
     {
@@ -74,25 +73,14 @@ public class PlayerDataManager implements Listener
                             + ")"
             );
             stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_MATERIAL_QUESTS_TABLE_NAME + " ("
+                    "CREATE TABLE IF NOT EXISTS " + PLAYER_QUESTS_TABLE_NAME + " ("
                             + "uuid VARCHAR(36) NOT NULL,"
-                            + "xp_reward DOUBLE NOT NULL,"
+                            + "quest_giver VARCHAR(36) NOT NULL,"
+                            + "goal_type VARCHAR(36) NOT NULL,"
                             + "goal_count VARCHAR(36) NOT NULL,"
                             + "player_count VARCHAR(36) NOT NULL,"
-                            + "goal_block_type VARCHAR(36) NOT NULL,"
-                            + "quest_giver VARCHAR(36) NOT NULL,"
-                            + "PRIMARY KEY (uuid, goal_count, goal_block_type, quest_giver)"
-                            + ")"
-            );
-            stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_ENTITY_QUESTS_TABLE_NAME + " ("
-                            + "uuid VARCHAR(36) NOT NULL,"
                             + "xp_reward DOUBLE NOT NULL,"
-                            + "goal_count VARCHAR(36) NOT NULL,"
-                            + "player_count VARCHAR(36) NOT NULL,"
-                            + "goal_entity_type VARCHAR(36) NOT NULL,"
-                            + "quest_giver VARCHAR(36) NOT NULL,"
-                            + "PRIMARY KEY (uuid, goal_count, goal_entity_type, quest_giver)"
+                            + "PRIMARY KEY (uuid, quest_giver, goal_type, goal_count)"
                             + ")"
             );
         } catch (SQLException e) {
@@ -159,55 +147,20 @@ public class PlayerDataManager implements Listener
                 }
             }
 
-            try (PreparedStatement playerMiningQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_MATERIAL_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
-                playerMiningQuestStatement.setString(1, uuid.toString());
+            try (PreparedStatement playerQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
+                playerQuestStatement.setString(1, uuid.toString());
 
-                try (ResultSet playerMiningQuestResult = playerMiningQuestStatement.executeQuery())
+                try (ResultSet playerQuestResult = playerQuestStatement.executeQuery())
                 {
-                    while (playerMiningQuestResult.next())
+                    while (playerQuestResult.next())
                     {
-                        double xpReward = playerMiningQuestResult.getDouble("xp_reward");
-                        Material goalBlockType = Material.valueOf(playerMiningQuestResult.getString("goal_block_type"));
-                        int goalBlockCount = Integer.parseInt(playerMiningQuestResult.getString("goal_count"));
-                        int playerBlockCount = Integer.parseInt(playerMiningQuestResult.getString("player_count"));
-                        NPC questGiver = BeanPass.getInstance().getNpcManager().getNPCByTypeName(playerMiningQuestResult.getString("quest_giver"));
+                        double xpReward = playerQuestResult.getDouble("xp_reward");
+                        String goalType = playerQuestResult.getString("goal_type");
+                        int goalCount = Integer.parseInt(playerQuestResult.getString("goal_count"));
+                        int playerCount = Integer.parseInt(playerQuestResult.getString("player_count"));
+                        NPC questGiver = BeanPass.getInstance().getNpcManager().getNPCByTypeName(playerQuestResult.getString("quest_giver"));
 
-                        playerData.giveQuest(new MiningQuest(uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount, questGiver), false);
-                    }
-                }
-            }
-            catch (SQLException e)
-            {
-                getLogger().severe(e.getMessage());
-            }
-
-            try (PreparedStatement playerKillingQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_ENTITY_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
-                playerKillingQuestStatement.setString(1, uuid.toString());
-
-                try (ResultSet playerKillingQuestResult = playerKillingQuestStatement.executeQuery())
-                {
-                    while (playerKillingQuestResult.next())
-                    {
-                        double xpReward = playerKillingQuestResult.getDouble("xp_reward");
-                        String goalEntityTypeName = playerKillingQuestResult.getString("goal_entity_type");
-                        EntityType goalEntityType = null;
-                        for (EntityType type : EntityType.values())
-                        {
-                            if (!type.name().equalsIgnoreCase(goalEntityTypeName)) continue;
-
-                            goalEntityType = type;
-                            break;
-                        }
-                        if (goalEntityType == null)
-                        {
-                            BeanPass.getInstance().getLogger().warning("Entity type " + goalEntityTypeName + " does not exist. Could not load quest.");
-                            continue;
-                        }
-                        int goalKillCount = Integer.parseInt(playerKillingQuestResult.getString("goal_count"));
-                        int playerKillCount = Integer.parseInt(playerKillingQuestResult.getString("player_count"));
-                        NPC questGiver = BeanPass.getInstance().getNpcManager().getNPCByTypeName(playerKillingQuestResult.getString("quest_giver"));
-
-                        playerData.giveQuest(new KillingQuest(uuid.toString(), xpReward, goalEntityType, goalKillCount, playerKillCount, questGiver), false);
+                        questGiver.giveQuest(playerData, goalType, goalCount, playerCount, xpReward, false);
                     }
                 }
             }
@@ -244,13 +197,9 @@ public class PlayerDataManager implements Listener
              PreparedStatement insertPlayerMountStatement = conn.prepareStatement(
                      "INSERT INTO player_mounts (uuid, mount_id, equipped) VALUES (?, ?, ?)"
              );
-             PreparedStatement insertPlayerMiningQuestsStatement = conn.prepareStatement(
-                     "INSERT INTO " + PLAYER_MATERIAL_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_block_type, quest_giver) VALUES (?, ?, ?, ?, ?, ?)" +
-                             "ON CONFLICT(uuid, goal_count, goal_block_type, quest_giver) DO UPDATE SET xp_reward = excluded.xp_reward, goal_count = excluded.goal_count, player_count = excluded.player_count, goal_block_type = excluded.goal_block_type, quest_giver = excluded.quest_giver"
-             );
-             PreparedStatement insertPlayerKillingQuestsStatement = conn.prepareStatement(
-                     "INSERT INTO " + PLAYER_ENTITY_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_entity_type, quest_giver) VALUES (?, ?, ?, ?, ?, ?)" +
-                             "ON CONFLICT(uuid, goal_count, goal_entity_type, quest_giver) DO UPDATE SET xp_reward = excluded.xp_reward, goal_count = excluded.goal_count, player_count = excluded.player_count, goal_entity_type = excluded.goal_entity_type, quest_giver = excluded.quest_giver"
+             PreparedStatement insertPlayerMaterialQuestsStatement = conn.prepareStatement(
+                     "INSERT INTO " + PLAYER_QUESTS_TABLE_NAME + " (uuid, quest_giver, goal_type, goal_count, player_count, xp_reward) VALUES (?, ?, ?, ?, ?, ?)" +
+                             "ON CONFLICT(uuid, quest_giver, goal_type, goal_count) DO UPDATE SET player_count = excluded.player_count"
              );
 
         ) {
@@ -290,31 +239,16 @@ public class PlayerDataManager implements Listener
 
             for (Quest quest : playerData.getQuests())
             {
-                if (quest instanceof MiningQuest)
-                {
-                    MiningQuest miningQuest = (MiningQuest) quest;
-                    insertPlayerMiningQuestsStatement.setString(1, miningQuest.playerUUID);
-                    insertPlayerMiningQuestsStatement.setDouble(2, miningQuest.xpReward);
-                    insertPlayerMiningQuestsStatement.setInt(3, miningQuest.goalCount);
-                    insertPlayerMiningQuestsStatement.setInt(4, miningQuest.playerCount);
-                    insertPlayerMiningQuestsStatement.setString(5, miningQuest.getGoalBlockType().name());
-                    insertPlayerMiningQuestsStatement.setString(6, BeanPass.getInstance().getNpcManager().getNPCTypeNameFromObject(miningQuest.getQuestGiver()));
-                    insertPlayerMiningQuestsStatement.addBatch();
-                }
-                else if (quest instanceof KillingQuest)
-                {
-                    KillingQuest killingQuest = (KillingQuest) quest;
-                    insertPlayerKillingQuestsStatement.setString(1, killingQuest.playerUUID);
-                    insertPlayerKillingQuestsStatement.setDouble(2, killingQuest.xpReward);
-                    insertPlayerKillingQuestsStatement.setInt(3, killingQuest.goalCount);
-                    insertPlayerKillingQuestsStatement.setInt(4, killingQuest.playerCount);
-                    insertPlayerKillingQuestsStatement.setString(5, killingQuest.getGoalEntityType().name());
-                    insertPlayerKillingQuestsStatement.setString(6, BeanPass.getInstance().getNpcManager().getNPCTypeNameFromObject(killingQuest.getQuestGiver()));
-                    insertPlayerKillingQuestsStatement.addBatch();
-                }
+                NPC questGiver = quest.getQuestGiver();
+                insertPlayerMaterialQuestsStatement.setString(1, quest.playerUUID);
+                insertPlayerMaterialQuestsStatement.setString(2, BeanPass.getInstance().getNpcManager().getNPCTypeNameFromObject(questGiver));
+                insertPlayerMaterialQuestsStatement.setString(3, questGiver.getQuestGoalType(quest));
+                insertPlayerMaterialQuestsStatement.setInt(4, quest.goalCount);
+                insertPlayerMaterialQuestsStatement.setInt(5, quest.playerCount);
+                insertPlayerMaterialQuestsStatement.setDouble(6, quest.xpReward);
+                insertPlayerMaterialQuestsStatement.addBatch();
             }
-            insertPlayerMiningQuestsStatement.executeBatch();
-            insertPlayerKillingQuestsStatement.executeBatch();
+            insertPlayerMaterialQuestsStatement.executeBatch();
         }
         catch (SQLException e)
         {

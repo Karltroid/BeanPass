@@ -3,6 +3,7 @@ package me.karltroid.beanpass.npcs;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests;
+import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
@@ -56,12 +57,25 @@ public class FisherNPC extends NPC
             if (wantNewQuest)
             {
                 if (previousQuest != null) playerData.removeQuest(previousQuest, true);
-
-                Quests.FishingQuest fishingQuest = new Quests.FishingQuest(player.getUniqueId().toString(), -1, null, -1, 0, this);
-                playerData.giveQuest(fishingQuest, true);
+                giveQuest(playerData, null, -1, 0, -1, true);
             }
 
             MessagePlayer(player, getRandomMessage(farewells));
         });
+    }
+
+    @Override
+    public String getQuestGoalType(Quest quest)
+    {
+        Quests.FishingQuest fishingQuest = (Quests.FishingQuest) quest;
+        return fishingQuest.getGoalItemType().name();
+    }
+
+    @Override
+    public void giveQuest(PlayerData playerData, String goalType, int goalCount, int playerCount, double xpReward, boolean alert)
+    {
+        Material goalMaterial = null;
+        if (goalType != null) goalMaterial = Material.valueOf(goalType);
+        playerData.giveQuest(new Quests.FishingQuest(playerData.getUUID().toString(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
     }
 }
