@@ -58,7 +58,7 @@ public class Quests
         }
 
         public boolean isCompleted() { return playerCount >= goalCount; }
-        public void incrementPlayerCount() { playerCount++; }
+        public void incrementPlayerCount(int amount) { playerCount += amount; }
         public double getXPReward() { return xpReward; }
         public NPC getQuestGiver() { return questGiver; }
     }
@@ -171,49 +171,50 @@ public class Quests
 
     // Breeding Quest
 
-    /*public static class FishingQuest extends Quest
+    public static class FishingQuest extends Quest
     {
-        EntityType goalEntityType;
+        private final Material goalItemType;
 
         public FishingQuest(String playerUUID, double xpReward, Material goalItemType, int goalItemCount, int playerItemCount, NPC questGiver)
         {
             super(playerUUID, xpReward, goalItemCount, playerItemCount, "Fish", questGiver);
             HashMap<Material, String> fishingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
-            while (!killingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!fishingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
 
-            this.goalCount = (goalITemCount <= 0 ? questDifficulty.generateUnitAmount() : goalItemCount);
+            this.goalCount = (goalItemCount <= 0 ? questDifficulty.generateUnitAmount() : goalItemCount);
             this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
 
 
-            if (goalEntityType != null)
+            if (goalItemType != null)
             {
-                this.goalEntityType = goalEntityType;
+                this.goalItemType = goalItemType;
             }
             else
             {
-                List<Map.Entry<EntityType, String>> matchingDifficultyEntity = new ArrayList<>();
+                List<Map.Entry<Material, String>> matchingDifficultyMaterials = new ArrayList<>();
 
-                for (Map.Entry<EntityType, String> entry : killingQuestDifficulties.entrySet()) {
+                for (Map.Entry<Material, String> entry : fishingQuestDifficulties.entrySet()) {
                     if (entry.getValue().equals(questDifficultyKey)) {
-                        matchingDifficultyEntity.add(entry);
+                        matchingDifficultyMaterials.add(entry);
                     }
                 }
 
                 Random random = new Random();
-                int randomIndex = random.nextInt(matchingDifficultyEntity.size());
+                int randomIndex = random.nextInt(matchingDifficultyMaterials.size());
 
-                Map.Entry<EntityType, String> randomEntry = matchingDifficultyEntity.get(randomIndex);
+                Map.Entry<Material, String> randomEntry = matchingDifficultyMaterials.get(randomIndex);
 
-                this.goalEntityType = randomEntry.getKey();
+                this.goalItemType = randomEntry.getKey();
             }
 
-            setGoalName(this.goalEntityType.name());
+            setGoalName(this.goalItemType.name());
         }
 
-        public EntityType getGoalEntityType() { return goalEntityType; }
-    }*/
+        public Material getGoalItemType() { return goalItemType; }
+
+    }
 
     // Farming Quest
 

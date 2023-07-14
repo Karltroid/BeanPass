@@ -27,9 +27,8 @@ public class PlayerDataManager implements Listener
     private static final String PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.getInstance().getSeason().getId() + "_data";
     private static final String PLAYER_SKINS_TABLE_NAME = "player_skins";
     private static final String PLAYER_MOUNTS_TABLE_NAME = "player_mounts";
-    private static final String PLAYER_MINING_QUESTS_TABLE_NAME = "player_mining_quests";
-    private static final String PLAYER_KILLING_QUESTS_TABLE_NAME = "player_killing_quests";
-    private static final String PLAYER_EXPLORATION_QUESTS_TABLE_NAME = "player_exploration_quests";
+    private static final String PLAYER_MATERIAL_QUESTS_TABLE_NAME = "player_material_quests";
+    private static final String PLAYER_ENTITY_QUESTS_TABLE_NAME = "player_entity_quests";
 
     public PlayerDataManager()
     {
@@ -75,7 +74,7 @@ public class PlayerDataManager implements Listener
                             + ")"
             );
             stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_MINING_QUESTS_TABLE_NAME + " ("
+                    "CREATE TABLE IF NOT EXISTS " + PLAYER_MATERIAL_QUESTS_TABLE_NAME + " ("
                             + "uuid VARCHAR(36) NOT NULL,"
                             + "xp_reward DOUBLE NOT NULL,"
                             + "goal_count VARCHAR(36) NOT NULL,"
@@ -86,7 +85,7 @@ public class PlayerDataManager implements Listener
                             + ")"
             );
             stmt.executeUpdate(
-                    "CREATE TABLE IF NOT EXISTS " + PLAYER_KILLING_QUESTS_TABLE_NAME + " ("
+                    "CREATE TABLE IF NOT EXISTS " + PLAYER_ENTITY_QUESTS_TABLE_NAME + " ("
                             + "uuid VARCHAR(36) NOT NULL,"
                             + "xp_reward DOUBLE NOT NULL,"
                             + "goal_count VARCHAR(36) NOT NULL,"
@@ -160,7 +159,7 @@ public class PlayerDataManager implements Listener
                 }
             }
 
-            try (PreparedStatement playerMiningQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_MINING_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
+            try (PreparedStatement playerMiningQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_MATERIAL_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
                 playerMiningQuestStatement.setString(1, uuid.toString());
 
                 try (ResultSet playerMiningQuestResult = playerMiningQuestStatement.executeQuery())
@@ -182,7 +181,7 @@ public class PlayerDataManager implements Listener
                 getLogger().severe(e.getMessage());
             }
 
-            try (PreparedStatement playerKillingQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_KILLING_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
+            try (PreparedStatement playerKillingQuestStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_ENTITY_QUESTS_TABLE_NAME + " WHERE uuid = ?")) {
                 playerKillingQuestStatement.setString(1, uuid.toString());
 
                 try (ResultSet playerKillingQuestResult = playerKillingQuestStatement.executeQuery())
@@ -246,11 +245,11 @@ public class PlayerDataManager implements Listener
                      "INSERT INTO player_mounts (uuid, mount_id, equipped) VALUES (?, ?, ?)"
              );
              PreparedStatement insertPlayerMiningQuestsStatement = conn.prepareStatement(
-                     "INSERT INTO " + PLAYER_MINING_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_block_type, quest_giver) VALUES (?, ?, ?, ?, ?, ?)" +
+                     "INSERT INTO " + PLAYER_MATERIAL_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_block_type, quest_giver) VALUES (?, ?, ?, ?, ?, ?)" +
                              "ON CONFLICT(uuid, goal_count, goal_block_type, quest_giver) DO UPDATE SET xp_reward = excluded.xp_reward, goal_count = excluded.goal_count, player_count = excluded.player_count, goal_block_type = excluded.goal_block_type, quest_giver = excluded.quest_giver"
              );
              PreparedStatement insertPlayerKillingQuestsStatement = conn.prepareStatement(
-                     "INSERT INTO " + PLAYER_KILLING_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_entity_type, quest_giver) VALUES (?, ?, ?, ?, ?, ?)" +
+                     "INSERT INTO " + PLAYER_ENTITY_QUESTS_TABLE_NAME + " (uuid, xp_reward, goal_count, player_count, goal_entity_type, quest_giver) VALUES (?, ?, ?, ?, ?, ?)" +
                              "ON CONFLICT(uuid, goal_count, goal_entity_type, quest_giver) DO UPDATE SET xp_reward = excluded.xp_reward, goal_count = excluded.goal_count, player_count = excluded.player_count, goal_entity_type = excluded.goal_entity_type, quest_giver = excluded.quest_giver"
              );
 

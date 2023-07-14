@@ -38,7 +38,7 @@ Difficulties:
     max_unit_multiplier: 1
     xp_per_unit: 150
 
-CommanderKillingQuests:
+CommanderQuests:
   BLAZE:
     difficulty: HARD
   CAVE_SPIDER:
@@ -87,8 +87,6 @@ CommanderKillingQuests:
     difficulty: NORMAL
   SPIDER:
     difficulty: NORMAL
-  SQUID:
-    difficulty: EASY
   STRAY:
     difficulty: HARD
   VEX:
@@ -111,7 +109,7 @@ CommanderKillingQuests:
     difficulty: HARD
 
 # All Possible Mining Quests And Its Respective Difficulty
-MinerMiningQuests:
+MinerQuests:
   COAL_ORE:
     difficulty: EASY
   COPPER_ORE:
@@ -135,7 +133,7 @@ MinerMiningQuests:
   ANCIENT_DEBRIS:
     difficulty: SUPER_HARD
 
-BuilderMiningQuests:
+BuilderQuests:
   STONE:
     difficulty: SUPER_EASY
   SAND:
@@ -161,8 +159,18 @@ BuilderMiningQuests:
   MOSSY_COBBLESTONE:
     difficulty: HARD
 
+FisherQuests:
+  COD:
+    difficulty: EASY
+  SALMON:
+    difficulty: NORMAL
+  PUFFERFISH:
+    difficulty: VERY_HARD
+  TROPICAL_FISH:
+    difficulty: SUPER_HARD
+
 # All Possible Lumber Quests And Its Respective Difficulty
-LumberjackMiningQuests:
+LumberjackQuests:
   OAK_LOG:
     difficulty: VERY_EASY
   SPRUCE_LOG:
@@ -182,7 +190,7 @@ LumberjackMiningQuests:
   WARPED_STEM:
     difficulty: EASY
 
-ButcherKillingQuests:
+ButcherQuests:
   CHICKEN:
     difficulty: EASY
   COD:
@@ -205,100 +213,6 @@ ButcherKillingQuests:
     difficulty: EASY
   TROPICAL_FISH:
     difficulty: NORMAL
-
-KillingQuestDifficulties:
-  BLAZE:
-    difficulty: HARD
-  CAVE_SPIDER:
-    difficulty: NORMAL
-  CHICKEN:
-    difficulty: EASY
-  COW:
-    difficulty: EASY
-  CREEPER:
-    difficulty: NORMAL
-  DROWNED:
-    difficulty: NORMAL
-  ELDER_GUARDIAN:
-    difficulty: SUPER_HARD
-  ENDER_DRAGON:
-    difficulty: SUPER_HARD
-  ENDERMAN:
-    difficulty: HARD
-  ENDERMITE:
-    difficulty: HARD
-  EVOKER:
-    difficulty: VERY_HARD
-  GHAST:
-    difficulty: HARD
-  GLOW_SQUID:
-    difficulty: NORMAL
-  GOAT:
-    difficulty: NORMAL
-  GUARDIAN:
-    difficulty: HARD
-  HOGLIN:
-    difficulty: HARD
-  HUSK:
-    difficulty: HARD
-  MAGMA_CUBE:
-    difficulty: HARD
-  MUSHROOM_COW:
-    difficulty: HARD
-  PHANTOM:
-    difficulty: HARD
-  PIG:
-    difficulty: EASY
-  PIGLIN:
-    difficulty: NORMAL
-  PIGLIN_BRUTE:
-    difficulty: VERY_HARD
-  PILLAGER:
-    difficulty: HARD
-  PUFFERFISH:
-    difficulty: NORMAL
-  RABBIT:
-    difficulty: EASY
-  RAVAGER:
-    difficulty: VERY_HARD
-  SALMON:
-    difficulty: NORMAL
-  SHEEP:
-    difficulty: EASY
-  SHULKER:
-    difficulty: HARD
-  SILVERFISH:
-    difficulty: HARD
-  SKELETON:
-    difficulty: NORMAL
-  SLIME:
-    difficulty: NORMAL
-  SPIDER:
-    difficulty: NORMAL
-  SQUID:
-    difficulty: EASY
-  STRAY:
-    difficulty: HARD
-  TROPICAL_FISH:
-    difficulty: NORMAL
-  VEX:
-    difficulty: VERY_HARD
-  VINDICATOR:
-    difficulty: VERY_HARD
-  WARDEN:
-    difficulty: SUPER_HARD
-  WITCH:
-    difficulty: HARD
-  WITHER:
-    difficulty: SUPER_HARD
-  WITHER_SKELETON:
-    difficulty: VERY_HARD
-  ZOGLIN:
-    difficulty: HARD
-  ZOMBIE:
-    difficulty: NORMAL
-  ZOMBIFIED_PIGLIN:
-    difficulty: HARD
 
 ExplorationQuestDifficulties:
   ANCIENT_CITY:

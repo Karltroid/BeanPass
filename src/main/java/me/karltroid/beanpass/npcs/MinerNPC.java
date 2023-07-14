@@ -25,9 +25,9 @@ public class MinerNPC extends NPC
             "Till next time, lucky mining!"
     };
 
-    public MinerNPC(String name, String configSectionName)
+    public MinerNPC(String name)
     {
-        super(name, configSectionName);
+        super(name);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MinerNPC extends NPC
     @Override
     public void loadQuests()
     {
-        questTypes = loadMiningQuestTypes(this.configSectionName);
+        questTypes = loadMaterialQuestTypes();
     }
 
     @Override

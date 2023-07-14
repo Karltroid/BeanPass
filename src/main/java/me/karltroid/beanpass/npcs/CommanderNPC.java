@@ -27,9 +27,9 @@ public class CommanderNPC extends NPC
             "Don't get yourself killed."
     };
 
-    public CommanderNPC(String name, String configSectionName)
+    public CommanderNPC(String name)
     {
-        super(name, configSectionName);
+        super(name);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CommanderNPC extends NPC
     @Override
     public void loadQuests()
     {
-        questTypes = loadKillingQuestTypes(this.configSectionName);
+        questTypes = loadEntityQuestTypes();
     }
 
     @Override

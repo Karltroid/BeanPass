@@ -12,13 +12,11 @@ import java.util.HashMap;
 
 public abstract class NPC implements INPC
 {
-    String configSectionName;
     String name;
 
-    public NPC(String name, String configSectionName)
+    public NPC(String name)
     {
         this.name = name;
-        this.configSectionName = configSectionName;
         loadQuests();
     }
 
@@ -32,22 +30,24 @@ public abstract class NPC implements INPC
         return name;
     }
 
-    HashMap<Material, String> loadMiningQuestTypes(String configSectionName)
+    HashMap<Material, String> loadMaterialQuestTypes()
     {
+        String configSectionName = getConfigSectionName();
+
         // load quest types from config.yml
         HashMap<Material, String> questTypes = new HashMap<>();
         FileConfiguration config = BeanPass.getInstance().getConfig();
-        ConfigurationSection lumberjackMiningQuests = config.getConfigurationSection(configSectionName);
+        ConfigurationSection materialQuest = config.getConfigurationSection(configSectionName);
 
-        if (lumberjackMiningQuests == null)
+        if (materialQuest == null)
         {
             BeanPass.getInstance().getLogger().warning("Couldn't get the " + configSectionName + " section in your Config.yml");
             return null;
         }
 
-        for (String materialName : lumberjackMiningQuests.getKeys(false))
+        for (String materialName : materialQuest.getKeys(false))
         {
-            ConfigurationSection difficultySection = lumberjackMiningQuests.getConfigurationSection(materialName);
+            ConfigurationSection difficultySection = materialQuest.getConfigurationSection(materialName);
 
             if (difficultySection == null)
             {
@@ -56,6 +56,11 @@ public abstract class NPC implements INPC
             }
 
             Material material = Material.matchMaterial(materialName);
+            if (material == null)
+            {
+                BeanPass.getInstance().getLogger().warning(materialName + " does not exist. Check the " + configSectionName + " section in the config");
+                continue;
+            }
             String difficulty = difficultySection.getString("difficulty");
 
             questTypes.put(material, difficulty);
@@ -64,8 +69,10 @@ public abstract class NPC implements INPC
         return questTypes;
     }
 
-    HashMap<EntityType, String> loadKillingQuestTypes(String configSectionName)
+    HashMap<EntityType, String> loadEntityQuestTypes()
     {
+        String configSectionName = getConfigSectionName();
+
         // load quest types from config.yml
         HashMap<EntityType, String> questTypes = new HashMap<>();
         FileConfiguration config = BeanPass.getInstance().getConfig();
@@ -105,5 +112,10 @@ public abstract class NPC implements INPC
         }
 
         return questTypes;
+    }
+
+    String getConfigSectionName()
+    {
+        return this.name + "Quests";
     }
 }

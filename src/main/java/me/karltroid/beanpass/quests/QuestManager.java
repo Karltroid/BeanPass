@@ -9,12 +9,13 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -51,8 +52,35 @@ public class QuestManager implements Listener
         }
         if (miningQuest == null) return;
 
-        miningQuest.incrementPlayerCount();
+        miningQuest.incrementPlayerCount(1);
         if (miningQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, miningQuest);
+    }
+
+    @EventHandler
+    void onFishingQuestProgressed(PlayerFishEvent event)
+    {
+        if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
+
+        UUID playerUUID = event.getPlayer().getUniqueId();
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
+
+        Entity caught = event.getCaught();
+
+        if (caught == null || caught.getType() != EntityType.DROPPED_ITEM) return;
+
+        Material caughtMaterial = ((Item)event.getCaught()).getItemStack().getType();
+
+        FishingQuest fishingQuest = null;
+        for (Quest quest : playerData.getQuests())
+        {
+            if (!(quest instanceof FishingQuest)) continue;
+            if (caughtMaterial != ((FishingQuest) quest).getGoalItemType()) continue;
+            fishingQuest = (FishingQuest) quest;
+        }
+        if (fishingQuest == null) return;
+
+        fishingQuest.incrementPlayerCount(1);
+        if (fishingQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, fishingQuest);
     }
 
     @EventHandler
@@ -73,7 +101,7 @@ public class QuestManager implements Listener
         }
         if (killingQuest == null) return;
 
-        killingQuest.incrementPlayerCount();
+        killingQuest.incrementPlayerCount(1);
         if (killingQuest.isCompleted()) completeQuest(player, playerData, killingQuest);
     }
 }

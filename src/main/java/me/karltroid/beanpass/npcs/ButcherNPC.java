@@ -21,9 +21,9 @@ public class ButcherNPC extends NPC
             "See you later."
     };
 
-    public ButcherNPC(String name, String configSectionName)
+    public ButcherNPC(String name)
     {
-        super(name, configSectionName);
+        super(name);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class ButcherNPC extends NPC
     @Override
     public void loadQuests()
     {
-        questTypes = loadKillingQuestTypes(this.configSectionName);
+        questTypes = loadEntityQuestTypes();
     }
 
     @Override
