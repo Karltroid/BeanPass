@@ -1,20 +1,16 @@
 package me.karltroid.beanpass.data;
 
 import com.earth2me.essentials.User;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
-import me.karltroid.beanpass.gui.Button;
 import me.karltroid.beanpass.mounts.Mount;
-import me.karltroid.beanpass.quests.Quests;
 import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,20 +21,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PlayerData
 {
+    // current instance player data
     OfflinePlayer player;
+    public CompletableFuture<Boolean> responseFuture;
+
+    // current season player data
+    double xp;
+    int lastKnownLevel;
+    List<Quest> quests = new ArrayList<>();
     Boolean premium;
+
+    // persistent player data
+    int maxHomes;
     List<Integer> ownedSkins;
     List<Integer> ownedMounts;
     List<Skin> equippedSkins = new ArrayList<>();
     List<Mount> equippedMounts = new ArrayList<>();
-    public AtomicBoolean lastQuestionAnswer = new AtomicBoolean();
-    public CompletableFuture<Boolean> responseFuture;
-
-    // current season data
-    double xp;
-    int lastKnownLevel;
-    int maxHomes;
-    List<Quest> quests = new ArrayList<>();
 
     public PlayerData(UUID UUID, boolean premium, List<Integer> ownedSkins, List<Integer> ownedMounts, double xp, int lastKnownLevel, int maxHomes)
     {
@@ -183,7 +181,7 @@ public class PlayerData
         BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "homes" : "home") + "! " + essentialsPlayer.getHomes().size() + "/" + maxHomes + " used.");
     }
 
-    public int getMaxHomes()
+    public int getMaxHomeAmount()
     {
         return maxHomes;
     }
@@ -275,4 +273,14 @@ public class PlayerData
     }
 
     public List<Quest> getQuests() { return quests; }
+
+    public double getBalance()
+    {
+        return BeanPass.getInstance().getEconomy().getBalance(player);
+    }
+
+    public int getHomeAmount()
+    {
+        return BeanPass.getInstance().getEssentials().getUser(getUUID()).getHomes().size();
+    }
 }

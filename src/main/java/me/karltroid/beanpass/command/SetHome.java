@@ -34,7 +34,7 @@ public class SetHome implements CommandExecutor
         }
 
         User essentialsUser = BeanPass.getInstance().getEssentials().getUser(senderPlayer);
-        int playerMaxHomes = BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getMaxHomes();
+        int playerMaxHomes = BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getMaxHomeAmount();
         int playerHomesAmount = essentialsUser.getHomes().size();
         if (playerHomesAmount >= playerMaxHomes)
         {

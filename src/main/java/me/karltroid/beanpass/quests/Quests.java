@@ -7,6 +7,7 @@ import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.generator.structure.Structure;
+import org.bukkit.inventory.ItemStack;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -170,7 +171,49 @@ public class Quests
 
     // Breeding Quest
 
-    // Fishing Quest
+    /*public static class FishingQuest extends Quest
+    {
+        EntityType goalEntityType;
+
+        public FishingQuest(String playerUUID, double xpReward, Material goalItemType, int goalItemCount, int playerItemCount, NPC questGiver)
+        {
+            super(playerUUID, xpReward, goalItemCount, playerItemCount, "Fish", questGiver);
+            HashMap<Material, String> fishingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
+            String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!killingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
+
+            this.goalCount = (goalITemCount <= 0 ? questDifficulty.generateUnitAmount() : goalItemCount);
+            this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
+
+
+            if (goalEntityType != null)
+            {
+                this.goalEntityType = goalEntityType;
+            }
+            else
+            {
+                List<Map.Entry<EntityType, String>> matchingDifficultyEntity = new ArrayList<>();
+
+                for (Map.Entry<EntityType, String> entry : killingQuestDifficulties.entrySet()) {
+                    if (entry.getValue().equals(questDifficultyKey)) {
+                        matchingDifficultyEntity.add(entry);
+                    }
+                }
+
+                Random random = new Random();
+                int randomIndex = random.nextInt(matchingDifficultyEntity.size());
+
+                Map.Entry<EntityType, String> randomEntry = matchingDifficultyEntity.get(randomIndex);
+
+                this.goalEntityType = randomEntry.getKey();
+            }
+
+            setGoalName(this.goalEntityType.name());
+        }
+
+        public EntityType getGoalEntityType() { return goalEntityType; }
+    }*/
 
     // Farming Quest
 

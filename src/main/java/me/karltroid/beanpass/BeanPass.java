@@ -18,6 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -194,7 +195,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("mounts").setExecutor(new OpenBeanPassPage(GUIMenu.Mounts));
         main.getCommand("hats").setExecutor(new OpenBeanPassPage(GUIMenu.Hats));
         main.getCommand("tools").setExecutor(new OpenBeanPassPage(GUIMenu.Tools));
-        main.getCommand("yesno").setExecutor(new OpenBeanPassPage(GUIMenu.YesNoQuestion));
         main.getCommand("sethome").setExecutor(new SetHome());
         main.getCommand("givequest").setExecutor(new GiveQuest());
     }

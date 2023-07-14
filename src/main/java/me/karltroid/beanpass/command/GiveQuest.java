@@ -17,9 +17,11 @@ public class GiveQuest implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        Player senderPlayer = (Player) sender;
 
-        if (!senderPlayer.hasPermission("beanpass.admin"))
+        Player senderPlayer = null;
+        if (sender instanceof Player) senderPlayer = (Player) sender;
+
+        if (senderPlayer != null && !senderPlayer.hasPermission("beanpass.admin"))
         {
             BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
             return false;
@@ -27,7 +29,8 @@ public class GiveQuest implements CommandExecutor
 
         if (args.length == 0)
         {
-            BeanPass.sendMessage(senderPlayer, "Command Usage: /givequest <npc typename> <player>");
+            if (senderPlayer != null) BeanPass.sendMessage(senderPlayer, "Command Usage: /givequest <npc typename> <player>");
+            else BeanPass.getInstance().getLogger().warning("Error server running command /givequest.");
             return false;
         }
 
@@ -51,8 +54,13 @@ public class GiveQuest implements CommandExecutor
             BeanPass.sendMessage(senderPlayer, "This NPC type does not exist");
             return false;
         }
-        npc.PromptQuestDifficulty(affectedPlayer);
+        if (affectedPlayer == null)
+        {
+            BeanPass.getInstance().getLogger().warning("The player receiving the quest is null");
+            return false;
+        }
 
+        npc.Interact(affectedPlayer);
         return true;
     }
 }

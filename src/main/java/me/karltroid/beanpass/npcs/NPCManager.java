@@ -1,5 +1,11 @@
 package me.karltroid.beanpass.npcs;
 
+import me.karltroid.beanpass.BeanPass;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,9 +16,10 @@ public class NPCManager
     public NPCManager()
     {
         // type name, npc object
-        npcs.put("commander", new CommanderNPC());
-        npcs.put("lumberjack", new LumberjackNPC());
-        npcs.put("miner", new MinerNPC());
+        npcs.put("commander", new CommanderNPC("Commander", "CommanderKillingQuests"));
+        npcs.put("lumberjack", new LumberjackNPC("Lumberjack", "LumberjackMiningQuests"));
+        npcs.put("miner", new MinerNPC("Miner", "MinerMiningQuests"));
+        npcs.put("butcher", new MinerNPC("Butcher", "ButcherKillingQuests"));
     }
 
     public NPC getNPCByTypeName(String name)

@@ -35,9 +35,7 @@ public class OpenBeanPassPage implements CommandExecutor
             return false;
         }
 
-        BeanPassGUI playerBeanPassGUI = BeanPass.getInstance().activeGUIs.get(senderPlayer);
-        if (playerBeanPassGUI != null) playerBeanPassGUI.loadMenu(menu);
-        else new BeanPassGUI(senderPlayer, menu);
+        new BeanPassGUI(senderPlayer, menu);
 
         return true;
     }

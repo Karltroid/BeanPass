@@ -182,6 +182,30 @@ LumberjackMiningQuests:
   WARPED_STEM:
     difficulty: EASY
 
+ButcherKillingQuests:
+  CHICKEN:
+    difficulty: EASY
+  COD:
+    difficulty: NORMAL
+  COW:
+    difficulty: EASY
+  HOGLIN:
+    difficulty: HARD
+  MUSHROOM_COW:
+    difficulty: HARD
+  PIG:
+    difficulty: EASY
+  POLAR_BEAR:
+    difficulty: HARD
+  RABBIT:
+    difficulty: EASY
+  SALMON:
+    difficulty: NORMAL
+  SHEEP:
+    difficulty: EASY
+  TROPICAL_FISH:
+    difficulty: NORMAL
+
 KillingQuestDifficulties:
   BLAZE:
     difficulty: HARD

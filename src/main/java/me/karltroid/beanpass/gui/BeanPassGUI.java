@@ -48,9 +48,12 @@ public class BeanPassGUI implements Listener
     public BeanPassGUI(Player player, GUIMenu guiMenu)
     {
         BeanPassGUI alreadyOpenGUI = BeanPass.getInstance().activeGUIs.get(player);
-        if (alreadyOpenGUI != null) alreadyOpenGUI.closeEntireGUI();
+        if (alreadyOpenGUI != null)
+        {
+            endQuestionResponse();
+            alreadyOpenGUI.closeEntireGUI();
+        }
 
-        System.out.println("!!!");
         this.player = player;
         this.world = player.getWorld();
         this.playerLocation = player.getEyeLocation();
@@ -59,10 +62,7 @@ public class BeanPassGUI implements Listener
         this.originalGamemode = player.getGameMode();
         this.currentMenu = guiMenu;
 
-        System.out.println("???");
         player.setGameMode(GameMode.ADVENTURE);
-
-        System.out.println("time to load");
         loadMenu(guiMenu);
 
         BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
@@ -109,9 +109,13 @@ public class BeanPassGUI implements Listener
         }.runTaskTimer(BeanPass.getInstance(),0,2);
     }
 
+    void endQuestionResponse()
+    {
+        if (currentMenu != null && currentMenu.equals(GUIMenu.YesNoQuestion)) playerData.responseFuture.complete(false);
+    }
+
     public void loadMenu(GUIMenu menu)
     {
-        System.out.println("loadmenu");
         switch (menu)
         {
             case BeanPass:
@@ -133,7 +137,6 @@ public class BeanPassGUI implements Listener
                 loadToolsMenu();
                 break;
             case YesNoQuestion:
-                System.out.println("YesNoSelected");
                 loadYesNoQuestionMenu();
                 break;
             default:
@@ -145,14 +148,13 @@ public class BeanPassGUI implements Listener
 
     void loadYesNoQuestionMenu()
     {
-        System.out.println("Loading yes no");
         this.currentMenu = GUIMenu.YesNoQuestion;
         closeElementList(allElements);
 
-        loadElement(new TextElement(this, true, 1.5, -12, -7, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
-        loadElement(new NoButton(this, true, 1.5, -12, -14, 0.4f), null);
-        loadElement(new TextElement(this, true, 1.5, 12, -7, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
-        loadElement(new YesButton(this, true, 1.5, 12, -14, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.5, -16, -4, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
+        loadElement(new NoButton(this, true, 1.5, -16, -12, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.5, 16, -4, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
+        loadElement(new YesButton(this, true, 1.5, 16, -12, 0.4f), null);
     }
 
     void loadBeanPassMenu()
@@ -180,7 +182,7 @@ public class BeanPassGUI implements Listener
         int y = 8;
         for (Quests.Quest quest : BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests())
         {
-            loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
+            loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.BOLD + quest.getQuestGiver().getName() + ": " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
             y -= lineSpacing;
         }
 
@@ -194,8 +196,8 @@ public class BeanPassGUI implements Listener
 
         loadElement(new RewardsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        loadElement(new TextElement(this, false, 3, 0, 15, 0.75f, ChatColor.GREEN + "Balance: $" + BeanPass.getInstance().getEconomy().getBalance(player)), null);
-        loadElement(new TextElement(this, false, 3, 0, 10, 0.75f, ChatColor.YELLOW + "Homes: " + BeanPass.getInstance().getEssentials().getUser(player.getUniqueId()).getHomes().size() + " / " + playerData.getMaxHomes() + " used"), null);
+        loadElement(new TextElement(this, false, 3, 0, 15, 0.75f, ChatColor.GREEN + "Balance: $" + playerData.getBalance()), null);
+        loadElement(new TextElement(this, false, 3, 0, 10, 0.75f, ChatColor.YELLOW + "Homes: " + playerData.getHomeAmount() + " / " + playerData.getMaxHomeAmount() + " used"), null);
 
 
         loadElement(new OpenMountsPage(this, false,3, -25, 0, 0.50f), null);
@@ -468,7 +470,8 @@ public class BeanPassGUI implements Listener
         interactionLoop = null;
         HandlerList.unregisterAll(this);
         BeanPass.getInstance().activeGUIs.remove(player);
-        playerData.lastQuestionAnswer = null;
+
+        endQuestionResponse();
     }
 
     @EventHandler

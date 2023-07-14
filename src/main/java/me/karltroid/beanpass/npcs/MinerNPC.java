@@ -2,6 +2,7 @@ package me.karltroid.beanpass.npcs;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.quests.Quests;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,17 +10,24 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 
 public class MinerNPC extends NPC
 {
     HashMap<Material, String> questTypes;
+    String[] greetings = new String[]{
+            "Whats good splunker!",
+            "Ah, the mighty miner, greetings!"
+    };
+    String[] farewells = new String[]{
+            "See you in the mines!",
+            "Be careful down there.",
+            "Till next time, lucky mining!"
+    };
 
-    public MinerNPC()
+    public MinerNPC(String name, String configSectionName)
     {
-        this.configSectionName = "MinerMiningQuests";
-        this.name = "Miner";
-
-        loadQuests();
+        super(name, configSectionName);
     }
 
     @Override
@@ -31,38 +39,34 @@ public class MinerNPC extends NPC
     @Override
     public void loadQuests()
     {
-        // load quest types from config.yml
-        questTypes = new HashMap<>();
-        FileConfiguration config = BeanPass.getInstance().getConfig();
-        ConfigurationSection minerMiningQuests = config.getConfigurationSection(configSectionName);
-
-        if (minerMiningQuests == null)
-        {
-            BeanPass.getInstance().getLogger().warning("Couldn't get the " + configSectionName + " section in your Config.yml");
-            return;
-        }
-
-        for (String materialName : minerMiningQuests.getKeys(false))
-        {
-            ConfigurationSection difficultySection = minerMiningQuests.getConfigurationSection(materialName);
-
-            if (difficultySection == null)
-            {
-                BeanPass.getInstance().getLogger().warning("Couldn't get the " + materialName + " mining difficulty in the " + configSectionName + " section");
-                continue;
-            }
-
-            Material material = Material.matchMaterial(materialName);
-            String difficulty = difficultySection.getString("difficulty");
-
-            questTypes.put(material, difficulty);
-        }
+        questTypes = loadMiningQuestTypes(this.configSectionName);
     }
 
     @Override
-    public void PromptQuestDifficulty(Player player)
+    public void Interact(Player player)
     {
         PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
-        //playerData.giveQuest(new Quests.MiningQuest(playerData.getUUID().toString(), xpReward, goalEntityType, goalKillCount, playerKillCount));
+
+        MessagePlayer(player, getRandomMessage(greetings));
+
+        Quests.MiningQuest previousQuest = (Quests.MiningQuest) playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
+
+        if (previousQuest == null) MessagePlayer(player, "Are you looking to help us find some minerals?");
+        else MessagePlayer(player, "The coal dust must be getting to your head. You need to " + previousQuest.getGoalDescription() + ". Or are ya having some troubles, want to look for something else?");
+
+        playerData.responseFuture = new CompletableFuture<>();
+        AskPlayer(player);
+
+        playerData.responseFuture.thenAccept(wantNewQuest -> {
+            if (wantNewQuest)
+            {
+                if (previousQuest != null) playerData.removeQuest(previousQuest, true);
+
+                Quests.MiningQuest miningQuest = new Quests.MiningQuest(player.getUniqueId().toString(), -1, null, -1, 0, this);
+                playerData.giveQuest(miningQuest, true);
+            }
+
+            MessagePlayer(player, getRandomMessage(farewells));
+        });
     }
 }

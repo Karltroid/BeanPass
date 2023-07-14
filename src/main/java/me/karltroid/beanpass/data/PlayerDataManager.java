@@ -175,8 +175,6 @@ public class PlayerDataManager implements Listener
 
                         playerData.giveQuest(new MiningQuest(uuid.toString(), xpReward, goalBlockType, goalBlockCount, playerBlockCount, questGiver), false);
                     }
-
-                    //if (!hasQuest) { seasonPlayer.giveQuest(new MiningQuest(ServerGamemode.SURVIVAL, uuid.toString(), -1, null, -1, 0)); }
                 }
             }
             catch (SQLException e)
@@ -196,12 +194,14 @@ public class PlayerDataManager implements Listener
                         EntityType goalEntityType = null;
                         for (EntityType type : EntityType.values())
                         {
-                            if (type.name().equalsIgnoreCase(goalEntityTypeName)) goalEntityType = type;
+                            if (!type.name().equalsIgnoreCase(goalEntityTypeName)) continue;
+
+                            goalEntityType = type;
                             break;
                         }
                         if (goalEntityType == null)
                         {
-                            BeanPass.getInstance().getLogger().warning("Entity type " + goalEntityTypeName + " does not exist. Skipping.");
+                            BeanPass.getInstance().getLogger().warning("Entity type " + goalEntityTypeName + " does not exist. Could not load quest.");
                             continue;
                         }
                         int goalKillCount = Integer.parseInt(playerKillingQuestResult.getString("goal_count"));
