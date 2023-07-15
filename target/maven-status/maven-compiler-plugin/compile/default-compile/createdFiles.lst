@@ -1,6 +1,6 @@
-me/karltroid/beanpass/npcs/WitchNPC.class
-me/karltroid/beanpass/quests/Quests$FishingQuest.class
-me/karltroid/beanpass/npcs/ButcherNPC.class
-me/karltroid/beanpass/quests/Quests$BrewingQuest.class
-me/karltroid/beanpass/npcs/BartenderNPC.class
-me/karltroid/beanpass/npcs/FisherNPC.class
+me\karltroid\beanpass\npcs\WitchNPC.class
+me\karltroid\beanpass\quests\Quests$BrewingQuest.class
+me\karltroid\beanpass\quests\Quests$FishingQuest.class
+me\karltroid\beanpass\npcs\FisherNPC.class
+me\karltroid\beanpass\npcs\BartenderNPC.class
+me\karltroid\beanpass\npcs\ButcherNPC.class

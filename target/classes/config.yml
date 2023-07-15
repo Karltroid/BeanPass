@@ -118,8 +118,6 @@ MinerQuests:
     difficulty: NORMAL
   NETHER_QUARTZ_ORE:
     difficulty: NORMAL
-  MOSSY_COBBLESTONE:
-    difficulty: HARD
   LAPIS_ORE:
     difficulty: HARD
   REDSTONE_ORE:
