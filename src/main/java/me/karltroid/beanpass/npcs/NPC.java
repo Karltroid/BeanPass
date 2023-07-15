@@ -7,12 +7,28 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionType;
 
 import java.util.HashMap;
 
 public abstract class NPC implements INPC
 {
     String name;
+    String[] greetings = new String[]{
+            "Hey"
+    };
+    String[] farewells = new String[]{
+            "Bye"
+    };
+    String[] questAsks = new String[]{
+            "Want a quest?"
+    };
+    String[] differentQuestAsksP1 = new String[]{
+            "I already have a quest for you, "
+    };
+    String[] differentQuestAsksP2 = new String[]{
+            ". Or are you having trouble, do you want a new quest?"
+    };
 
     public NPC(String name)
     {
@@ -64,6 +80,40 @@ public abstract class NPC implements INPC
             String difficulty = difficultySection.getString("difficulty");
 
             questTypes.put(material, difficulty);
+        }
+
+        return questTypes;
+    }
+
+    HashMap<PotionType, String> loadBrewingQuestTypes()
+    {
+        String configSectionName = getConfigSectionName();
+
+        // load quest types from config.yml
+        HashMap<PotionType, String> questTypes = new HashMap<>();
+        FileConfiguration config = BeanPass.getInstance().getConfig();
+        ConfigurationSection brewingQuest = config.getConfigurationSection(configSectionName);
+
+        if (brewingQuest == null)
+        {
+            BeanPass.getInstance().getLogger().warning("Couldn't get the " + configSectionName + " section in your Config.yml");
+            return null;
+        }
+
+        for (String potionTypeName : brewingQuest.getKeys(false))
+        {
+            ConfigurationSection difficultySection = brewingQuest.getConfigurationSection(potionTypeName);
+
+            if (difficultySection == null)
+            {
+                BeanPass.getInstance().getLogger().warning("Couldn't get the " + potionTypeName + " mining difficulty in the " + configSectionName + " section");
+                continue;
+            }
+
+            PotionType potionType = PotionType.valueOf(potionTypeName);
+            String difficulty = difficultySection.getString("difficulty");
+
+            questTypes.put(potionType, difficulty);
         }
 
         return questTypes;

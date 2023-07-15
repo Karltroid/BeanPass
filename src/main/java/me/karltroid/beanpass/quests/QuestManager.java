@@ -6,6 +6,7 @@ import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,10 +15,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class QuestManager implements Listener
@@ -81,6 +91,46 @@ public class QuestManager implements Listener
 
         fishingQuest.incrementPlayerCount(1);
         if (fishingQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, fishingQuest);
+    }
+
+    @EventHandler
+    void onBrewingQuestProgressed(InventoryClickEvent event)
+    {
+        if (!(event.getClickedInventory() instanceof BrewerInventory)) return;
+
+        Player player = (Player)event.getWhoClicked();
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+
+        // Check if the click resulted in a potion being taken out
+        ItemStack currentItem = event.getCurrentItem();
+        if (currentItem == null || currentItem.getType() != Material.POTION) return;
+
+        PotionMeta potionMeta = (PotionMeta)currentItem.getItemMeta();
+        NamespacedKey brewedKey = new NamespacedKey(BeanPass.getInstance(), "brewed");
+        if (potionMeta.getPersistentDataContainer().has(brewedKey, PersistentDataType.BYTE)) return;
+        else
+        {
+            potionMeta.getPersistentDataContainer().set(brewedKey, PersistentDataType.BYTE, (byte) 1);
+            currentItem.setItemMeta(potionMeta);
+        }
+
+        PotionType potionType = (potionMeta).getBasePotionData().getType();
+
+        List<BrewingQuest> brewingQuests = new ArrayList<>();
+        for (Quest quest : playerData.getQuests())
+        {
+            if (quest instanceof BrewingQuest) brewingQuests.add((BrewingQuest) quest);
+        }
+
+        if (brewingQuests.size() == 0) return;
+
+        for(BrewingQuest brewingQuest : brewingQuests)
+        {
+            if (!(potionType.equals(brewingQuest.getGoalItemType()))) continue;
+
+            brewingQuest.incrementPlayerCount(1);
+            if (brewingQuest.isCompleted()) completeQuest(player, playerData, brewingQuest);
+        }
     }
 
     @EventHandler

@@ -2,42 +2,42 @@ package me.karltroid.beanpass.npcs;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
-import me.karltroid.beanpass.quests.Quests;
-import org.bukkit.entity.EntityType;
+import me.karltroid.beanpass.quests.Quests.BrewingQuest;
+import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionType;
 
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
-public class CommanderNPC extends NPC
+public class WitchNPC extends NPC
 {
-    HashMap<EntityType, String> questTypes;
+    HashMap<PotionType, String> questTypes;
 
-    public CommanderNPC(String name)
+    public WitchNPC(String name)
     {
         super(name);
 
         this.greetings = new String[]{
-                "Greetings soldier.",
-                "Greeting warrior."
+                "HEHEHE-oh hey! uh.. nothing to see here!"
         };
         this.farewells = new String[]{
-                "Till next time, see you on the battlefield.",
-                "Don't get yourself killed."
+                "See you soon, happy brewing HEHEHE!",
+                "Don't drop your potions! Your dog might lick it up... stupid boy."
         };
         this.questAsks = new String[]{
-                "Are you looking to help us take down a few targets? We could use your help."
+                "I make some great brews, but I'm just one witch! Would you help an old woman out?"
         };
         this.differentQuestAsksP1 = new String[]{
-                "You've already got your orders. "
+                "Let me guess, sniffing those fermented spider eyes. Like I told you, "
         };
         this.differentQuestAsksP2 = new String[]{
-                ". Or is that too tough, do you want a new order?"
+                ". Or do you want to brew something else for me?"
         };
     }
 
     @Override
-    public HashMap<EntityType, String> getQuestTypes()
+    public HashMap<PotionType, String> getQuestTypes()
     {
         return questTypes;
     }
@@ -45,7 +45,7 @@ public class CommanderNPC extends NPC
     @Override
     public void loadQuests()
     {
-        questTypes = loadEntityQuestTypes();
+        questTypes = loadBrewingQuestTypes();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CommanderNPC extends NPC
 
         MessagePlayer(player, getRandomMessage(greetings));
 
-        Quests.KillingQuest previousQuest = (Quests.KillingQuest) playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
+        BrewingQuest previousQuest = (BrewingQuest) playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
 
         if (previousQuest == null) MessagePlayer(player, getRandomMessage(questAsks));
         else MessagePlayer(player, getRandomMessage(differentQuestAsksP1) + previousQuest.getGoalDescription() + getRandomMessage(differentQuestAsksP2));
@@ -75,27 +75,17 @@ public class CommanderNPC extends NPC
     }
 
     @Override
-    public String getQuestGoalType(Quests.Quest quest)
+    public String getQuestGoalType(Quest quest)
     {
-        Quests.KillingQuest killingQuest = (Quests.KillingQuest) quest;
-        return killingQuest.getGoalEntityType().name();
+        BrewingQuest brewingQuest = (BrewingQuest) quest;
+        return brewingQuest.getGoalItemType().name();
     }
 
     @Override
     public void giveQuest(PlayerData playerData, String goalType, int goalCount, int playerCount, double xpReward, boolean alert)
     {
-        EntityType goalEntityType = null;
-        if (goalType != null)
-        {
-            for (EntityType type : EntityType.values())
-            {
-                if (!type.name().equalsIgnoreCase(goalType)) continue;
-
-                goalEntityType = type;
-                break;
-            }
-        }
-
-        playerData.giveQuest(new Quests.KillingQuest(playerData.getUUID().toString(), this, goalEntityType, goalCount, playerCount, xpReward), alert);
+        PotionType goalPotionType = null;
+        if (goalType != null) goalPotionType = PotionType.valueOf(goalType);
+        playerData.giveQuest(new BrewingQuest(playerData.getUUID().toString(), this, goalPotionType, goalCount, playerCount, xpReward), alert);
     }
 }

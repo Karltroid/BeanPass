@@ -169,6 +169,40 @@ FisherQuests:
   TROPICAL_FISH:
     difficulty: SUPER_HARD
 
+WitchQuests:
+  FIRE_RESISTANCE:
+    difficulty: NORMAL
+  INSTANT_DAMAGE:
+    difficulty: NORMAL
+  INVISIBILITY:
+    difficulty: NORMAL
+  NIGHT_VISION:
+    difficulty: NORMAL
+  POISON:
+    difficulty: NORMAL
+  SLOW_FALLING:
+    difficulty: HARD
+  SLOWNESS:
+    difficulty: NORMAL
+  WEAKNESS:
+    difficulty: NORMAL
+  WATER_BREATHING:
+    difficulty: NORMAL
+
+BartenderQuests:
+  POISON:
+    difficulty: NORMAL
+  STRENGTH:
+    difficulty: NORMAL
+  INSTANT_HEAL:
+    difficulty: NORMAL
+  REGEN:
+    difficulty: NORMAL
+  NIGHT_VISION:
+    difficulty: NORMAL
+  FIRE_RESISTANCE:
+    difficulty: NORMAL
+
 # All Possible Lumber Quests And Its Respective Difficulty
 LumberjackQuests:
   OAK_LOG:

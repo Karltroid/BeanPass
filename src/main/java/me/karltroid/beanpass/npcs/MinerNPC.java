@@ -12,19 +12,30 @@ import java.util.concurrent.CompletableFuture;
 public class MinerNPC extends NPC
 {
     HashMap<Material, String> questTypes;
-    String[] greetings = new String[]{
-            "Whats good splunker!",
-            "Ah, the mighty miner, greetings!"
-    };
-    String[] farewells = new String[]{
-            "See you in the mines!",
-            "Be careful down there.",
-            "Till next time, lucky mining!"
-    };
+
 
     public MinerNPC(String name)
     {
         super(name);
+
+        this.greetings = new String[]{
+                "Whats good splunker!",
+                "Ah, the mighty miner, greetings!"
+        };
+        this.farewells = new String[]{
+                "See you in the mines!",
+                "Be careful down there.",
+                "Till next time, lucky mining!"
+        };
+        this.questAsks = new String[]{
+                "Are you looking to help us find some minerals?"
+        };
+        this.differentQuestAsksP1 = new String[]{
+                "The coal dust must be getting to your head. You need to "
+        };
+        this.differentQuestAsksP2 = new String[]{
+                ". Or are ya having some troubles, want to look for something else?"
+        };
     }
 
     @Override
@@ -48,8 +59,8 @@ public class MinerNPC extends NPC
 
         Quests.MiningQuest previousQuest = (Quests.MiningQuest) playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
 
-        if (previousQuest == null) MessagePlayer(player, "Are you looking to help us find some minerals?");
-        else MessagePlayer(player, "The coal dust must be getting to your head. You need to " + previousQuest.getGoalDescription() + ". Or are ya having some troubles, want to look for something else?");
+        if (previousQuest == null) MessagePlayer(player, getRandomMessage(questAsks));
+        else MessagePlayer(player, getRandomMessage(differentQuestAsksP1) + previousQuest.getGoalDescription() + getRandomMessage(differentQuestAsksP2));
 
         playerData.responseFuture = new CompletableFuture<>();
         AskPlayer(player);

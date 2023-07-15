@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.generator.structure.Structure;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionType;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -214,6 +215,50 @@ public class Quests
 
         public Material getGoalItemType() { return goalItemType; }
 
+    }
+
+    public static class BrewingQuest extends Quest
+    {
+        private final PotionType goalPotionType;
+
+        public BrewingQuest(String playerUUID, NPC questGiver, PotionType goalPotionType, int goalItemCount, int playerItemCount, double xpReward)
+        {
+            super(playerUUID, questGiver, "Brew", goalItemCount, playerItemCount, xpReward);
+            HashMap<PotionType, String> brewingQuestDifficulties = (HashMap<PotionType, String>) questGiver.getQuestTypes();
+            String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!brewingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
+
+            this.goalCount = (goalItemCount <= 0 ? questDifficulty.generateUnitAmount() : goalItemCount);
+            this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
+
+
+            if (goalPotionType != null)
+            {
+                this.goalPotionType = goalPotionType;
+            }
+            else
+            {
+                List<Map.Entry<PotionType, String>> matchingDifficultyPotions = new ArrayList<>();
+
+                for (Map.Entry<PotionType, String> entry : brewingQuestDifficulties.entrySet()) {
+                    if (entry.getValue().equals(questDifficultyKey)) {
+                        matchingDifficultyPotions.add(entry);
+                    }
+                }
+
+                Random random = new Random();
+                int randomIndex = random.nextInt(matchingDifficultyPotions.size());
+
+                Map.Entry<PotionType, String> randomEntry = matchingDifficultyPotions.get(randomIndex);
+
+                this.goalPotionType = randomEntry.getKey();
+            }
+
+            setGoalName(this.goalPotionType.name());
+        }
+
+        public PotionType getGoalItemType() { return goalPotionType; }
     }
 
     // Farming Quest

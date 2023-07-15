@@ -164,8 +164,6 @@ public class BeanPassGUI implements Listener
 
         loadElement(new BeanPassTitle(this, true, 3.1, 0, 21, 1f), null);
         loadElement(new BeanPassBackground(this, false, 3.05, 0, 0, 1.75f), null);
-        loadElement(new LeftArrow(this, true, 3.85, -43, 0, 0.3f), null);
-        loadElement(new RightArrow(this, true,3.85, 43, 0, 0.3f), null);
 
         displayLevelData();
         displayNavigationButtons();
@@ -404,6 +402,12 @@ public class BeanPassGUI implements Listener
         //loadElement(new TextElement(this, true,1.5, 0, -45, 1f, ChatColor.GREEN + "" + playerData.getXpNeededForNextLevel() + "XP needed for LVL " + playerData.getLevel() + 1), allLevelRewardElements);
 
         int playerLevel = playerData.getLevel();
+
+        if (rewardPage > 0)
+            loadElement(new LeftArrow(this, true, 3.85, -43, 0, 0.3f), allLevelRewardElements);
+
+        if (rewardPage * LEVELS_PER_PAGE + LEVELS_PER_PAGE + 1 < BeanPass.getInstance().getSeason().getLevels().size())
+            loadElement(new RightArrow(this, true,3.85, 43, 0, 0.3f), allLevelRewardElements);
 
         for (int i = 1; i <= LEVELS_PER_PAGE; i++)
         {

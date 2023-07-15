@@ -9,83 +9,28 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
-public class ButcherNPC extends NPC
+public class ButcherNPC extends CommanderNPC
 {
-    HashMap<EntityType, String> questTypes;
-    String[] greetings = new String[]{
-            "Hello!",
-            "Whats good?"
-    };
-    String[] farewells = new String[]{
-            "Bye!",
-            "See you later."
-    };
-
     public ButcherNPC(String name)
     {
         super(name);
-    }
 
-    @Override
-    public HashMap<EntityType, String> getQuestTypes()
-    {
-        return questTypes;
-    }
-
-    @Override
-    public void loadQuests()
-    {
-        questTypes = loadEntityQuestTypes();
-    }
-
-    @Override
-    public void Interact(Player player)
-    {
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
-
-        MessagePlayer(player, getRandomMessage(greetings));
-
-        Quests.KillingQuest previousQuest = (Quests.KillingQuest) playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
-
-        if (previousQuest == null) MessagePlayer(player, "I need some fresh kill for the shop, can you hunt down some for me?");
-        else MessagePlayer(player, "I still need you to " + previousQuest.getGoalDescription() + ". Are you having trouble, you can get me a different kind of meat if you want?");
-
-        playerData.responseFuture = new CompletableFuture<>();
-        AskPlayer(player);
-
-        playerData.responseFuture.thenAccept(wantNewQuest -> {
-            if (wantNewQuest)
-            {
-                if (previousQuest != null) playerData.removeQuest(previousQuest, true);
-                giveQuest(playerData, null, -1, 0, -1, true);
-            }
-
-            MessagePlayer(player, getRandomMessage(farewells));
-        });
-    }
-
-    @Override
-    public String getQuestGoalType(Quests.Quest quest)
-    {
-        Quests.KillingQuest killingQuest = (Quests.KillingQuest) quest;
-        return killingQuest.getGoalEntityType().name();
-    }
-
-    @Override
-    public void giveQuest(PlayerData playerData, String goalType, int goalCount, int playerCount, double xpReward, boolean alert)
-    {
-        EntityType goalEntityType = null;
-        if (goalType != null)
-        {
-            for (EntityType type : EntityType.values())
-            {
-                if (!type.name().equalsIgnoreCase(goalType)) continue;
-
-                goalEntityType = type;
-                break;
-            }
-        }
-
-        playerData.giveQuest(new Quests.KillingQuest(playerData.getUUID().toString(), this, goalEntityType, goalCount, playerCount, xpReward), alert);
+        this.greetings = new String[]{
+                "Hello!",
+                "Whats good?"
+        };
+        this.farewells = new String[]{
+                "Bye!",
+                "See you later."
+        };
+        this.questAsks = new String[]{
+                "I need some fresh kill for the shop, can you hunt down some for me?"
+        };
+        this.differentQuestAsksP1 = new String[]{
+                "I still need you to "
+        };
+        this.differentQuestAsksP2 = new String[]{
+                ". Are you having trouble, you can get me a different kind of meat if you want?"
+        };
     }
 }

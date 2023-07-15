@@ -176,12 +176,14 @@ public class PlayerDataManager implements Listener
                              "ON CONFLICT(uuid) DO UPDATE SET xp = excluded.xp, premium = excluded.premium, last_known_level = excluded.last_known_level, max_homes = excluded.max_homes"
              );
              PreparedStatement deletePlayerRewardsStatement = conn.prepareStatement(
-                     "DELETE FROM player_rewards WHERE uuid = ?"
+                     "DELETE FROM " + PLAYER_REWARDS_TABLE_NAME + " WHERE uuid = ?"
              );
              PreparedStatement insertPlayerRewardsStatement = conn.prepareStatement(
-                     "INSERT INTO player_rewards (uuid, reward_type, reward_id, equipped) VALUES (?, ?, ?, ?)"
+                     "INSERT INTO " + PLAYER_REWARDS_TABLE_NAME + " (uuid, reward_type, reward_id, equipped) VALUES (?, ?, ?, ?)"
              );
-
+             PreparedStatement deletePlayerQuestsStatement = conn.prepareStatement(
+                     "DELETE FROM " + PLAYER_QUESTS_TABLE_NAME + " WHERE uuid = ?"
+             );
              PreparedStatement insertPlayerQuestsStatement = conn.prepareStatement(
                      "INSERT INTO " + PLAYER_QUESTS_TABLE_NAME + " (uuid, quest_giver, goal_type, goal_count, player_count, xp_reward) VALUES (?, ?, ?, ?, ?, ?)" +
                              "ON CONFLICT(uuid, quest_giver, goal_type, goal_count) DO UPDATE SET player_count = excluded.player_count"
@@ -222,6 +224,8 @@ public class PlayerDataManager implements Listener
             }
             insertPlayerRewardsStatement.executeBatch();
 
+            deletePlayerQuestsStatement.setString(1, uuid.toString());
+            deletePlayerQuestsStatement.executeUpdate();
             for (Quest quest : playerData.getQuests())
             {
                 NPC questGiver = quest.getQuestGiver();
