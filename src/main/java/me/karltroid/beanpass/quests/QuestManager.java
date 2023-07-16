@@ -8,6 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
+import org.bukkit.block.Smoker;
+import org.bukkit.block.data.type.Furnace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
@@ -17,9 +19,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.BrewerInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -138,6 +143,33 @@ public class QuestManager implements Listener
             if (!(itemCraftedType.equals(craftingQuest.getGoalItemType()))) continue;
 
             craftingQuest.incrementPlayerCount(amount);
+            if (craftingQuest.isCompleted()) completeQuest(player, playerData, craftingQuest);
+        }
+    }
+
+    @EventHandler
+    public void onCraftingQuestProgressed_Furnace(FurnaceExtractEvent event)
+    {
+        Player player = event.getPlayer();
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+
+        // Check if the click resulted in a potion being taken out
+        Material itemSmeltedType = event.getItemType();
+        int amountSmelted = event.getItemAmount();
+
+        List<CraftingQuest> craftingQuests = new ArrayList<>();
+        for (Quest quest : playerData.getQuests())
+        {
+            if (quest instanceof CraftingQuest) craftingQuests.add((CraftingQuest) quest);
+        }
+
+        if (craftingQuests.size() == 0) return;
+
+        for(CraftingQuest craftingQuest : craftingQuests)
+        {
+            if (!(itemSmeltedType.equals(craftingQuest.getGoalItemType()))) continue;
+
+            craftingQuest.incrementPlayerCount(amountSmelted);
             if (craftingQuest.isCompleted()) completeQuest(player, playerData, craftingQuest);
         }
     }
