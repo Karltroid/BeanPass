@@ -20,16 +20,14 @@ public class Quests
         public String playerUUID;
         NPC questGiver;
         String goalName = "";
-        String questVerb = "";
         public int goalCount;
         public int playerCount;
         public double xpReward;
 
-        Quest(String playerUUID, NPC questGiver, String questVerb, int goalCount, int playerCount, double xpReward)
+        Quest(String playerUUID, NPC questGiver, int goalCount, int playerCount, double xpReward)
         {
             this.playerUUID = playerUUID;
             this.questGiver = questGiver;
-            this.questVerb = questVerb;
             this.goalCount = goalCount;
             this.playerCount = playerCount;
             this.xpReward = xpReward;
@@ -38,10 +36,6 @@ public class Quests
         public void setGoalName(String goalName)
         {
             this.goalName = goalName;
-        }
-        public void setQuestVerb(String questVerb)
-        {
-            this.questVerb = questVerb;
         }
 
         public String getRewardDescription()
@@ -55,7 +49,7 @@ public class Quests
             formattedGoalName = formattedGoalName.toLowerCase();
             formattedGoalName = formattedGoalName.replace('_', ' ');
             formattedGoalName += (goalCount > 1 && !formattedGoalName.endsWith("sh") && !formattedGoalName.endsWith("s") ? "s" : "");
-            return questVerb + " " + playerCount + "/" + goalCount + "x " + formattedGoalName;
+            return questGiver.getQuestVerb() + " " + playerCount + "/" + goalCount + "x " + formattedGoalName;
         }
 
         public boolean isCompleted() { return playerCount >= goalCount; }
@@ -70,7 +64,7 @@ public class Quests
 
         public MiningQuest(String playerUUID, NPC questGiver, Material goalBlockType, int goalBlockCount, int playerBlockCount, double xpReward)
         {
-            super(playerUUID, questGiver, "Mine", goalBlockCount, playerBlockCount, xpReward);
+            super(playerUUID, questGiver, goalBlockCount, playerBlockCount, xpReward);
             HashMap<Material, String> miningQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!miningQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
@@ -114,7 +108,7 @@ public class Quests
 
         public KillingQuest(String playerUUID, NPC questGiver, EntityType goalEntityType, int goalKillCount, int playerKillCount, double xpReward)
         {
-            super(playerUUID, questGiver, "Kill", goalKillCount, playerKillCount, xpReward);
+            super(playerUUID, questGiver, goalKillCount, playerKillCount, xpReward);
             HashMap<EntityType, String> killingQuestDifficulties = (HashMap<EntityType, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!killingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
@@ -178,7 +172,7 @@ public class Quests
 
         public FishingQuest(String playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
         {
-            super(playerUUID, questGiver, "Fish", goalItemCount, playerItemCount, xpReward);
+            super(playerUUID, questGiver, goalItemCount, playerItemCount, xpReward);
             HashMap<Material, String> fishingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!fishingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
@@ -223,7 +217,7 @@ public class Quests
 
         public BrewingQuest(String playerUUID, NPC questGiver, PotionType goalPotionType, int goalItemCount, int playerItemCount, double xpReward)
         {
-            super(playerUUID, questGiver, "Brew", goalItemCount, playerItemCount, xpReward);
+            super(playerUUID, questGiver, goalItemCount, playerItemCount, xpReward);
             HashMap<PotionType, String> brewingQuestDifficulties = (HashMap<PotionType, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             while (!brewingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
@@ -259,6 +253,51 @@ public class Quests
         }
 
         public PotionType getGoalItemType() { return goalPotionType; }
+    }
+
+    public static class CraftingQuest extends Quest
+    {
+        private final Material goalItemType;
+
+        public CraftingQuest(String playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
+        {
+            super(playerUUID, questGiver, goalItemCount, playerItemCount, xpReward);
+            HashMap<Material, String> fishingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
+            String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!fishingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
+
+            this.goalCount = (goalItemCount <= 0 ? questDifficulty.generateUnitAmount() : goalItemCount);
+            this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
+
+
+            if (goalItemType != null)
+            {
+                this.goalItemType = goalItemType;
+            }
+            else
+            {
+                List<Map.Entry<Material, String>> matchingDifficultyMaterials = new ArrayList<>();
+
+                for (Map.Entry<Material, String> entry : fishingQuestDifficulties.entrySet()) {
+                    if (entry.getValue().equals(questDifficultyKey)) {
+                        matchingDifficultyMaterials.add(entry);
+                    }
+                }
+
+                Random random = new Random();
+                int randomIndex = random.nextInt(matchingDifficultyMaterials.size());
+
+                Map.Entry<Material, String> randomEntry = matchingDifficultyMaterials.get(randomIndex);
+
+                this.goalItemType = randomEntry.getKey();
+            }
+
+            setGoalName(this.goalItemType.name());
+        }
+
+        public Material getGoalItemType() { return goalItemType; }
+
     }
 
     // Farming Quest

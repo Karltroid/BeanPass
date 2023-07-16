@@ -248,6 +248,22 @@ ButcherQuests:
   TROPICAL_FISH:
     difficulty: NORMAL
 
+BakerQuests:
+  PUMPKIN_PIE:
+    difficulty: NORMAL
+  CAKE:
+    difficulty: HARD
+  COOKIE:
+    difficulty: EASY
+  BREAD:
+    difficulty: NORMAL
+  BAKED_POTATO:
+    difficulty: NORMAL
+  RABBIT_STEW:
+    difficulty: HARD
+  SUGAR:
+    difficulty: VERY_EASY
+
 ExplorationQuestDifficulties:
   ANCIENT_CITY:
     structures:

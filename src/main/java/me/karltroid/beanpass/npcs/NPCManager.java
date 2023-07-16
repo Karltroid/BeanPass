@@ -17,6 +17,7 @@ public class NPCManager
         npcs.put("fisher", new FisherNPC("Fisher"));
         npcs.put("witch", new WitchNPC("Witch"));
         npcs.put("bartender", new BartenderNPC("Bartender"));
+        npcs.put("baker", new BakerNPC("Baker"));
     }
 
     public NPC getNPCByTypeName(String name)

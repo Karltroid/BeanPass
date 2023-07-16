@@ -11,7 +11,7 @@ import org.joml.Vector3f;
 
 public class VisualElement extends Element
 {
-    ItemDisplay itemDisplay;
+    Entity entity;
     Transformation originalTransformation;
     float displayScale;
 
@@ -29,14 +29,33 @@ public class VisualElement extends Element
 
         this.displayScale = displayScale;
 
-        this.itemDisplay = (ItemDisplay) beanPassGUI.world.spawnEntity(this.location, EntityType.ITEM_DISPLAY);
-        this.itemDisplay.setItemStack(itemStack);
+        if (beanPassGUI.playerData.isBedrockAccount())
+        {
+            ArmorStand armorStand = (ArmorStand) beanPassGUI.world.spawnEntity(this.location, EntityType.ARMOR_STAND);
+            armorStand.setGravity(false);
+            armorStand.setVisible(false);
+            armorStand.setBasePlate(false);
+            armorStand.setInvulnerable(true);
+            armorStand.setSmall(true);
+            armorStand.setMarker(true);
+            armorStand.setFireTicks(72000);
+            armorStand.getEquipment().setHelmet(itemStack);
 
-        this.itemDisplay.setBillboard(Display.Billboard.FIXED);
-        this.itemDisplay.setBrightness(new Display.Brightness(10, 10));
-        Transformation transformation = this.itemDisplay.getTransformation();
-        this.itemDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
-        this.originalTransformation = this.itemDisplay.getTransformation();
-        this.itemDisplay.setRotation(location.getYaw(), location.getPitch());
+            this.entity = armorStand;
+        }
+        else
+        {
+            ItemDisplay itemDisplay = (ItemDisplay) beanPassGUI.world.spawnEntity(this.location, EntityType.ITEM_DISPLAY);
+            itemDisplay.setItemStack(itemStack);
+
+            itemDisplay.setBillboard(Display.Billboard.FIXED);
+            itemDisplay.setBrightness(new Display.Brightness(10, 10));
+            Transformation transformation = itemDisplay.getTransformation();
+            itemDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
+            this.originalTransformation = itemDisplay.getTransformation();
+            itemDisplay.setRotation(location.getYaw(), location.getPitch());
+
+            this.entity = itemDisplay;
+        }
     }
 }

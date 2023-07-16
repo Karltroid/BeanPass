@@ -3,6 +3,8 @@ package me.karltroid.beanpass.gui;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
@@ -17,15 +19,33 @@ public class ButtonElement extends VisualElement implements Button
 
     public void select()
     {
-        itemDisplay.setTransformation(new Transformation(originalTransformation.getTranslation(), originalTransformation.getLeftRotation(), new Vector3f(originalTransformation.getScale().x * 1.2f), originalTransformation.getRightRotation()));
-        itemDisplay.setGlowing(true);
-        itemDisplay.setGlowColorOverride(Color.WHITE);
+        if (beanPassGUI.playerData.isBedrockAccount())
+        {
+            ArmorStand armorStand = (ArmorStand) entity;
+            armorStand.setGlowing(true);
+        }
+        else
+        {
+            ItemDisplay itemDisplay = (ItemDisplay) entity;
+            itemDisplay.setTransformation(new Transformation(originalTransformation.getTranslation(), originalTransformation.getLeftRotation(), new Vector3f(originalTransformation.getScale().x * 1.2f), originalTransformation.getRightRotation()));
+            itemDisplay.setGlowing(true);
+            itemDisplay.setGlowColorOverride(Color.WHITE);
+        }
     }
 
     public void unselect()
     {
-        itemDisplay.setTransformation(originalTransformation);
-        itemDisplay.setGlowing(false);
+        if (beanPassGUI.playerData.isBedrockAccount())
+        {
+            ArmorStand armorStand = (ArmorStand) entity;
+            armorStand.setGlowing(false);
+        }
+        else
+        {
+            ItemDisplay itemDisplay = (ItemDisplay) entity;
+            itemDisplay.setTransformation(originalTransformation);
+            itemDisplay.setGlowing(false);
+        }
     }
 
     public boolean isPlayerLooking(Player player)
@@ -39,7 +59,7 @@ public class ButtonElement extends VisualElement implements Button
         Vector toEntity = location.toVector().subtract(eye.toVector());
         double dot = toEntity.normalize().dot(eye.getDirection());
 
-        Double baseSelectionArea = 0.025D;
+        Double baseSelectionArea = 0.0275D;
         return dot > (1D - baseSelectionArea) + (baseSelectionArea * displayScale);
     }
 

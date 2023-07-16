@@ -8,6 +8,7 @@ import me.karltroid.beanpass.data.Skin;
 import me.karltroid.beanpass.gui.Elements.*;
 import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.quests.Quests;
+import me.karltroid.beanpass.quests.Quests.Quest;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -178,7 +179,7 @@ public class BeanPassGUI implements Listener
 
         int lineSpacing = 3;
         int y = 8;
-        for (Quests.Quest quest : BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests())
+        for (Quest quest : BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests())
         {
             loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.BOLD + quest.getQuestGiver().getName() + ": " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
             y -= lineSpacing;
@@ -451,7 +452,7 @@ public class BeanPassGUI implements Listener
         if (element instanceof VisualElement)
         {
             if (element instanceof ButtonElement) allButtonElements.remove((ButtonElement) element);
-            ((VisualElement)element).itemDisplay.remove();
+            ((VisualElement)element).entity.remove();
         }
         else ((TextElement)element).textDisplay.remove();
     }
@@ -481,7 +482,6 @@ public class BeanPassGUI implements Listener
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
-        if (event.getAction() != Action.LEFT_CLICK_AIR && event.getAction() != Action.LEFT_CLICK_BLOCK) return;
         if (selectedButtonElement == null) return;
 
         Player player = event.getPlayer();

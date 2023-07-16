@@ -18,6 +18,8 @@ public class MinerNPC extends NPC
     {
         super(name);
 
+        this.questVerb = "Mine";
+
         this.greetings = new String[]{
                 "Whats good splunker!",
                 "Ah, the mighty miner, greetings!"
@@ -48,32 +50,6 @@ public class MinerNPC extends NPC
     public void loadQuests()
     {
         questTypes = loadMaterialQuestTypes();
-    }
-
-    @Override
-    public void Interact(Player player)
-    {
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
-
-        MessagePlayer(player, getRandomMessage(greetings));
-
-        Quests.MiningQuest previousQuest = (Quests.MiningQuest) playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
-
-        if (previousQuest == null) MessagePlayer(player, getRandomMessage(questAsks));
-        else MessagePlayer(player, getRandomMessage(differentQuestAsksP1) + previousQuest.getGoalDescription() + getRandomMessage(differentQuestAsksP2));
-
-        playerData.responseFuture = new CompletableFuture<>();
-        AskPlayer(player);
-
-        playerData.responseFuture.thenAccept(wantNewQuest -> {
-            if (wantNewQuest)
-            {
-                if (previousQuest != null) playerData.removeQuest(previousQuest, true);
-                giveQuest(playerData, null, -1, 0, -1, true);
-            }
-
-            MessagePlayer(player, getRandomMessage(farewells));
-        });
     }
 
     @Override

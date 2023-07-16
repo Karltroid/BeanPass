@@ -24,6 +24,7 @@ public class PlayerData
     // current instance player data
     OfflinePlayer player;
     public CompletableFuture<Boolean> responseFuture;
+    boolean bedrockAccount;
 
     // current season player data
     double xp;
@@ -47,6 +48,7 @@ public class PlayerData
         this.xp = xp;
         this.lastKnownLevel = lastKnownLevel;
         this.maxHomes = maxHomes;
+        this.bedrockAccount = player.getName().startsWith(".");
     }
 
     public void setPremiumPass(boolean hasPass) { this.premium = hasPass; }
@@ -89,6 +91,10 @@ public class PlayerData
             return;
         }
         ownedMounts.add(mountId);
+    }
+    public boolean isBedrockAccount()
+    {
+        return bedrockAccount;
     }
     public void equipSkin(Skin skin, boolean alert)
     {

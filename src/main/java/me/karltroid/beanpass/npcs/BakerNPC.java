@@ -3,6 +3,7 @@ package me.karltroid.beanpass.npcs;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests;
+import me.karltroid.beanpass.quests.Quests.CraftingQuest;
 import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -10,51 +11,38 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
 
-public class FisherNPC extends NPC
+public class BakerNPC extends FisherNPC
 {
     HashMap<Material, String> questTypes;
 
-    public FisherNPC(String name)
+    public BakerNPC(String name)
     {
         super(name);
 
-        this.questVerb = "Fish";
+        this.questVerb = "Bake";
 
         this.greetings = new String[]{
-                "Such a great day for fishing!"
+                "Hello! Don't you love the smell of fresh bread."
         };
         this.farewells = new String[]{
-                "Watch out for drowned!",
-                "Till next time, lucky fishing!"
+                "Don't eat too many cookies, or it'll go right to your thighs!"
         };
         this.questAsks = new String[]{
-                "Haven't been having good luck with the water, think you can help catch something?"
+                "This town is growing a sweet tooth or something, could you help me bake some product?"
         };
         this.differentQuestAsksP1 = new String[]{
-                "Did a puffer fish poison you or something? Don't you remember, "
+                "One too many loaves of bread put you in a food coma, huh. I need you to "
         };
         this.differentQuestAsksP2 = new String[]{
-                ". Or are ya not having good luck, want to catch something else?"
+                ". Or is that too hard, want to bake something else?"
         };
-    }
-
-    @Override
-    public HashMap<Material, String> getQuestTypes()
-    {
-        return questTypes;
-    }
-
-    @Override
-    public void loadQuests()
-    {
-        questTypes = loadMaterialQuestTypes();
     }
 
     @Override
     public String getQuestGoalType(Quest quest)
     {
-        Quests.FishingQuest fishingQuest = (Quests.FishingQuest) quest;
-        return fishingQuest.getGoalItemType().name();
+        CraftingQuest craftingQuest = (CraftingQuest) quest;
+        return craftingQuest.getGoalItemType().name();
     }
 
     @Override
@@ -62,6 +50,6 @@ public class FisherNPC extends NPC
     {
         Material goalMaterial = null;
         if (goalType != null) goalMaterial = Material.valueOf(goalType);
-        playerData.giveQuest(new Quests.FishingQuest(playerData.getUUID().toString(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
+        playerData.giveQuest(new CraftingQuest(playerData.getUUID().toString(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
     }
 }

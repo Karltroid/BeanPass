@@ -1,6 +1,9 @@
 package me.karltroid.beanpass.npcs;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.quests.Quests;
+import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -10,10 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionType;
 
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class NPC implements INPC
 {
     String name;
+    String questVerb;
     String[] greetings = new String[]{
             "Hey"
     };
@@ -41,9 +46,33 @@ public abstract class NPC implements INPC
         player.sendMessage(npcTag + ChatColor.YELLOW + " " + ChatColor.BOLD + name + " " + ChatColor.RESET + message);
     }
 
-    public String getName()
+    public String getName(){ return name; }
+    public String getQuestVerb(){ return questVerb; }
+
+    @Override
+    public void Interact(Player player)
     {
-        return name;
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+
+        MessagePlayer(player, getRandomMessage(greetings));
+
+        Quest previousQuest = playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
+
+        if (previousQuest == null) MessagePlayer(player, getRandomMessage(questAsks));
+        else MessagePlayer(player, getRandomMessage(differentQuestAsksP1) + previousQuest.getGoalDescription() + getRandomMessage(differentQuestAsksP2));
+
+        playerData.responseFuture = new CompletableFuture<>();
+        AskPlayer(player);
+
+        playerData.responseFuture.thenAccept(wantNewQuest -> {
+            if (wantNewQuest)
+            {
+                if (previousQuest != null) playerData.removeQuest(previousQuest, true);
+                giveQuest(playerData, null, -1, 0, -1, true);
+            }
+
+            MessagePlayer(player, getRandomMessage(farewells));
+        });
     }
 
     HashMap<Material, String> loadMaterialQuestTypes()

@@ -16,6 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.BrewEvent;
+import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.BrewerInventory;
@@ -91,6 +92,54 @@ public class QuestManager implements Listener
 
         fishingQuest.incrementPlayerCount(1);
         if (fishingQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, fishingQuest);
+    }
+
+    @EventHandler
+    void onCraftingQuestProgressed(CraftItemEvent event)
+    {
+        Player player = (Player)event.getWhoClicked();
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+
+        // Check if the click resulted in a potion being taken out
+        ItemStack itemCrafted = event.getCurrentItem();
+        Material itemCraftedType = itemCrafted.getType();
+        int amount = itemCrafted.getAmount();
+
+        if (event.isShiftClick())
+        {
+            ItemStack[] matrix = event.getInventory().getMatrix();
+            ItemStack smallestItem = null;
+            for(int i = 2; i <= 65; i++)
+            {
+                for (ItemStack item : matrix) {
+                    if (item == null || item.getAmount() >= i) continue;
+
+                    smallestItem = item;
+                    break;
+                }
+
+                if (smallestItem == null) continue;
+
+                amount *= smallestItem.getAmount();
+                break;
+            }
+        }
+
+        List<CraftingQuest> craftingQuests = new ArrayList<>();
+        for (Quest quest : playerData.getQuests())
+        {
+            if (quest instanceof CraftingQuest) craftingQuests.add((CraftingQuest) quest);
+        }
+
+        if (craftingQuests.size() == 0) return;
+
+        for(CraftingQuest craftingQuest : craftingQuests)
+        {
+            if (!(itemCraftedType.equals(craftingQuest.getGoalItemType()))) continue;
+
+            craftingQuest.incrementPlayerCount(amount);
+            if (craftingQuest.isCompleted()) completeQuest(player, playerData, craftingQuest);
+        }
     }
 
     @EventHandler

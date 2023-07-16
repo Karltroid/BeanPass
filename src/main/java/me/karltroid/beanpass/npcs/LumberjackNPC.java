@@ -15,6 +15,8 @@ public class LumberjackNPC extends MinerNPC
     {
         super(name);
 
+        this.questVerb = "Chop down";
+
         this.greetings = new String[]{
                 "Don't you love the smell of freshly chopped wood? anyways-",
                 "How goes it?"
