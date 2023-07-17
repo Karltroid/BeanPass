@@ -11,9 +11,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class ButcherNPC extends CommanderNPC
 {
-    public ButcherNPC(String name)
+    public ButcherNPC()
     {
-        super(name);
+        super();
 
         this.greetings = new String[]{
                 "Hello!",

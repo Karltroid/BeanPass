@@ -262,9 +262,9 @@ public class Quests
         public CraftingQuest(String playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
         {
             super(playerUUID, questGiver, goalItemCount, playerItemCount, xpReward);
-            HashMap<Material, String> fishingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
+            HashMap<Material, String> craftingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
             String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
-            while (!fishingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!craftingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
             QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
 
             this.goalCount = (goalItemCount <= 0 ? questDifficulty.generateUnitAmount() : goalItemCount);
@@ -279,7 +279,7 @@ public class Quests
             {
                 List<Map.Entry<Material, String>> matchingDifficultyMaterials = new ArrayList<>();
 
-                for (Map.Entry<Material, String> entry : fishingQuestDifficulties.entrySet()) {
+                for (Map.Entry<Material, String> entry : craftingQuestDifficulties.entrySet()) {
                     if (entry.getValue().equals(questDifficultyKey)) {
                         matchingDifficultyMaterials.add(entry);
                     }

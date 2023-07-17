@@ -14,9 +14,9 @@ public class FisherNPC extends NPC
 {
     HashMap<Material, String> questTypes;
 
-    public FisherNPC(String name)
+    public FisherNPC()
     {
-        super(name);
+        super();
 
         this.questVerb = "Fish";
 

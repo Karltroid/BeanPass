@@ -4,6 +4,7 @@ import com.earth2me.essentials.User;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.*;
@@ -255,7 +256,7 @@ public class PlayerData
         if (BeanPass.getInstance().activeGUIs.containsKey(player))
         {
             BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(player);
-            beanPassGUI.reloadLevelElements();
+            if (beanPassGUI.getCurrentGUIMenu() == GUIMenu.BeanPass) beanPassGUI.reloadLevelElements();
         }
 
         lastKnownLevel = newLevel;

@@ -2,9 +2,9 @@ package me.karltroid.beanpass.npcs;
 
 public class BartenderNPC extends WitchNPC
 {
-    public BartenderNPC(String name)
+    public BartenderNPC()
     {
-        super(name);
+        super();
 
         this.greetings = new String[]{
                 "Welcome to the Nautilus Tavern!"

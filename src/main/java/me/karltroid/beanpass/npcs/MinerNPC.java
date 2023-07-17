@@ -13,10 +13,9 @@ public class MinerNPC extends NPC
 {
     HashMap<Material, String> questTypes;
 
-
-    public MinerNPC(String name)
+    public MinerNPC()
     {
-        super(name);
+        super();
 
         this.questVerb = "Mine";
 

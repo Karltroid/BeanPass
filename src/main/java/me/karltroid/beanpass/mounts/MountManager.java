@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -107,6 +108,8 @@ public class MountManager implements Listener
     void onPlayerMount(VehicleEnterEvent event)
     {
         if (!(event.getEntered() instanceof Player)) return;
+        Vehicle vehicle = event.getVehicle();
+        if (!vehicle.getPassengers().isEmpty()) return;
         createMountInstance((Player) event.getEntered(), event.getVehicle());
     }
 
@@ -139,6 +142,9 @@ public class MountManager implements Listener
                     case MINECART:
                         break;
                     case BOAT:
+                        BoatMount boatMount = new BoatMount(player, mountedEntity, mount);
+                        if (boatMount.getMountStructure().size() == 0) return;
+                        mountInstances.put(player.getUniqueId(), boatMount);
                         break;
                     default:
                         return;

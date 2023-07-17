@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.Rewards;
 
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;

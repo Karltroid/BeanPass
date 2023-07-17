@@ -17,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class NPC implements INPC
 {
-    String name;
+    String typeName;
     String questVerb;
     String[] greetings = new String[]{
             "Hey"
@@ -35,18 +35,17 @@ public abstract class NPC implements INPC
             ". Or are you having trouble, do you want a new quest?"
     };
 
-    public NPC(String name)
+    public NPC()
     {
-        this.name = name;
+        this.typeName = this.getClass().getSimpleName().replace("NPC", "");
         loadQuests();
     }
 
     void MessagePlayer(Player player, String message)
     {
-        player.sendMessage(npcTag + ChatColor.YELLOW + " " + ChatColor.BOLD + name + " " + ChatColor.RESET + message);
+        player.sendMessage(npcTag + ChatColor.YELLOW + "" + ChatColor.BOLD + getTypeName() + ChatColor.DARK_GRAY + " " + ChatColor.BOLD + "» " + ChatColor.RESET + message);
     }
 
-    public String getName(){ return name; }
     public String getQuestVerb(){ return questVerb; }
 
     @Override
@@ -56,7 +55,7 @@ public abstract class NPC implements INPC
 
         MessagePlayer(player, getRandomMessage(greetings));
 
-        Quest previousQuest = playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().name.equals(this.name)).findFirst().orElse(null);
+        Quest previousQuest = playerData.getQuests().stream().filter(quest -> quest.getQuestGiver().typeName.equals(this.typeName)).findFirst().orElse(null);
 
         if (previousQuest == null) MessagePlayer(player, getRandomMessage(questAsks));
         else MessagePlayer(player, getRandomMessage(differentQuestAsksP1) + previousQuest.getGoalDescription() + getRandomMessage(differentQuestAsksP2));
@@ -86,7 +85,7 @@ public abstract class NPC implements INPC
 
         if (materialQuest == null)
         {
-            BeanPass.getInstance().getLogger().warning("Couldn't get the " + configSectionName + " section in your Config.yml");
+            BeanPass.getInstance().getLogger().warning("Couldn't get the material quest types in the " + configSectionName + " section in your Config.yml");
             return null;
         }
 
@@ -193,8 +192,13 @@ public abstract class NPC implements INPC
         return questTypes;
     }
 
+    public String getTypeName()
+    {
+        return typeName;
+    }
+
     String getConfigSectionName()
     {
-        return this.name + "Quests";
+        return typeName + "Quests";
     }
 }

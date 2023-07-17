@@ -14,9 +14,9 @@ public class WitchNPC extends NPC
 {
     HashMap<PotionType, String> questTypes;
 
-    public WitchNPC(String name)
+    public WitchNPC()
     {
-        super(name);
+        super();
 
         this.questVerb = "Brew";
 

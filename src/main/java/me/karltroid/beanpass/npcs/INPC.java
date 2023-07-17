@@ -18,7 +18,7 @@ import java.util.Random;
 
 public interface INPC
 {
-    String npcTag = ChatColor.GRAY + "" + ChatColor.BOLD + "[NPC]";
+    String npcTag = "\uE039";
 
     void loadQuests();
     void Interact(Player player);

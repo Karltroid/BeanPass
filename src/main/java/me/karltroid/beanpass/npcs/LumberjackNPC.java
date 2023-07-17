@@ -11,9 +11,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class LumberjackNPC extends MinerNPC
 {
-    public LumberjackNPC(String name)
+    public LumberjackNPC()
     {
-        super(name);
+        super();
 
         this.questVerb = "Chop down";
 

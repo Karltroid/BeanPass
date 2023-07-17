@@ -15,9 +15,9 @@ public class BakerNPC extends FisherNPC
 {
     HashMap<Material, String> questTypes;
 
-    public BakerNPC(String name)
+    public BakerNPC()
     {
-        super(name);
+        super();
 
         this.questVerb = "Bake";
 

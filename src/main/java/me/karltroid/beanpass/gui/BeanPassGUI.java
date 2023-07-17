@@ -181,7 +181,7 @@ public class BeanPassGUI implements Listener
         int y = 8;
         for (Quest quest : BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests())
         {
-            loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.BOLD + quest.getQuestGiver().getName() + ": " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
+            loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.BOLD + quest.getQuestGiver().getTypeName() + ": " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
             y -= lineSpacing;
         }
 
@@ -510,5 +510,10 @@ public class BeanPassGUI implements Listener
                 loadElement(new ButtonElement(this, true, radiusOffset, angleYaw, anglePitch, 1f, Material.STONE, 0), null);
             }
         }
+    }
+
+    public GUIMenu getCurrentGUIMenu()
+    {
+        return currentMenu;
     }
 }

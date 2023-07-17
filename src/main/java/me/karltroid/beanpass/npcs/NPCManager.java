@@ -10,14 +10,18 @@ public class NPCManager
     public NPCManager()
     {
         // type name, npc object
-        npcs.put("commander", new CommanderNPC("Commander"));
-        npcs.put("lumberjack", new LumberjackNPC("Lumberjack"));
-        npcs.put("miner", new MinerNPC("Miner"));
-        npcs.put("butcher", new ButcherNPC("Butcher"));
-        npcs.put("fisher", new FisherNPC("Fisher"));
-        npcs.put("witch", new WitchNPC("Witch"));
-        npcs.put("bartender", new BartenderNPC("Bartender"));
-        npcs.put("baker", new BakerNPC("Baker"));
+        npcs.put("commander", new CommanderNPC());
+        npcs.put("lumberjack", new LumberjackNPC());
+        npcs.put("miner", new MinerNPC());
+        npcs.put("butcher", new ButcherNPC());
+        npcs.put("fisher", new FisherNPC());
+        npcs.put("witch", new WitchNPC());
+        npcs.put("bartender", new BartenderNPC());
+        npcs.put("baker", new BakerNPC());
+        npcs.put("artist", new ArtistNPC());
+        npcs.put("blacksmith", new BlacksmithNPC());
+        npcs.put("farmer", new FarmerNPC());
+        npcs.put("builder", new BuilderNPC());
     }
 
     public NPC getNPCByTypeName(String name)

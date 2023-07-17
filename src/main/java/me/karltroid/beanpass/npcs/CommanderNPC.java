@@ -13,9 +13,9 @@ public class CommanderNPC extends NPC
 {
     HashMap<EntityType, String> questTypes;
 
-    public CommanderNPC(String name)
+    public CommanderNPC()
     {
-        super(name);
+        super();
 
         this.questVerb = "Kill";
 

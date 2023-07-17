@@ -122,7 +122,7 @@ MinerQuests:
     difficulty: HARD
   REDSTONE_ORE:
     difficulty: HARD
-  GOLD_ORE: #NETHER_GOLD_ORE, DEEPSLATE_GOLD_ORE
+  GOLD_ORE: # NETHER_GOLD_ORE, DEEPSLATE_GOLD_ORE
     difficulty: HARD
   EMERALD_ORE:
     difficulty: VERY_HARD
@@ -262,6 +262,116 @@ BakerQuests:
   SUGAR:
     difficulty: VERY_EASY
 
+FarmerQuests:
+  WHEAT:
+    difficulty: NORMAL
+  CARROTS:
+    difficulty: NORMAL
+  POTATOES:
+    difficulty: NORMAL
+  BEETROOTS:
+    difficulty: NORMAL
+  PUMPKIN:
+    difficulty: HARD
+  MELON:
+    difficulty: HARD
+
+BlacksmithQuests:
+  IRON_NUGGET:
+    difficulty: SUPER_EASY
+  IRON_INGOT:
+    difficulty: VERY_EASY
+  ANVIL:
+    difficulty: VERY_HARD
+  BUCKET:
+    difficulty: NORMAL
+  CHAIN:
+    difficulty: VERY_EASY
+  IRON_BARS:
+    difficulty: NORMAL
+  IRON_BLOCK:
+    difficulty: HARD
+  IRON_DOOR:
+    difficulty: NORMAL
+  IRON_HELMET:
+    difficulty: NORMAL
+  IRON_CHESTPLATE:
+    difficulty: HARD
+  IRON_LEGGINGS:
+    difficulty: HARD
+  IRON_BOOTS:
+    difficulty: NORMAL
+  IRON_SWORD:
+    difficulty: EASY
+  IRON_PICKAXE:
+    difficulty: NORMAL
+  IRON_AXE:
+    difficulty: NORMAL
+  IRON_SHOVEL:
+    difficulty: EASY
+  IRON_HOE:
+    difficulty: EASY
+  SHIELD:
+    difficulty: EASY
+  GOLD_NUGGET:
+    difficulty: VERY_EASY
+  GOLD_INGOT:
+    difficulty: EASY
+  GOLD_BLOCK:
+    difficulty: VERY_HARD
+  GOLDEN_HELMET:
+    difficulty: HARD
+  GOLDEN_CHESTPLATE:
+    difficulty: VERY_HARD
+  GOLDEN_LEGGINGS:
+    difficulty: VERY_HARD
+  GOLDEN_BOOTS:
+    difficulty: HARD
+  GOLDEN_SWORD:
+    difficulty: NORMAL
+  GOLDEN_PICKAXE:
+    difficulty: HARD
+  GOLDEN_AXE:
+    difficulty: HARD
+  GOLDEN_SHOVEL:
+    difficulty: NORMAL
+  GOLDEN_HOE:
+    difficulty: NORMAL
+
+ArtistQuests:
+  WHITE_DYE:
+    difficulty: VERY_EASY
+  LIGHT_GRAY_DYE:
+    difficulty: EASY
+  GRAY_DYE:
+    difficulty: EASY
+  BLACK_DYE:
+    difficulty: EASY
+  BROWN_DYE:
+    difficulty: NORMAL
+  RED_DYE:
+    difficulty: EASY
+  ORANGE_DYE:
+    difficulty: NORMAL
+  YELLOW_DYE:
+    difficulty: EASY
+  LIME_DYE:
+    difficulty: NORMAL
+  GREEN_DYE:
+    difficulty: NORMAL
+  CYAN_DYE:
+    difficulty: NORMAL
+  LIGHT_BLUE_DYE:
+    difficulty: NORMAL
+  BLUE_DYE:
+    difficulty: EASY
+  PURPLE_DYE:
+    difficulty: NORMAL
+  MAGENTA_DYE:
+    difficulty: NORMAL
+  PINK_DYE:
+    difficulty: NORMAL
+
 ExplorationQuestDifficulties:
   ANCIENT_CITY:
     structures:
@@ -341,16 +451,15 @@ ExplorationQuestDifficulties:
 # TYPES: MONEY, SET_HOME, SKIN
 Season: 1
 SeasonLevels:
-  1:
-    XP: 0 #amount of xp needed from the previous level
-    Reward:
-  2:
+  '1':
+    XP: 0 # amount of xp needed from the previous level
+  '2':
     XP: 25
     Reward:
       Free:
         Type: MONEY
         Amount: 10
-  3:
+  '3':
     XP: 30
     Reward:
       Free:
@@ -359,31 +468,31 @@ SeasonLevels:
       Paid:
         Type: SKIN
         Skin: witch_hat
-  4:
+  '4':
     XP: 40
     Reward:
       Free:
         Type: MONEY
         Amount: 15
-  5:
+  '5':
     XP: 50
     Reward:
       Free:
         Type: MONEY
         Amount: 20
-  6:
+  '6':
     XP: 60
     Reward:
       Free:
         Type: MONEY
         Amount: 25
-  7:
+  '7':
     XP: 75
     Reward:
       Free:
         Type: MONEY
         Amount: 30
-  8:
+  '8':
     XP: 90
     Reward:
       Free:
@@ -392,31 +501,31 @@ SeasonLevels:
       Paid:
         Type: SKIN
         Skin: top_hat
-  9:
+  '9':
     XP: 105
     Reward:
       Free:
         Type: MONEY
         Amount: 35
-  10:
+  '10':
     XP: 120
     Reward:
       Free:
         Type: MONEY
         Amount: 40
-  11:
+  '11':
     XP: 140
     Reward:
       Free:
         Type: MONEY
         Amount: 45
-  12:
+  '12':
     XP: 160
     Reward:
       Free:
         Type: MONEY
         Amount: 50
-  13:
+  '13':
     XP: 180
     Reward:
       Free:
@@ -425,31 +534,34 @@ SeasonLevels:
       Paid:
         Type: SKIN
         Skin: santa_hat
-  14:
+  '14':
     XP: 200
     Reward:
       Free:
         Type: MONEY
         Amount: 55
-  15:
+  '15':
     XP: 225
     Reward:
       Free:
         Type: MONEY
         Amount: 60
-  16:
+      Paid:
+        Type: MOUNT
+        Mount: canoe
+  '16':
     XP: 250
     Reward:
       Free:
         Type: MONEY
         Amount: 65
-  17:
+  '17':
     XP: 275
     Reward:
       Free:
         Type: MONEY
         Amount: 70
-  18:
+  '18':
     XP: 300
     Reward:
       Free:
@@ -458,31 +570,31 @@ SeasonLevels:
       Paid:
         Type: SKIN
         Skin: hard_hat
-  19:
+  '19':
     XP: 350
     Reward:
       Free:
         Type: MONEY
         Amount: 85
-  20:
+  '20':
     XP: 400
     Reward:
       Free:
         Type: MONEY
         Amount: 90
-  21:
+  '21':
     XP: 450
     Reward:
       Free:
         Type: MONEY
         Amount: 100
-  22:
+  '22':
     XP: 500
     Reward:
       Free:
         Type: MONEY
         Amount: 120
-  23:
+  '23':
     XP: 600
     Reward:
       Free:
@@ -491,18 +603,231 @@ SeasonLevels:
       Paid:
         Type: MOUNT
         Mount: lamborghini_jalpa
-  24:
+  '24':
     XP: 700
     Reward:
       Free:
         Type: MONEY
         Amount: 140
-  25:
+  '25':
     XP: 800
     Reward:
       Free:
         Type: MONEY
         Amount: 175
+  '26':
+    XP: 400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '27':
+    XP: 450
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  '28':
+    XP: 500
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+      Paid:
+        Type: SKIN
+        Skin: beansprout_hat
+  '29':
+    XP: 700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+  '30':
+    XP: 800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '31':
+    XP: 400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '32':
+    XP: 450
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  '33':
+    XP: 500
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+      Paid:
+        Type: SKIN
+        Skin: bone_hat
+  '34':
+    XP: 700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+  '35':
+    XP: 800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '36':
+    XP: 400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '37':
+    XP: 450
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  '38':
+    XP: 500
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+      Paid:
+        Type: SKIN
+        Skin: bunny_ears_hat
+  '39':
+    XP: 700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+  '40':
+    XP: 800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '41':
+    XP: 400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '42':
+    XP: 450
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  '43':
+    XP: 500
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+      Paid:
+        Type: SKIN
+        Skin: candle_hat
+  '44':
+    XP: 700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+  '45':
+    XP: 800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '46':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: cat_ears_hat
+  '47':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: fishbowl_hat
+  '48':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: party_hat
+  '49':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: ram_horns_hat
+  '50':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: smul_birthday_hat
+  '51':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: space_helmet_hat
+  '52':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: unicorn_hat
+  '53':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  '54':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  '55':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
 
 Skins:
   witch_hat:
@@ -517,8 +842,47 @@ Skins:
   hard_hat:
     Material: CARVED_PUMPKIN
     ID: 10011
+  beansprout_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10018
+  bone_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10019
+  bunny_ears_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10020
+  candle_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10021
+  cat_ears_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10022
+  fishbowl_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10023
+  goggles_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10024
+  party_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10025
+  ram_horns_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10026
+  smul_birthday_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10027
+  space_helmet_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10028
+  unicorn_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10029
 
 Mounts:
   lamborghini_jalpa:
     Entity: HORSE
     ID: 10010
+  canoe:
+    Entity: BOAT
+    ID: 10017

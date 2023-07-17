@@ -8,7 +8,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Smoker;
+import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Furnace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -54,12 +57,19 @@ public class QuestManager implements Listener
     @EventHandler
     void onMiningQuestProgressed(BlockBreakEvent event)
     {
+        // if the block goal is something that grows, only count it if its fully grown
+        BlockData blockData = event.getBlock().getState().getBlockData();
+        if (blockData instanceof Ageable)
+        {
+            Ageable ageable = (Ageable) blockData;
+            if (ageable.getAge() != ageable.getMaximumAge()) return;
+        }
+
         UUID playerUUID = event.getPlayer().getUniqueId();
         PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
 
-        Material blockMinedType = event.getBlock().getType();
-
         MiningQuest miningQuest = null;
+        Material blockMinedType = event.getBlock().getType();
         for (Quest quest : playerData.getQuests())
         {
             if (!(quest instanceof MiningQuest)) continue;
@@ -128,6 +138,24 @@ public class QuestManager implements Listener
                 amount *= smallestItem.getAmount();
                 break;
             }
+
+            // check to make sure the amount crafted fit in their inventory, if not adjust amount accordingly
+            int itemCraftedMaxStackSize = itemCrafted.getMaxStackSize();
+            int playerInvSlotsOpen = 0;
+            int playerInvAmountOfCraftedTypeFillable = 0;
+            for (ItemStack slot : player.getInventory().getStorageContents()) {
+                if (slot == null || slot.getType() == Material.AIR) {
+                    playerInvSlotsOpen++;
+                }
+                else if (slot.getType() == itemCraftedType && slot.getAmount() < itemCraftedMaxStackSize)
+                {
+                    playerInvAmountOfCraftedTypeFillable += itemCraftedMaxStackSize - slot.getAmount();
+                }
+            }
+            if (playerInvSlotsOpen == 0 && playerInvAmountOfCraftedTypeFillable == 0) return;
+
+            int maxCraftedItemThatFitsInv = playerInvSlotsOpen * itemCraftedMaxStackSize + playerInvAmountOfCraftedTypeFillable;
+            if (maxCraftedItemThatFitsInv < amount) amount = maxCraftedItemThatFitsInv;
         }
 
         List<CraftingQuest> craftingQuests = new ArrayList<>();
