@@ -1,0 +1,26 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"texture_size": [105, 17],
+	"textures": {
+		"0": "item/glass_bottle/title_hats",
+		"particle": "item/glass_bottle/title_hats"
+	},
+	"elements": [
+		{
+			"from": [-3.5, 8, 8],
+			"to": [19.5, 16, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 4, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, 8.75, 0],
+			"scale": [1.25, 1.25, 1.25]
+		}
+	}
+}

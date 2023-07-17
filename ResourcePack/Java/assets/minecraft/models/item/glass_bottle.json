@@ -1,0 +1,27 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/glass_bottle"
+  },
+  
+  "overrides": [
+    {"predicate": {"custom_model_data":10000}, "model": "item/glass_bottle/bg_beanpass"},
+    {"predicate": {"custom_model_data":10001}, "model": "item/glass_bottle/btn_arrow_left"},
+    {"predicate": {"custom_model_data":10002}, "model": "item/glass_bottle/btn_arrow_right"},
+    {"predicate": {"custom_model_data":10003}, "model": "item/glass_bottle/btn_get_premium"},
+    {"predicate": {"custom_model_data":10004}, "model": "item/glass_bottle/btn_rewards"},
+    {"predicate": {"custom_model_data":10005}, "model": "item/glass_bottle/btn_quests"},
+    {"predicate": {"custom_model_data":10006}, "model": "item/glass_bottle/title_beanpass"},
+    {"predicate": {"custom_model_data":10007}, "model": "item/glass_bottle/btn_beanpass"},
+    {"predicate": {"custom_model_data":10008}, "model": "item/glass_bottle/title_quests"},
+    {"predicate": {"custom_model_data":10009}, "model": "item/glass_bottle/title_rewards"},
+    {"predicate": {"custom_model_data":10010}, "model": "item/glass_bottle/lamborghini_jalpa"},
+    {"predicate": {"custom_model_data":10011}, "model": "item/glass_bottle/title_hats"},
+    {"predicate": {"custom_model_data":10012}, "model": "item/glass_bottle/title_mounts"},
+    {"predicate": {"custom_model_data":10013}, "model": "item/glass_bottle/title_tools"},
+    {"predicate": {"custom_model_data":10014}, "model": "item/glass_bottle/btn_hats"},
+    {"predicate": {"custom_model_data":10015}, "model": "item/glass_bottle/btn_mounts"},
+    {"predicate": {"custom_model_data":10016}, "model": "item/glass_bottle/btn_tools"},
+    {"predicate": {"custom_model_data":10017}, "model": "item/glass_bottle/canoe"}
+  ]
+}

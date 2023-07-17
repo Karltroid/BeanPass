@@ -1,0 +1,74 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/npc.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE039"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/queenbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE038"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/kingbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE037"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/adminbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE036"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/modbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE035"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/ultimatebean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE034"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/boosterbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE033"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/bigbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE032"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/coolbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE031"]
+        },
+        {
+            "type": "bitmap",
+            "file": "minecraft:icons/beansprout.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE030"]
+        }
+    ]
+}

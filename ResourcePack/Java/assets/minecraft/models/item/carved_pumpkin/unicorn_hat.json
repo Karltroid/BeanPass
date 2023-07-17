@@ -1,0 +1,27 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "item/carved_pumpkin/unicorn",
+		"particle": "item/carved_pumpkin/unicorn"
+	},
+	"elements": [
+		{
+			"from": [7, 12, 7],
+			"to": [9, 22, 9],
+			"faces": {
+				"north": {"uv": [9, 0, 13, 11], "texture": "#0"},
+				"east": {"uv": [2, 0, 6, 11], "texture": "#0"},
+				"south": {"uv": [9, 0, 13, 11], "texture": "#0"},
+				"west": {"uv": [2, 0, 6, 11], "texture": "#0"},
+				"up": {"uv": [6, 16, 2, 12], "texture": "#0"},
+				"down": {"uv": [13, 12, 9, 16], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"rotation": [-38, -35, 1],
+			"translation": [0.25, 2.25, -3]
+		}
+	}
+}

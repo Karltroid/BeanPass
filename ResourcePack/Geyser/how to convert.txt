@@ -1,0 +1,15 @@
+Note to self:
+1. Any models that will appear in GUI (hats for example) need a hand made sprite
+1a. put sprites in geyser_sprites > textures > geyser > geyser_custom
+1b. In the java resourcepack, include a sprites.json, and add an entry under the item type with the custom model data and sprite location from 1a
+2. Archive java resourcepack, upload to site like drop box
+3. Also upload the geyser_sprites.mcpack file to drop box
+4. Go to https://github.com/Kas-tle/java2bedrock.sh/issues/new/choose and click Get Started on Pack Conversion
+5. Java Pack Direct Download URL -> Enter the direct link to the java pack on dropbox
+6. Bedrock Merge Pack Direct Download URL -> Enter the direct link to the geyser_sprites.mcpack file on drop box
+7. Default Assets Version -> newest
+8. Leave everything else deafult and agree to code of conduct
+9. Download file generated
+10. Extract geyser_mappings.json file to geyser/custom_mappings
+11. Extract geyser_resources.mcpack to geyser/packs
+12. Done!

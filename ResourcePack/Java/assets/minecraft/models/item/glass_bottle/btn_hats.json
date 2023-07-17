@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"texture_size": [103, 55],
+	"textures": {
+		"0": "item/glass_bottle/btn_hats",
+		"particle": "item/glass_bottle/btn_hats"
+	},
+	"elements": [
+		{
+			"from": [-16, 0, 6.9],
+			"to": [32, 26, 6.9],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [-12.7, 0, 6.99],
+			"to": [28.7, 24, 8.99],
+			"faces": {
+				"north": {"uv": [1.08738, 1.16364, 14.91262, 16], "texture": "#0"},
+				"east": {"uv": [14.13592, 9.6, 14.75728, 11.63636], "texture": "#0"},
+				"south": {"uv": [1.24272, 1.16364, 14.91262, 16], "texture": "#0"},
+				"west": {"uv": [14.13592, 9.6, 14.75728, 11.63636], "texture": "#0"},
+				"up": {"uv": [1.08738, 11.63636, 14.91262, 12.8], "texture": "#0"},
+				"down": {"uv": [1.08738, 11.63636, 14.81942, 12.8], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, 0.25, 0],
+			"scale": [0.75, 0.75, 0.75]
+		}
+	}
+}

@@ -1,0 +1,78 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "item/carved_pumpkin/bone",
+		"particle": "item/carved_pumpkin/bone"
+	},
+	"elements": [
+		{
+			"from": [3, 2, 6],
+			"to": [13, 4, 8],
+			"faces": {
+				"north": {"uv": [3, 6, 10, 8], "texture": "#0"},
+				"east": {"uv": [3, 6, 10, 8], "texture": "#0"},
+				"south": {"uv": [3, 6, 10, 8], "texture": "#0"},
+				"west": {"uv": [3, 6, 10, 8], "texture": "#0"},
+				"up": {"uv": [3, 6, 10, 8], "texture": "#0"},
+				"down": {"uv": [3, 6, 10, 8], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2, 4, 6],
+			"to": [4, 6, 8],
+			"faces": {
+				"north": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"east": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"south": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"west": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"up": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"down": {"uv": [2, 4, 4, 6], "texture": "#0"}
+			}
+		},
+		{
+			"from": [12, 4, 6],
+			"to": [14, 6, 8],
+			"faces": {
+				"north": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"east": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"south": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"west": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"up": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"down": {"uv": [2, 4, 4, 6], "texture": "#0"}
+			}
+		},
+		{
+			"from": [2, 1, 6],
+			"to": [4, 3, 8],
+			"faces": {
+				"north": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"east": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"south": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"west": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"up": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"down": {"uv": [2, 4, 4, 6], "texture": "#0"}
+			}
+		},
+		{
+			"from": [12, 1, 6],
+			"to": [14, 3, 8],
+			"faces": {
+				"north": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"east": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"south": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"west": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"up": {"uv": [2, 4, 4, 6], "texture": "#0"},
+				"down": {"uv": [2, 4, 4, 6], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"ground": {
+			"translation": [0, 3.75, 0]
+		},
+		"head": {
+			"rotation": [4, 0, 0],
+			"translation": [0, 0.5, -6]
+		}
+	}
+}

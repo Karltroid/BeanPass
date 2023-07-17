@@ -1,0 +1,22 @@
+{
+    "parent": "block/carved_pumpkin",
+	"overrides": [
+		{"predicate": {"custom_model_data":116}, "model": "item/carved_pumpkin/witch_hat"},
+		{"predicate": {"custom_model_data":10009}, "model": "item/carved_pumpkin/top_hat"},
+		{"predicate": {"custom_model_data":10010}, "model": "item/carved_pumpkin/santa_hat"},
+		{"predicate": {"custom_model_data":10010}, "model": "item/carved_pumpkin/santa_hat"},
+		{"predicate": {"custom_model_data":10011}, "model": "item/carved_pumpkin/hard_hat"},
+		{"predicate": {"custom_model_data":10018}, "model": "item/carved_pumpkin/beansprout_hat"},
+		{"predicate": {"custom_model_data":10019}, "model": "item/carved_pumpkin/bone_hat"},
+		{"predicate": {"custom_model_data":10020}, "model": "item/carved_pumpkin/bunny_ears_hat"},
+		{"predicate": {"custom_model_data":10021}, "model": "item/carved_pumpkin/candle_hat"},
+		{"predicate": {"custom_model_data":10022}, "model": "item/carved_pumpkin/cat_ears_hat"},
+		{"predicate": {"custom_model_data":10023}, "model": "item/carved_pumpkin/fishbowl_hat"},
+		{"predicate": {"custom_model_data":10024}, "model": "item/carved_pumpkin/goggles_hat"},
+		{"predicate": {"custom_model_data":10025}, "model": "item/carved_pumpkin/party_hat"},
+		{"predicate": {"custom_model_data":10026}, "model": "item/carved_pumpkin/ram_horns_hat"},
+		{"predicate": {"custom_model_data":10027}, "model": "item/carved_pumpkin/smul_birthday_hat"},
+		{"predicate": {"custom_model_data":10028}, "model": "item/carved_pumpkin/space_helmet_hat"},
+		{"predicate": {"custom_model_data":10029}, "model": "item/carved_pumpkin/unicorn_hat"}
+	]
+}
