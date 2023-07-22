@@ -1,0 +1,354 @@
+# Beanpass Rewards
+# TYPES: MONEY, SET_HOME, SKIN
+SeasonLevels:
+  '1':
+    XP: 0 # amount of xp needed from the previous level
+  '2':
+    XP: 25
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 10
+      Paid:
+        Type: SKIN
+        Skin: top_hat
+  '3':
+    XP: 30
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 1
+  '4':
+    XP: 40
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 15
+      Paid:
+        Type: SKIN
+        Skin: witch_hat
+  '5':
+    XP: 50
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 20
+  '6':
+    XP: 60
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 25
+  '7':
+    XP: 75
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 30
+      Paid:
+        Type: SKIN
+        Skin: hard_hat
+  '8':
+    XP: 90
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 1
+  '9':
+    XP: 105
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 35
+      Paid:
+        Type: SKIN
+        Skin: santa_hat
+  '10':
+    XP: 120
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 40
+  '11':
+    XP: 140
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 45
+  '12':
+    XP: 160
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 50
+      Paid:
+        Type: SKIN
+        Skin: beansprout_hat
+  '13':
+    XP: 180
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 1
+  '14':
+    XP: 200
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 55
+      Paid:
+        Type: MOUNT
+        Mount: canoe
+  '15':
+    XP: 225
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 60
+
+  '16':
+    XP: 250
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 65
+  '17':
+    XP: 275
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 70
+      Paid:
+        Type: SKIN
+        Skin: fishbowl_hat
+  '18':
+    XP: 300
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 1
+  '19':
+    XP: 350
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 85
+      Paid:
+        Type: SKIN
+        Skin: ram_horns_hat
+  '20':
+    XP: 400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '21':
+    XP: 450
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+  '22':
+    XP: 500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 120
+      Paid:
+        Type: SKIN
+        Skin: bunny_ears_hat
+  '23':
+    XP: 600
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+  '24':
+    XP: 700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+      Paid:
+        Type: SKIN
+        Skin: captain_hat
+  '25':
+    XP: 800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '26':
+    XP: 900
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '27':
+    XP: 1000
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: MOUNT
+        Mount: lamborghini_jalpa
+  '28':
+    XP: 1100
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+  '29':
+    XP: 1200
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+      Paid:
+        Type: SKIN
+        Skin: cat_ears_hat
+  '30':
+    XP: 1300
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '31':
+    XP: 1400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '32':
+    XP: 1500
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: candle_hat
+  '33':
+    XP: 1600
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+  '34':
+    XP: 1700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+      Paid:
+        Type: SKIN
+        Skin: bone_hat
+  '35':
+    XP: 1800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '36':
+    XP: 1900
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '37':
+    XP: 2000
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: party_hat
+  '38':
+    XP: 2200
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+  '39':
+    XP: 2400
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+      Paid:
+        Type: SKIN
+        Skin: space_helmet_hat
+  '40':
+    XP: 2600
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '41':
+    XP: 2800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 90
+  '42':
+    XP: 3000
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 100
+      Paid:
+        Type: SKIN
+        Skin: unicorn_hat
+  '43':
+    XP: 3300
+    Reward:
+      Free:
+        Type: SET_HOME
+        Amount: 2
+  '44':
+    XP: 3600
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 140
+      Paid:
+        Type: SKIN
+        Skin: smul_birthday_hat
+  '45':
+    XP: 3900
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 175
+  '46':
+    XP: 4200
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 200
+  '47':
+    XP: 4800
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 250
+  '48':
+    XP: 5200
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 300
+  '49':
+    XP: 5700
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 400
+  '50':
+    XP: 6200
+    Reward:
+      Free:
+        Type: MONEY
+        Amount: 500

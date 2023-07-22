@@ -18,7 +18,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.EntityType;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,13 +27,17 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 
 public final class BeanPass extends JavaPlugin implements Listener
 {
     static BeanPass main;
-    private FileConfiguration config;
+    private FileConfiguration generalConfig;
+    private FileConfiguration cosmeticsConfig;
+    private FileConfiguration questsConfig;
+    private FileConfiguration seasonConfig;
     PluginManager pluginManager = getServer().getPluginManager();
     HashMap<UUID, PlayerData> playerData = new HashMap<>();
     Season season;
@@ -50,6 +54,8 @@ public final class BeanPass extends JavaPlugin implements Listener
 
     public SkinManager skinManager;
     public MountManager mountManager;
+
+    static String beanPassChatSymbol = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[BeanPass] ";
 
     @Override
     public void onEnable()
@@ -78,10 +84,12 @@ public final class BeanPass extends JavaPlugin implements Listener
             return;
         }
 
-        // load config
-        saveDefaultConfig();
-        reloadConfig();
-        config = getConfig();
+        // load configs
+        generalConfig = loadConfigFile("GeneralConfig.yml");
+        int seasonNumber = generalConfig.getInt("Season", 1);
+        cosmeticsConfig = loadConfigFile("CosmeticsConfig.yml");
+        questsConfig = loadConfigFile("QuestsConfig.yml");
+        seasonConfig = loadConfigFile("Season"+ seasonNumber + "Config.yml");
 
         skinManager = new SkinManager();
         mountManager = new MountManager();
@@ -89,10 +97,10 @@ public final class BeanPass extends JavaPlugin implements Listener
         // get season data
         HashMap<Integer, Level> seasonLevels = new HashMap<>();
         // Check if the SeasonLevels section exists
-        if (config.contains("SeasonLevels"))
+        if (seasonConfig.contains("SeasonLevels"))
         {
             // Get the SeasonRewards section
-            ConfigurationSection seasonLevelsSection = config.getConfigurationSection("SeasonLevels");
+            ConfigurationSection seasonLevelsSection = seasonConfig.getConfigurationSection("SeasonLevels");
 
             // Iterate through each season
             for (String season : seasonLevelsSection.getKeys(false))
@@ -174,7 +182,6 @@ public final class BeanPass extends JavaPlugin implements Listener
                 }
             }
         }
-        int seasonNumber = config.getInt("Season", 1);
         season = new Season(seasonNumber, seasonLevels);
 
         npcManager = new NPCManager();
@@ -199,7 +206,20 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("givequest").setExecutor(new GiveQuest());
     }
 
-    public FileConfiguration getBeanPassConfig() { return config; }
+    public FileConfiguration getGeneralConfig() { return generalConfig; }
+    public FileConfiguration getCosmeticsConfig() { return cosmeticsConfig; }
+    public FileConfiguration getQuestsConfig() { return questsConfig; }
+    public FileConfiguration getSeasonConfig() { return seasonConfig; }
+
+    private FileConfiguration loadConfigFile(String fileName) {
+        File configFile = new File(getDataFolder(), fileName);
+        if (!configFile.exists()) {
+            configFile.getParentFile().mkdirs();
+            saveResource(fileName, false);
+        }
+
+        return YamlConfiguration.loadConfiguration(configFile);
+    }
 
     @Override
     public void onDisable()
@@ -211,8 +231,6 @@ public final class BeanPass extends JavaPlugin implements Listener
             if (activeGUIs.containsKey(player)) activeGUIs.get(player).closeEntireGUI();
             mountManager.destroyMountInstance(player);
         }
-
-        saveConfig();
     }
 
     public PluginManager getPluginManager(){ return pluginManager; }
@@ -263,7 +281,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         if (!p.isOnline()) return;
 
         Player player = (Player) p;
-        player.sendMessage(ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[BeanPass] " + ChatColor.RESET + message);
+        player.sendMessage(beanPassChatSymbol + ChatColor.RESET + message);
     }
 
     public ProtocolManager getProtocolManager() {

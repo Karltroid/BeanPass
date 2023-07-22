@@ -17,6 +17,7 @@
 		{"predicate": {"custom_model_data":10026}, "model": "item/carved_pumpkin/ram_horns_hat"},
 		{"predicate": {"custom_model_data":10027}, "model": "item/carved_pumpkin/smul_birthday_hat"},
 		{"predicate": {"custom_model_data":10028}, "model": "item/carved_pumpkin/space_helmet_hat"},
-		{"predicate": {"custom_model_data":10029}, "model": "item/carved_pumpkin/unicorn_hat"}
+		{"predicate": {"custom_model_data":10029}, "model": "item/carved_pumpkin/unicorn_hat"},
+		{"predicate": {"custom_model_data":10030}, "model": "item/carved_pumpkin/captain_hat"}
 	]
 }

@@ -27,7 +27,7 @@ public class MountManager implements Listener
 
     public MountManager()
     {
-        FileConfiguration config = BeanPass.getInstance().getBeanPassConfig();
+        FileConfiguration config = BeanPass.getInstance().getCosmeticsConfig();
 
         ConfigurationSection mountsSection = config.getConfigurationSection("Mounts");
 

@@ -30,7 +30,7 @@ public class QuestDifficulties
 
     private void loadDifficulties()
     {
-        FileConfiguration config = BeanPass.getInstance().getConfig();
+        FileConfiguration config = BeanPass.getInstance().getQuestsConfig();
         ConfigurationSection difficultiesSection = config.getConfigurationSection("Difficulties");
 
         if (difficultiesSection == null)

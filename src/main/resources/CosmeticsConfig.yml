@@ -1,0 +1,68 @@
+#  ____                       _____
+# |  _ \                     |  __ \
+# | |_) |  ___   __ _  _ __  | |__) |__ _  ___  ___
+# |  _ <  / _ \ / _` || '_ \ |  ___// _` |/ __|/ __|
+# | |_) ||  __/| (_| || | | || |   | (_| |\__ \\__ \
+# |____/  \___| \__,_||_| |_||_|    \__,_||___/|___/
+
+# All Skins In The Game
+Skins:
+  witch_hat:
+    Material: CARVED_PUMPKIN
+    ID: 116
+  top_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10009
+  santa_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10010
+  hard_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10011
+  beansprout_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10018
+  bone_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10019
+  bunny_ears_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10020
+  candle_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10021
+  cat_ears_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10022
+  fishbowl_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10023
+  goggles_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10024
+  party_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10025
+  ram_horns_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10026
+  smul_birthday_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10027
+  space_helmet_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10028
+  unicorn_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10029
+  captain_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10030
+
+Mounts:
+  lamborghini_jalpa:
+    Entity: HORSE
+    ID: 10010
+  canoe:
+    Entity: BOAT
+    ID: 10017

@@ -33,7 +33,7 @@ public class SkinManager implements Listener
 
     public SkinManager()
     {
-        FileConfiguration config = BeanPass.getInstance().getBeanPassConfig();
+        FileConfiguration config = BeanPass.getInstance().getCosmeticsConfig();
 
         ConfigurationSection skinsSection = config.getConfigurationSection("Skins");
 

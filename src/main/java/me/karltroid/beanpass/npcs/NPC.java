@@ -80,7 +80,7 @@ public abstract class NPC implements INPC
 
         // load quest types from config.yml
         HashMap<Material, String> questTypes = new HashMap<>();
-        FileConfiguration config = BeanPass.getInstance().getConfig();
+        FileConfiguration config = BeanPass.getInstance().getQuestsConfig();
         ConfigurationSection materialQuest = config.getConfigurationSection(configSectionName);
 
         if (materialQuest == null)
@@ -119,7 +119,7 @@ public abstract class NPC implements INPC
 
         // load quest types from config.yml
         HashMap<PotionType, String> questTypes = new HashMap<>();
-        FileConfiguration config = BeanPass.getInstance().getConfig();
+        FileConfiguration config = BeanPass.getInstance().getQuestsConfig();
         ConfigurationSection brewingQuest = config.getConfigurationSection(configSectionName);
 
         if (brewingQuest == null)
@@ -153,7 +153,7 @@ public abstract class NPC implements INPC
 
         // load quest types from config.yml
         HashMap<EntityType, String> questTypes = new HashMap<>();
-        FileConfiguration config = BeanPass.getInstance().getConfig();
+        FileConfiguration config = BeanPass.getInstance().getQuestsConfig();
         ConfigurationSection commanderKillingQuests = config.getConfigurationSection(configSectionName);
 
         if (commanderKillingQuests == null)
