@@ -334,6 +334,9 @@ SeasonLevels:
       Free:
         Type: MONEY
         Amount: 250
+      Paid:
+        Type: SKIN
+        Skin: battle_axe
   '48':
     XP: 5200
     Reward:
@@ -346,6 +349,9 @@ SeasonLevels:
       Free:
         Type: MONEY
         Amount: 400
+      Paid:
+        Type: MOUNT
+        Mount: demon_train
   '50':
     XP: 6200
     Reward:

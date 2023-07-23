@@ -1,6 +1,5 @@
 package me.karltroid.beanpass.mounts;
 
-import me.karltroid.beanpass.BeanPass;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -12,19 +11,17 @@ import org.bukkit.util.EulerAngle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BoatMount implements IMount
+public class MinecartMount implements IMount
 {
     Player player;
-    Boat mountedEntity;
-    Boat.Type originalBoatType;
+    Minecart mountedEntity;
     ArmorStand mountModel;
     List<Entity> mountStructure = new ArrayList<>();
 
-    public BoatMount(Player player, Entity mountedEntity, Mount mount)
+    public MinecartMount(Player player, Entity mountedEntity, Mount mount)
     {
         this.player = player;
-        this.mountedEntity = (Boat)mountedEntity;
-        this.originalBoatType = this.mountedEntity.getBoatType();
+        this.mountedEntity = (Minecart)mountedEntity;
         createMount(mount);
     }
 
@@ -54,8 +51,6 @@ public class BoatMount implements IMount
         armorStand.getEquipment().setHelmet(customModel);
         mountModel = armorStand;
 
-        //mountedEntity.setBoatType(Boat.Type.BAMBOO);
-
         mountStructure.add(this.mountedEntity);
         mountStructure.add(player);
         mountStructure.add(customModelRotationBuffer);
@@ -76,8 +71,6 @@ public class BoatMount implements IMount
             mountStructure.get(i - 1).removePassenger(mountStructure.get(i));
             mountStructure.get(i).remove();
         }
-
-        //mountedEntity.setBoatType(originalBoatType);
     }
 
     @Override
@@ -99,8 +92,12 @@ public class BoatMount implements IMount
             return;
         }
 
-        float mountYaw = mountedEntity.getLocation().getYaw();
-        EulerAngle mountYawEulerAngle = new EulerAngle(0,(Math.toRadians(mountYaw)),0);
+        System.out.println(mountedEntity.getVelocity().getX() + " - " + mountedEntity.getLocation().getYaw());
+        double mountYaw;
+        if (mountedEntity.getVelocity().getX() < 0 && mountedEntity.getLocation().getYaw() == 0.0) mountYaw = Math.toRadians(-mountedEntity.getLocation().getYaw());
+        else mountYaw = Math.toRadians(mountedEntity.getLocation().getYaw());
+
+        EulerAngle mountYawEulerAngle = new EulerAngle(0,mountYaw,0);
 
         getMountModel().setHeadPose(mountYawEulerAngle);
     }

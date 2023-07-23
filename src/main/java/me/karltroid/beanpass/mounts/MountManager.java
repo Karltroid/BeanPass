@@ -140,6 +140,9 @@ public class MountManager implements Listener
                         mountInstances.put(player.getUniqueId(), horseMount);
                         break;
                     case MINECART:
+                        MinecartMount minecartMount = new MinecartMount(player, mountedEntity, mount);
+                        if (minecartMount.getMountStructure().size() == 0) return;
+                        mountInstances.put(player.getUniqueId(), minecartMount);
                         break;
                     case BOAT:
                         BoatMount boatMount = new BoatMount(player, mountedEntity, mount);

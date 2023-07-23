@@ -58,6 +58,9 @@ Skins:
   captain_hat:
     Material: CARVED_PUMPKIN
     ID: 10030
+  battle_axe:
+    Material: NETHERITE_AXE
+    ID: 10031
 
 Mounts:
   lamborghini_jalpa:
@@ -66,3 +69,6 @@ Mounts:
   canoe:
     Entity: BOAT
     ID: 10017
+  demon_train:
+    Entity: MINECART
+    ID: 10032

@@ -22,6 +22,7 @@
     {"predicate": {"custom_model_data":10014}, "model": "item/glass_bottle/btn_hats"},
     {"predicate": {"custom_model_data":10015}, "model": "item/glass_bottle/btn_mounts"},
     {"predicate": {"custom_model_data":10016}, "model": "item/glass_bottle/btn_tools"},
-    {"predicate": {"custom_model_data":10017}, "model": "item/glass_bottle/canoe"}
+    {"predicate": {"custom_model_data":10017}, "model": "item/glass_bottle/canoe"},
+    {"predicate": {"custom_model_data":10032}, "model": "item/glass_bottle/demon_train"}
   ]
 }
