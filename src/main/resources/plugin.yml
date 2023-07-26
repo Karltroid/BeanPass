@@ -49,3 +49,7 @@ commands:
     usage: /givequest <npc> <player>
     permission: beanpass.admin
     aliases: [ gq, gquest ]
+  requestteleport:
+    description: Ask player if they want to teleport
+    usage: /requestteleport <player> <world> <x> <y> <z> <yes_msg> | <no_msg>
+    permission: beanpass.admin

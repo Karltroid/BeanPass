@@ -152,10 +152,10 @@ public class BeanPassGUI implements Listener
         this.currentMenu = GUIMenu.YesNoQuestion;
         closeElementList(allElements);
 
-        loadElement(new TextElement(this, true, 1.5, -16, -4, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
-        loadElement(new NoButton(this, true, 1.5, -16, -12, 0.4f), null);
-        loadElement(new TextElement(this, true, 1.5, 16, -4, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
-        loadElement(new YesButton(this, true, 1.5, 16, -12, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.225, -16, -8.5, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
+        loadElement(new NoButton(this, true, 1.25, -16, -8, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.225, 16, -8.5, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
+        loadElement(new YesButton(this, true, 1.25, 16, -8, 0.4f), null);
     }
 
     void loadBeanPassMenu()
@@ -471,8 +471,12 @@ public class BeanPassGUI implements Listener
 
         closeElementList(allElements);
 
-        interactionLoop.cancel();
-        interactionLoop = null;
+        if (interactionLoop != null)
+        {
+            interactionLoop.cancel();
+            interactionLoop = null;
+        }
+
         HandlerList.unregisterAll(this);
         BeanPass.getInstance().activeGUIs.remove(player);
 
