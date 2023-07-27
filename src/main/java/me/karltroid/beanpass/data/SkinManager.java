@@ -42,7 +42,6 @@ public class SkinManager implements Listener
             // Loop through each key (skin name) in the "Skins" section
             for (String skinName : skinsSection.getKeys(false))
             {
-
                 // Get the configuration section for the current skin
                 ConfigurationSection skinSection = skinsSection.getConfigurationSection(skinName);
                 if (skinSection != null)
@@ -69,20 +68,21 @@ public class SkinManager implements Listener
     public void updateInventorySkins(Player player, Inventory inventory)
     {
         ItemStack[] contents = inventory.getContents();
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
         for (int i = 0; i < contents.length; i++)
         {
-            updateItemSlotWithSkin(player, inventory, i);
+            updateItemSlotWithSkin(playerData, inventory, i);
         }
     }
 
-    void updateItemSlotWithSkin(Player player, Inventory inventory, int slot)
+    void updateItemSlotWithSkin(PlayerData playerData, Inventory inventory, int slot)
     {
         ItemStack item = inventory.getItem(slot);
         if (item == null || item.getType() == Material.AIR) return;
         if (!skinTypes.contains(item.getType())) return;
 
         List<Skin> playerEquippedSkins = new ArrayList<>();
-        if (inventory instanceof PlayerInventory) playerEquippedSkins = BeanPass.getInstance().getPlayerData(player.getUniqueId()).equippedSkins;
+        if (inventory instanceof PlayerInventory) playerEquippedSkins = playerData.equippedSkins;
 
         int skinId = -1;
         for (Skin skin : playerEquippedSkins)
@@ -94,6 +94,7 @@ public class SkinManager implements Listener
             }
         }
 
+        if (item.getType().equals(Material.CARVED_PUMPKIN) && slot != 39) skinId = -1;
         ItemStack updatedItem = applySkin(item.clone(), skinId); // Create a clone of the item with updated customModelData
 
         // Use inventory.setItem() instead of player.getInventory().setItem()
