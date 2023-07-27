@@ -152,10 +152,10 @@ public class BeanPassGUI implements Listener
         this.currentMenu = GUIMenu.YesNoQuestion;
         closeElementList(allElements);
 
-        loadElement(new TextElement(this, true, 1.225, -16, -8.5, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
-        loadElement(new NoButton(this, true, 1.25, -16, -8, 0.4f), null);
-        loadElement(new TextElement(this, true, 1.225, 16, -8.5, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
-        loadElement(new YesButton(this, true, 1.25, 16, -8, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.225, -18, -9.5, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
+        loadElement(new NoButton(this, true, 1.25, -18, -8.5, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.225, 18, -9.5, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
+        loadElement(new YesButton(this, true, 1.25, 18, -8.5, 0.4f), null);
     }
 
     void loadBeanPassMenu()
@@ -234,7 +234,7 @@ public class BeanPassGUI implements Listener
             if (i == 0 && !predeterminedItemPlaced)
             {
                 // Place the predetermined item at slot 0,0
-                loadElement(new VisualElement(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, Material.CARVED_PUMPKIN, 0), null);
+                loadElement(new VisualElement(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, 3, Material.CARVED_PUMPKIN, 0), null);
                 predeterminedItemPlaced = true;
             }
 
@@ -257,7 +257,7 @@ public class BeanPassGUI implements Listener
                     loadElement(new EquipSkin(this, false, 3, xPos, yPos, 0.3f, skin), null);
                 }
             } else {
-                loadElement(new VisualElement(this, false, 3, xPos, yPos, 0.25f, Material.BARRIER, 0), null);
+                loadElement(new VisualElement(this, false, 3, xPos, yPos, 0.25f, 1, Material.BARRIER, 0), null);
             }
         }
 
@@ -293,7 +293,7 @@ public class BeanPassGUI implements Listener
             if (i == 0 && !predeterminedItemPlaced)
             {
                 // Place the predetermined item at slot 0,0
-                loadElement(new VisualElement(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, Material.LEATHER_HORSE_ARMOR, 0), null);
+                loadElement(new VisualElement(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, 3, Material.LEATHER_HORSE_ARMOR, 0), null);
                 predeterminedItemPlaced = true;
             }
 
@@ -315,7 +315,7 @@ public class BeanPassGUI implements Listener
                 Mount mount = BeanPass.getInstance().getMountManager().getMountById(mountId);
                 if (mount != null) loadElement(new EquipMount(this, false, 3, xPos, yPos, 0.3f, mount), null);
             }
-            else loadElement(new VisualElement(this, false, 3, xPos, yPos, 0.25f, Material.BARRIER, 0), null);
+            else loadElement(new VisualElement(this, false, 3, xPos, yPos, 0.25f, 3, Material.BARRIER, 0), null);
         }
 
         displayNavigationButtons();
@@ -328,7 +328,7 @@ public class BeanPassGUI implements Listener
 
         loadElement(new ToolsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        Material[] categories = new Material[] { Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE, Material.BOW, Material.CROSSBOW };
+        Material[] categories = new Material[] { Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE, Material.BOW, Material.CROSSBOW, Material.SHIELD };
         List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
 
         double firstRowYPosition = 10.0;
@@ -339,7 +339,7 @@ public class BeanPassGUI implements Listener
         for(int x = 0; x < categories.length; x++)
         {
             double columnXPosition = firstColumnXPosition + (x * columnSpacing);
-            loadElement(new VisualElement(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, categories[x], 0), null);
+            loadElement(new VisualElement(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, 3, categories[x], 0), null);
             List<Skin> ownedSkinsInCategory = new ArrayList<>();
             for (Integer skinId : ownedSkins)
             {
@@ -363,7 +363,7 @@ public class BeanPassGUI implements Listener
                     // do nothing
                 }
 
-                if (skin == null) loadElement(new VisualElement(this, false, 3, columnXPosition, columnYPosition, 0.25f, Material.BARRIER, 0), null);
+                if (skin == null) loadElement(new VisualElement(this, false, 3, columnXPosition, columnYPosition, 0.25f, 1, Material.BARRIER, 0), null);
                 else loadElement(new EquipSkin(this, false, 3, columnXPosition, columnYPosition, 0.25f, skin), null);
             }
         }
@@ -511,7 +511,7 @@ public class BeanPassGUI implements Listener
             for (double anglePitch = 0.0; anglePitch < 360; anglePitch += angleIncrement)
             {
                 // Call createHolographicText with the angle offsets for X and Y positioning on the sphere
-                loadElement(new ButtonElement(this, true, radiusOffset, angleYaw, anglePitch, 1f, Material.STONE, 0), null);
+                loadElement(new ButtonElement(this, true, radiusOffset, angleYaw, anglePitch, 1f, 3, 0.98D, Material.STONE, 0), null);
             }
         }
     }

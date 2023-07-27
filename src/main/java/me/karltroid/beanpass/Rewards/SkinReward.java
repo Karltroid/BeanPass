@@ -34,6 +34,6 @@ public class SkinReward implements Reward
     @Override
     public void displayReward(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double xAngle, double yAngle, float displayScale)
     {
-        beanPassGUI.loadElement(new VisualElement(beanPassGUI, spherePlacement, distance, xAngle, yAngle, displayScale, skin.getSkinApplicant(), skin.getId()), beanPassGUI.allLevelRewardElements);
+        beanPassGUI.loadElement(new VisualElement(beanPassGUI, spherePlacement, distance, xAngle, yAngle, displayScale, 3, skin.getSkinApplicant(), skin.getId()), beanPassGUI.allLevelRewardElements);
     }
 }

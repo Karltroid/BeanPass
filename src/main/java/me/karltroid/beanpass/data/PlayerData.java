@@ -97,6 +97,10 @@ public class PlayerData
     {
         return bedrockAccount;
     }
+    public void toggleBedrockAccount()
+    {
+        bedrockAccount = !bedrockAccount;
+    }
     public void equipSkin(Skin skin, boolean alert)
     {
         for (Skin equippedSkin : equippedSkins)

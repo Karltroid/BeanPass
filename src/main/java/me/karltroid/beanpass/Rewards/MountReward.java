@@ -30,6 +30,6 @@ public class MountReward implements Reward
     @Override
     public void displayReward(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double xAngle, double yAngle, float displayScale)
     {
-        beanPassGUI.loadElement(new VisualElement(beanPassGUI, spherePlacement, distance, xAngle, yAngle, displayScale/2, Material.GLASS_BOTTLE, mount.getId()), beanPassGUI.allLevelRewardElements);
+        beanPassGUI.loadElement(new VisualElement(beanPassGUI, spherePlacement, distance, xAngle, yAngle, displayScale/2, 1, Material.GLASS_BOTTLE, mount.getId()), beanPassGUI.allLevelRewardElements);
     }
 }

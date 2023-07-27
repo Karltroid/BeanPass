@@ -12,9 +12,12 @@ import org.joml.Vector3f;
 
 public class ButtonElement extends VisualElement implements Button
 {
-    public ButtonElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+    double selectionSensitivity;
+
+    public ButtonElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, int legacySize, double selectionSensitivity, Material material, int customModelData)
     {
-        super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, material, customModelData);
+        super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, legacySize, material, customModelData);
+        this.selectionSensitivity = selectionSensitivity;
     }
 
     public void select()
@@ -51,7 +54,12 @@ public class ButtonElement extends VisualElement implements Button
     public boolean isPlayerLooking(Player player)
     {
         Location eye = player.getEyeLocation();
-        eye.setY(eye.getY()-0.25);
+        if (beanPassGUI.playerData.isBedrockAccount())
+        {
+            ArmorStand armorStand = (ArmorStand) entity;
+            if (armorStand.isSmall()) eye.setPitch(eye.getPitch() + 11.0f);
+            else eye.setPitch(eye.getPitch() + 21.0f);
+        }
 
         double distance = Math.sqrt(Math.pow(location.getX() - eye.getX(), 2) + Math.pow(location.getY() - eye.getY(), 2) + Math.pow(location.getZ() - eye.getZ(), 2));
         if (distance > 10) return false;
@@ -59,8 +67,7 @@ public class ButtonElement extends VisualElement implements Button
         Vector toEntity = location.toVector().subtract(eye.toVector());
         double dot = toEntity.normalize().dot(eye.getDirection());
 
-        Double baseSelectionArea = 0.0275D;
-        return dot > (1D - baseSelectionArea) + (baseSelectionArea * displayScale);
+        return dot > selectionSensitivity;
     }
 
     @Override

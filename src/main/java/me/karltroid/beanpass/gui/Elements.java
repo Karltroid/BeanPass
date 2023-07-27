@@ -11,7 +11,7 @@ public class Elements
     {
         public LeftArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10001);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 3, 0.985D, Material.GLASS_BOTTLE, 10001);
         }
 
         @Override
@@ -25,7 +25,7 @@ public class Elements
     {
         public RightArrow(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10002);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 3, 0.985D, Material.GLASS_BOTTLE, 10002);
         }
 
         @Override
@@ -39,7 +39,7 @@ public class Elements
     {
         public OpenQuestsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10005);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10005);
         }
 
         @Override
@@ -53,7 +53,7 @@ public class Elements
     {
         public OpenHatsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10014);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10014);
         }
 
         @Override
@@ -67,7 +67,7 @@ public class Elements
     {
         public OpenMountsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10015);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10015);
         }
 
         @Override
@@ -81,7 +81,7 @@ public class Elements
     {
         public OpenRewardsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10004);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10004);
         }
 
         @Override
@@ -95,7 +95,7 @@ public class Elements
     {
         public OpenToolsPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10016);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10016);
         }
 
         @Override
@@ -109,7 +109,7 @@ public class Elements
     {
         public OpenGetPremiumPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10003);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10003);
         }
 
         @Override
@@ -123,7 +123,7 @@ public class Elements
     {
         public OpenBeanPassPage(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10007);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10007);
         }
 
         @Override
@@ -137,7 +137,7 @@ public class Elements
     {
         public BeanPassTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10006);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, Material.GLASS_BOTTLE, 10006);
         }
     }
 
@@ -145,7 +145,7 @@ public class Elements
     {
         public RewardsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10009);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, Material.GLASS_BOTTLE, 10009);
         }
     }
 
@@ -153,7 +153,7 @@ public class Elements
     {
         public HatsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10011);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, Material.GLASS_BOTTLE, 10011);
         }
     }
 
@@ -161,7 +161,7 @@ public class Elements
     {
         public MountsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10012);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, Material.GLASS_BOTTLE, 10012);
         }
     }
 
@@ -169,7 +169,7 @@ public class Elements
     {
         public ToolsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10013);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, Material.GLASS_BOTTLE, 10013);
         }
     }
 
@@ -177,7 +177,7 @@ public class Elements
     {
         public QuestsTitle(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10008);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, Material.GLASS_BOTTLE, 10008);
         }
     }
 
@@ -185,7 +185,7 @@ public class Elements
     {
         public BeanPassBackground(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, 10000);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 3, Material.GLASS_BOTTLE, 10000);
         }
     }
 
@@ -195,7 +195,7 @@ public class Elements
 
         public EquipSkin(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Skin skin)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, skin.getSkinApplicant(), skin.getId());
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.9875D, skin.getSkinApplicant(), skin.getId());
             this.skin = skin;
         }
 
@@ -213,7 +213,7 @@ public class Elements
 
         public EquipMount(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Mount mount)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.GLASS_BOTTLE, mount.getId());
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.987D, Material.GLASS_BOTTLE, mount.getId());
             this.mount = mount;
         }
 
@@ -229,7 +229,7 @@ public class Elements
     {
         public YesButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.LIME_STAINED_GLASS_PANE, -1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 3, 0.98D, Material.LIME_STAINED_GLASS_PANE, -1);
         }
 
         @Override
@@ -244,7 +244,7 @@ public class Elements
     {
         public NoButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, Material.RED_STAINED_GLASS_PANE, -1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 3, 0.98D, Material.RED_STAINED_GLASS_PANE, -1);
         }
 
         @Override

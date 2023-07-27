@@ -1,10 +1,12 @@
 package me.karltroid.beanpass.gui;
 
+import me.karltroid.beanpass.BeanPass;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.joml.Vector3f;
@@ -15,7 +17,7 @@ public class VisualElement extends Element
     Transformation originalTransformation;
     float displayScale;
 
-    public VisualElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double angleOffsetX, double angleOffsetY, float displayScale, Material material, int customModelData)
+    public VisualElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double angleOffsetX, double angleOffsetY, float displayScale, int legacySize, Material material, int customModelData)
     {
         super(beanPassGUI, spherePlacement, distance, angleOffsetX, angleOffsetY);
 
@@ -31,15 +33,47 @@ public class VisualElement extends Element
 
         if (beanPassGUI.playerData.isBedrockAccount())
         {
+            boolean smallArmorStand = false;
+            boolean headDisplay = true;
+
+            switch (legacySize)
+            {
+                case 1:
+                    smallArmorStand = true;
+                    headDisplay = false;
+                    this.location.subtract(0, 0.697058, 0);
+                    break;
+                case 2:
+                    headDisplay = false;
+                    this.location.subtract(0, 1.394117, 0);
+                    break;
+                case 3:
+                    smallArmorStand = true;
+                    this.location.subtract(0, 0.697058, 0);
+                    break;
+                case 4:
+                    this.location.subtract(0, 1.394117, 0);
+                    break;
+                default:
+                    BeanPass.getInstance().getLogger().warning("Bedrock armor stand legacy size does not exist. (1-4 only)");
+                    break;
+            }
+
             ArmorStand armorStand = (ArmorStand) beanPassGUI.world.spawnEntity(this.location, EntityType.ARMOR_STAND);
             armorStand.setGravity(false);
             armorStand.setVisible(false);
             armorStand.setBasePlate(false);
             armorStand.setInvulnerable(true);
-            armorStand.setSmall(true);
             armorStand.setMarker(true);
             armorStand.setFireTicks(72000);
-            armorStand.getEquipment().setHelmet(itemStack);
+            armorStand.setSmall(smallArmorStand);
+
+            if (headDisplay)
+            {
+                armorStand.getEquipment().setHelmet(itemStack);
+                armorStand.setHeadPose(new EulerAngle(Math.toRadians(location.getPitch()), 0 ,0));
+            }
+            else armorStand.getEquipment().setItemInMainHand(itemStack);
 
             this.entity = armorStand;
         }

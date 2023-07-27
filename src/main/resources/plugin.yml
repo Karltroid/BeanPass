@@ -13,6 +13,10 @@ commands:
     description: Modify a player's BeanPass season XP
     usage: /beanpass addxp <player> <amount>
     permission: beanpass.admin
+  beanpass-bedrock:
+    description: Toggle whether the GUI thinks the player is bedrock for testing bedrock GUI
+    usage: /beanpass bedrock <player>
+    permission: beanpass.admin
   quests:
     description: View your active quests to complete
     usage: /quests

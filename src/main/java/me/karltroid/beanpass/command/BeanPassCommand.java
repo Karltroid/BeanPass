@@ -4,6 +4,7 @@ import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.GUIMenu;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -80,6 +81,29 @@ public class BeanPassCommand implements CommandExecutor
 
             BeanPass.sendMessage(senderPlayer, ((xpChange > 0) ? "Increased " : "Decreased ") + targetPlayer.getName() + "'s xp by " + Math.abs(xpChange) + " (" + oldXP + " -> " + playerData.getXp() + ")");
             playerData.addXp(xpChange);
+            return true;
+        }
+        else if (args[0].equalsIgnoreCase("bedrock"))
+        {
+            if (!sender.hasPermission("beanpass.admin")) {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
+                return false;
+            }
+
+            Player requestedPlayer;
+
+            if (args.length == 1) requestedPlayer = senderPlayer;
+            else requestedPlayer = Bukkit.getPlayer(args[1]);
+
+            if (requestedPlayer == null)
+            {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "This player is not online or does not exist.");
+                return false;
+            }
+
+            PlayerData playerData = BeanPass.getInstance().getPlayerData(requestedPlayer.getUniqueId());
+            playerData.toggleBedrockAccount();
+            BeanPass.sendMessage(senderPlayer, requestedPlayer.getName() + " bedrockAccount: " + playerData.isBedrockAccount());
             return true;
         }
 
