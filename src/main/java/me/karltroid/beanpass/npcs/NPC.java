@@ -13,10 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionType;
 
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class NPC implements INPC
 {
+    HashMap<UUID, Integer> questsGivenThisInstance = new HashMap<UUID, Integer>();
     String typeName;
     String questVerb;
     String[] greetings = new String[]{
@@ -60,6 +62,13 @@ public abstract class NPC implements INPC
         if (previousQuest == null) MessagePlayer(player, getRandomMessage(questAsks));
         else MessagePlayer(player, getRandomMessage(differentQuestAsksP1) + previousQuest.getGoalDescription() + getRandomMessage(differentQuestAsksP2));
 
+        int questsGivenAlready = questsGivenThisInstance.getOrDefault(player.getUniqueId(), 0);
+        if (questsGivenAlready >= 3)
+        {
+            MessagePlayer(player, "Sorry I have no work for you right now, come back tomorrow and I may have something for you!");
+            return;
+        }
+
         playerData.responseFuture = new CompletableFuture<>();
         AskPlayer(player);
 
@@ -68,6 +77,8 @@ public abstract class NPC implements INPC
             {
                 if (previousQuest != null) playerData.removeQuest(previousQuest, true);
                 giveQuest(playerData, null, -1, 0, -1, true);
+
+                questsGivenThisInstance.put(player.getUniqueId(), questsGivenAlready + 1);
             }
 
             MessagePlayer(player, getRandomMessage(farewells));

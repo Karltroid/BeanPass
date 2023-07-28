@@ -83,9 +83,11 @@ public class MountManager implements Listener
     {
         for (IMount mountInstance : mountInstances.values())
         {
+            Entity exitedEntity = event.getExited();
             if (mountInstance.getMountStructure().contains(event.getExited()) || mountInstance.getMountStructure().contains(event.getVehicle()))
             {
-                destroyMountInstance(mountInstance.getPlayer());
+                if (exitedEntity instanceof Player) destroyMountInstance(mountInstance.getPlayer());
+                else event.setCancelled(true);
                 break;
             }
         }
@@ -110,6 +112,7 @@ public class MountManager implements Listener
         if (!(event.getEntered() instanceof Player)) return;
         Vehicle vehicle = event.getVehicle();
         if (!vehicle.getPassengers().isEmpty()) return;
+
         createMountInstance((Player) event.getEntered(), event.getVehicle());
     }
 

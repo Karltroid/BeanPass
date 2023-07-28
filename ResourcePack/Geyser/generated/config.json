@@ -1,0 +1,651 @@
+{
+  "gmdl_1": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 116
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/witch_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "witch_hat",
+    "generated": false,
+    "geyserID": "gmdl_1",
+    "path_hash": "gmdl_fd82caf",
+    "geometry": "geo_d29edf3"
+  },
+  "gmdl_2": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10009
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/top_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "top_hat",
+    "generated": false,
+    "geyserID": "gmdl_2",
+    "parent": "./assets/minecraft/models/block/carved_pumpkin.json",
+    "path_hash": "gmdl_4eba6f1",
+    "geometry": "geo_f788e4e"
+  },
+  "gmdl_5": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10011
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/hard_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "hard_hat",
+    "generated": false,
+    "geyserID": "gmdl_5",
+    "path_hash": "gmdl_90e5983",
+    "geometry": "geo_4bf08f5"
+  },
+  "gmdl_6": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10018
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/beansprout_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "beansprout_hat",
+    "generated": false,
+    "geyserID": "gmdl_6",
+    "path_hash": "gmdl_a819a35",
+    "geometry": "geo_6748e4f"
+  },
+  "gmdl_7": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10019
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/bone_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "bone_hat",
+    "generated": false,
+    "geyserID": "gmdl_7",
+    "path_hash": "gmdl_4182488",
+    "geometry": "geo_3f88c63"
+  },
+  "gmdl_8": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10020
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/bunny_ears_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "bunny_ears_hat",
+    "generated": false,
+    "geyserID": "gmdl_8",
+    "path_hash": "gmdl_481d6bd",
+    "geometry": "geo_dfd6351"
+  },
+  "gmdl_9": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10021
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/candle_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "candle_hat",
+    "generated": false,
+    "geyserID": "gmdl_9",
+    "path_hash": "gmdl_e0eddde",
+    "geometry": "geo_46a6fa7"
+  },
+  "gmdl_10": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10022
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/cat_ears_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "cat_ears_hat",
+    "generated": false,
+    "geyserID": "gmdl_10",
+    "path_hash": "gmdl_a92f837",
+    "geometry": "geo_6be6706"
+  },
+  "gmdl_11": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10023
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/fishbowl_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "fishbowl_hat",
+    "generated": false,
+    "geyserID": "gmdl_11",
+    "path_hash": "gmdl_7f9b355",
+    "geometry": "geo_2a21060"
+  },
+  "gmdl_12": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10024
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/goggles_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "goggles_hat",
+    "generated": false,
+    "geyserID": "gmdl_12",
+    "path_hash": "gmdl_ccc9b75",
+    "geometry": "geo_d7e54ec"
+  },
+  "gmdl_13": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10025
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/party_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "party_hat",
+    "generated": false,
+    "geyserID": "gmdl_13",
+    "path_hash": "gmdl_da13628",
+    "geometry": "geo_5059f93"
+  },
+  "gmdl_14": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10026
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/ram_horns_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "ram_horns_hat",
+    "generated": false,
+    "geyserID": "gmdl_14",
+    "path_hash": "gmdl_1d259fc",
+    "geometry": "geo_92570ba"
+  },
+  "gmdl_15": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10027
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/smul_birthday_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "smul_birthday_hat",
+    "generated": false,
+    "geyserID": "gmdl_15",
+    "path_hash": "gmdl_e367a58",
+    "geometry": "geo_3012f0c"
+  },
+  "gmdl_16": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10028
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/space_helmet_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "space_helmet_hat",
+    "generated": false,
+    "geyserID": "gmdl_16",
+    "path_hash": "gmdl_8c46e16",
+    "geometry": "geo_20d6866"
+  },
+  "gmdl_17": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10029
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/unicorn_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "unicorn_hat",
+    "generated": false,
+    "geyserID": "gmdl_17",
+    "path_hash": "gmdl_248bebf",
+    "geometry": "geo_0d4f30f"
+  },
+  "gmdl_18": {
+    "item": "carved_pumpkin",
+    "bedrock_icon": {
+      "icon": "camera",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10030
+    },
+    "path": "./assets/minecraft/models/item/carved_pumpkin/captain_hat.json",
+    "namespace": "minecraft",
+    "model_path": "item/carved_pumpkin",
+    "model_name": "captain_hat",
+    "generated": false,
+    "geyserID": "gmdl_18",
+    "path_hash": "gmdl_fe75252",
+    "geometry": "geo_1c37c9e"
+  },
+  "gmdl_19": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10000
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/bg_beanpass.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "bg_beanpass",
+    "generated": false,
+    "geyserID": "gmdl_19",
+    "path_hash": "gmdl_e894046",
+    "geometry": "geo_bbc8bc1"
+  },
+  "gmdl_20": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10001
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_arrow_left.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_arrow_left",
+    "generated": false,
+    "geyserID": "gmdl_20",
+    "path_hash": "gmdl_afafddf",
+    "geometry": "geo_f9dde0b"
+  },
+  "gmdl_21": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10002
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_arrow_right.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_arrow_right",
+    "generated": false,
+    "geyserID": "gmdl_21",
+    "path_hash": "gmdl_dd5602e",
+    "geometry": "geo_49d0879"
+  },
+  "gmdl_22": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10003
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_get_premium.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_get_premium",
+    "generated": false,
+    "geyserID": "gmdl_22",
+    "path_hash": "gmdl_cc10f8f",
+    "geometry": "geo_7b44255"
+  },
+  "gmdl_23": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10004
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_rewards.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_rewards",
+    "generated": false,
+    "geyserID": "gmdl_23",
+    "path_hash": "gmdl_e2ec97b",
+    "geometry": "geo_49a22d1"
+  },
+  "gmdl_24": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10005
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_quests.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_quests",
+    "generated": false,
+    "geyserID": "gmdl_24",
+    "path_hash": "gmdl_e8d1588",
+    "geometry": "geo_db9db76"
+  },
+  "gmdl_25": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10006
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/title_beanpass.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "title_beanpass",
+    "generated": false,
+    "geyserID": "gmdl_25",
+    "path_hash": "gmdl_4b1f755",
+    "geometry": "geo_a71535d"
+  },
+  "gmdl_26": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10007
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_beanpass.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_beanpass",
+    "generated": false,
+    "geyserID": "gmdl_26",
+    "path_hash": "gmdl_a89d4f7",
+    "geometry": "geo_7ae4c8d"
+  },
+  "gmdl_27": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10008
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/title_quests.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "title_quests",
+    "generated": false,
+    "geyserID": "gmdl_27",
+    "path_hash": "gmdl_2065f69",
+    "geometry": "geo_cc524ce"
+  },
+  "gmdl_28": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10009
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/title_rewards.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "title_rewards",
+    "generated": false,
+    "geyserID": "gmdl_28",
+    "path_hash": "gmdl_8ba716e",
+    "geometry": "geo_2ca8f93"
+  },
+  "gmdl_29": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10010
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/lamborghini_jalpa.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "lamborghini_jalpa",
+    "generated": false,
+    "geyserID": "gmdl_29",
+    "path_hash": "gmdl_2ba76a9",
+    "geometry": "geo_2f1ae1d"
+  },
+  "gmdl_30": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10011
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/title_hats.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "title_hats",
+    "generated": false,
+    "geyserID": "gmdl_30",
+    "path_hash": "gmdl_f69821f",
+    "geometry": "geo_2afc2bd"
+  },
+  "gmdl_31": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10012
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/title_mounts.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "title_mounts",
+    "generated": false,
+    "geyserID": "gmdl_31",
+    "path_hash": "gmdl_5bfa98b",
+    "geometry": "geo_b2d2017"
+  },
+  "gmdl_32": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10013
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/title_tools.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "title_tools",
+    "generated": false,
+    "geyserID": "gmdl_32",
+    "path_hash": "gmdl_bdc0633",
+    "geometry": "geo_694ce1d"
+  },
+  "gmdl_33": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10014
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_hats.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_hats",
+    "generated": false,
+    "geyserID": "gmdl_33",
+    "path_hash": "gmdl_4980966",
+    "geometry": "geo_a444e70"
+  },
+  "gmdl_34": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10015
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_mounts.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_mounts",
+    "generated": false,
+    "geyserID": "gmdl_34",
+    "path_hash": "gmdl_0e69924",
+    "geometry": "geo_e938e1e"
+  },
+  "gmdl_35": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10016
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/btn_tools.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "btn_tools",
+    "generated": false,
+    "geyserID": "gmdl_35",
+    "path_hash": "gmdl_397ddc8",
+    "geometry": "geo_0968636"
+  },
+  "gmdl_36": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10017
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/canoe.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "canoe",
+    "generated": false,
+    "geyserID": "gmdl_36",
+    "path_hash": "gmdl_64f5983",
+    "geometry": "geo_f20342f"
+  },
+  "gmdl_37": {
+    "item": "glass_bottle",
+    "bedrock_icon": {
+      "icon": "potion_bottle_empty",
+      "frame": 0
+    },
+    "nbt": {
+      "CustomModelData": 10032
+    },
+    "path": "./assets/minecraft/models/item/glass_bottle/demon_train.json",
+    "namespace": "minecraft",
+    "model_path": "item/glass_bottle",
+    "model_name": "demon_train",
+    "generated": false,
+    "geyserID": "gmdl_37",
+    "path_hash": "gmdl_b0d488b",
+    "geometry": "geo_fec7b89"
+  },
+  "gmdl_38": {
+    "item": "netherite_axe",
+    "bedrock_icon": {
+      "icon": "axe",
+      "frame": 5
+    },
+    "nbt": {
+      "CustomModelData": 10031
+    },
+    "path": "./assets/minecraft/models/item/netherite_axe/battle_axe.json",
+    "namespace": "minecraft",
+    "model_path": "item/netherite_axe",
+    "model_name": "battle_axe",
+    "generated": false,
+    "geyserID": "gmdl_38",
+    "path_hash": "gmdl_d26188a",
+    "geometry": "geo_a0e8b29"
+  }
+}

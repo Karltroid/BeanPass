@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.mounts;
 
 import me.karltroid.beanpass.BeanPass;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -62,10 +63,7 @@ public class BoatMount implements IMount
         mountStructure.add(armorStand);
 
         // stack all the mountStructure entities together after horse and player
-        for (int i = 2; i < mountStructure.size(); i++)
-        {
-            mountStructure.get(i-1).addPassenger(mountStructure.get(i));
-        }
+        for (int i = 2; i < mountStructure.size(); i++) mountStructure.get(i-1).addPassenger(mountStructure.get(i));
     }
 
     @Override

@@ -4,11 +4,5 @@
             "custom_model_data": 116,
             "sprite": "textures/geyser/geyser_custom/witch_hat"
         }
-    ],
-    "glass_bottle":[
-        {
-            "custom_model_data": 116,
-            "sprite": "textures/geyser/geyser_custom/witch_hat"
-        }
     ]
 }
