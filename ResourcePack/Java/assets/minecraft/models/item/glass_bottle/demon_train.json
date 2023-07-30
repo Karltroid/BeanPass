@@ -15548,9 +15548,9 @@
 	],
 	"display": {
 		"thirdperson_righthand": {
-			"rotation": [90, 0, 0],
-			"translation": [-6, -2, -26],
-			"scale": [3, 3, 3]
+			"rotation": [90, 90, 0],
+			"translation": [-6.25, -2, 13.5],
+			"scale": [0.35, 0.35, 0.35]
 		},
 		"thirdperson_lefthand": {
 			"rotation": [67.5, 0, 0],

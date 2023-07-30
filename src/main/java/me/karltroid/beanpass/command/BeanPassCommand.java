@@ -12,6 +12,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 public class BeanPassCommand implements CommandExecutor
@@ -19,13 +20,8 @@ public class BeanPassCommand implements CommandExecutor
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
     {
-        if (!(sender instanceof Player))
-        {
-            sender.sendMessage("This command can only be executed by a player.");
-            return false;
-        }
-
-        Player senderPlayer = (Player) sender;
+        Player senderPlayer = null;
+        if (sender instanceof Player) senderPlayer = (Player) sender;
 
         if (args.length == 0)
         {
@@ -79,8 +75,8 @@ public class BeanPassCommand implements CommandExecutor
             PlayerData playerData = BeanPass.getInstance().getPlayerData(targetPlayerUUID);
             double oldXP = playerData.getXp();
 
-            BeanPass.sendMessage(senderPlayer, ((xpChange > 0) ? "Increased " : "Decreased ") + targetPlayer.getName() + "'s xp by " + Math.abs(xpChange) + " (" + oldXP + " -> " + playerData.getXp() + ")");
             playerData.addXp(xpChange);
+            BeanPass.sendMessage(senderPlayer, ((xpChange > 0) ? "Increased " : "Decreased ") + targetPlayer.getName() + "'s xp by " + Math.abs(xpChange) + " (" + oldXP + " -> " + playerData.getXp() + ")");
             return true;
         }
         else if (args[0].equalsIgnoreCase("bedrock"))
@@ -106,7 +102,58 @@ public class BeanPassCommand implements CommandExecutor
             BeanPass.sendMessage(senderPlayer, requestedPlayer.getName() + " bedrockAccount: " + playerData.isBedrockAccount());
             return true;
         }
+        else if (args[0].equalsIgnoreCase("premium"))
+        {
+            if (!sender.hasPermission("beanpass.admin")) {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
+                return false;
+            }
+
+            Player requestedPlayer = Bukkit.getPlayer(args[1]);
+            int passesPurchased = 1;
+            if (args.length >= 3) passesPurchased = Integer.parseInt(args[2]);
+
+            PlayerData playerData = BeanPass.getInstance().getPlayerData(requestedPlayer.getUniqueId());
+            if (!playerData.isPremium())
+            {
+                playerData.givePremiumPass(requestedPlayer, true);
+                passesPurchased--;
+            }
+
+            if (passesPurchased > 0)
+            {
+                // give extra bean passes to online players first
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers())
+                {
+                    if (passesPurchased == 0) break;
+                    if (onlinePlayer.getUniqueId() == requestedPlayer.getUniqueId()) continue;
+                    PlayerData onlinePlayerData = BeanPass.getInstance().getPlayerData(onlinePlayer.getUniqueId());
+                    if (onlinePlayerData.isPremium()) continue;
+
+                    onlinePlayerData.givePremiumPass(requestedPlayer, true);
+                    passesPurchased--;
+                }
+
+                // give extra bean passes to most recent offline players next
+                for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers())
+                {
+                    UUID offlinePlayerUUID = offlinePlayer.getUniqueId();
+                    if (passesPurchased == 0) break;
+                    if (offlinePlayerUUID == requestedPlayer.getUniqueId() || offlinePlayer.isOnline()) continue;
+                    PlayerData offlinePlayerData = BeanPass.getInstance().getPlayerData(offlinePlayerUUID);
+                    if (offlinePlayerData == null || offlinePlayerData.isPremium()) continue;
+
+                    offlinePlayerData.givePremiumPass(requestedPlayer, true);
+                    BeanPass.getInstance().getDataManager().savePlayerData(offlinePlayerUUID);
+                    BeanPass.getInstance().unloadPlayerData(offlinePlayerUUID);
+                    passesPurchased--;
+                }
+            }
+
+            return true;
+        }
 
         return false;
     }
+
 }

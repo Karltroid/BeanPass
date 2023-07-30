@@ -132,6 +132,19 @@ public class Elements
             beanPassGUI.loadBeanPassMenu();
         }
     }
+    static class GetBeanPassButton extends ButtonElement implements Button
+    {
+        public GetBeanPassButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.9725D, Material.GLASS_BOTTLE, 10003);
+        }
+
+        @Override
+        public void click()
+        {
+            BeanPass.sendMessage(beanPassGUI.player, "Purchase BeanPass premium for $5.99: https://beanpass.smulbeana.net");
+        }
+    }
 
     static class BeanPassTitle extends VisualElement
     {
@@ -229,7 +242,7 @@ public class Elements
     {
         public YesButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 3, 0.98D, Material.LIME_STAINED_GLASS_PANE, -1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.98D, Material.LIME_DYE, 1);
         }
 
         @Override
@@ -244,7 +257,7 @@ public class Elements
     {
         public NoButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 3, 0.98D, Material.RED_STAINED_GLASS_PANE, -1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 4, 0.98D, Material.RED_DYE, 2);
         }
 
         @Override

@@ -4,6 +4,8 @@ import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.npcs.NPC;
 import me.karltroid.beanpass.quests.Quests.*;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,8 +15,8 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getLogger;
 
@@ -102,7 +104,7 @@ public class PlayerDataManager implements Listener
 
             PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), new ArrayList<>(), xp, lastKnownLevel, maxHomes);
             BeanPass.getInstance().addPlayerData(uuid, playerData);
-            if (lastKnownLevel < playerData.getLevel()) playerData.leveledUp(); // level up player if they got xp while offline
+            if (Bukkit.getOfflinePlayer(uuid).isOnline() && lastKnownLevel < playerData.getLevel()) playerData.leveledUp(); // level up player if they got xp while offline
 
             try (PreparedStatement playerRewardsStatement = conn.prepareStatement("SELECT * FROM player_rewards WHERE uuid = ?"))
             {
@@ -255,7 +257,8 @@ public class PlayerDataManager implements Listener
     @EventHandler
     void onPlayerLeave(PlayerQuitEvent event)
     {
-        Player player = event.getPlayer();
-        savePlayerData(player.getUniqueId());
+        UUID playerUUID = event.getPlayer().getUniqueId();
+        savePlayerData(playerUUID);
+        BeanPass.getInstance().unloadPlayerData(playerUUID);
     }
 }

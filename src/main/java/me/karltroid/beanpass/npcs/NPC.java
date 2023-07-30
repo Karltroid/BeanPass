@@ -63,7 +63,7 @@ public abstract class NPC implements INPC
         else MessagePlayer(player, getRandomMessage(differentQuestAsksP1) + previousQuest.getGoalDescription() + getRandomMessage(differentQuestAsksP2));
 
         int questsGivenAlready = questsGivenThisInstance.getOrDefault(player.getUniqueId(), 0);
-        if (questsGivenAlready >= 3)
+        if (questsGivenAlready >= BeanPass.getInstance().getNpcManager().questsPerNPCPerDay)
         {
             MessagePlayer(player, "Sorry I have no work for you right now, come back tomorrow and I may have something for you!");
             return;

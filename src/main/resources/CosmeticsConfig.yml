@@ -61,6 +61,27 @@ Skins:
   battle_axe:
     Material: NETHERITE_AXE
     ID: 10031
+  bat:
+    Material: NETHERITE_SWORD
+    ID: 10033
+  pitchfork:
+    Material: NETHERITE_SWORD
+    ID: 10034
+  frown_mask:
+    Material: CARVED_PUMPKIN
+    ID: 10035
+  smile_mask:
+    Material: CARVED_PUMPKIN
+    ID: 10036
+  headphones:
+    Material: CARVED_PUMPKIN
+    ID: 10037
+  pig_ears:
+    Material: CARVED_PUMPKIN
+    ID: 10038
+  racoon_tail_cap:
+    Material: CARVED_PUMPKIN
+    ID: 10039
 
 Mounts:
   lamborghini_jalpa:

@@ -1,14 +1,19 @@
 package me.karltroid.beanpass.npcs;
 
+import me.karltroid.beanpass.BeanPass;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class NPCManager
 {
     HashMap<String, NPC> npcs = new HashMap<>();
+    public int questsPerNPCPerDay;
 
     public NPCManager()
     {
+        questsPerNPCPerDay = BeanPass.getInstance().getGeneralConfig().getInt("QuestsPerNPCPerDay");
+
         // type name, npc object
         npcs.put("commander", new CommanderNPC());
         npcs.put("lumberjack", new LumberjackNPC());

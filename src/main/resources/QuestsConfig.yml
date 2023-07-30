@@ -9,27 +9,27 @@
 Difficulties:
   SUPER_EASY:
     base_units: 8
-    max_unit_multiplier: 24
+    max_unit_multiplier: 16
     xp_per_unit: 0.0521
   VERY_EASY:
     base_units: 8
-    max_unit_multiplier: 16
+    max_unit_multiplier: 12
     xp_per_unit: 0.196
   EASY:
     base_units: 6
-    max_unit_multiplier: 12
+    max_unit_multiplier: 8
     xp_per_unit: 0.56
   NORMAL:
     base_units: 4
-    max_unit_multiplier: 8
+    max_unit_multiplier: 4
     xp_per_unit: 1.6
   HARD:
     base_units: 2
-    max_unit_multiplier: 8
+    max_unit_multiplier: 2
     xp_per_unit: 5
   VERY_HARD:
     base_units: 2
-    max_unit_multiplier: 4
+    max_unit_multiplier: 1
     xp_per_unit: 13
   SUPER_HARD:
     base_units: 1
@@ -157,13 +157,13 @@ BuilderQuests:
 
 FisherQuests:
   COD:
-    difficulty: EASY
-  SALMON:
     difficulty: NORMAL
+  SALMON:
+    difficulty: HARD
   PUFFERFISH:
     difficulty: VERY_HARD
   TROPICAL_FISH:
-    difficulty: SUPER_HARD
+    difficulty: VERY_HARD
 
 WitchQuests:
   FIRE_RESISTANCE:

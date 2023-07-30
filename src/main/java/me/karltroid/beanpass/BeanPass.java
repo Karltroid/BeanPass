@@ -207,6 +207,8 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("requestteleport").setExecutor(new RequestTeleport());
     }
 
+    public void unloadPlayerData(UUID uuid) { playerData.remove(uuid); }
+
     public FileConfiguration getGeneralConfig() { return generalConfig; }
     public FileConfiguration getCosmeticsConfig() { return cosmeticsConfig; }
     public FileConfiguration getQuestsConfig() { return questsConfig; }
@@ -236,11 +238,17 @@ public final class BeanPass extends JavaPlugin implements Listener
 
     public PluginManager getPluginManager(){ return pluginManager; }
 
+
+    public PlayerDataManager getDataManager() { return dataManager; }
+
     public void addPlayerData(UUID uuid, PlayerData playerData) {
         this.playerData.put(uuid, playerData);
     }
     public PlayerData getPlayerData(UUID uuid) {
-        return playerData.get(uuid);
+        PlayerData p = playerData.get(uuid);
+        if (p == null) dataManager.loadPlayerData(uuid);
+        p = playerData.get(uuid);
+        return p;
     }
 
     public boolean playerDataExists(UUID playerUUID) { return playerData.containsKey(playerUUID); }
@@ -264,7 +272,7 @@ public final class BeanPass extends JavaPlugin implements Listener
             return false;
         }
         econ = rsp.getProvider();
-        return econ != null;
+        return true;
     }
 
     public Economy getEconomy()
@@ -279,10 +287,18 @@ public final class BeanPass extends JavaPlugin implements Listener
 
     public static void sendMessage(OfflinePlayer p, String message)
     {
-        if (!p.isOnline()) return;
+        if (p == null || !p.isOnline()) return;
 
         Player player = (Player) p;
         player.sendMessage(beanPassChatSymbol + ChatColor.RESET + message);
+    }
+
+    public static void BroadcastMessage(String message)
+    {
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            player.sendMessage(beanPassChatSymbol + ChatColor.RESET + message);
+        }
     }
 
     public ProtocolManager getProtocolManager() {

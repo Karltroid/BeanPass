@@ -18,6 +18,11 @@
 		{"predicate": {"custom_model_data":10027}, "model": "item/carved_pumpkin/smul_birthday_hat"},
 		{"predicate": {"custom_model_data":10028}, "model": "item/carved_pumpkin/space_helmet_hat"},
 		{"predicate": {"custom_model_data":10029}, "model": "item/carved_pumpkin/unicorn_hat"},
-		{"predicate": {"custom_model_data":10030}, "model": "item/carved_pumpkin/captain_hat"}
+		{"predicate": {"custom_model_data":10030}, "model": "item/carved_pumpkin/captain_hat"},
+		{"predicate": {"custom_model_data":10035}, "model": "item/carved_pumpkin/frown_mask"},
+		{"predicate": {"custom_model_data":10036}, "model": "item/carved_pumpkin/smile_mask"},
+		{"predicate": {"custom_model_data":10037}, "model": "item/carved_pumpkin/headphones"},
+		{"predicate": {"custom_model_data":10038}, "model": "item/carved_pumpkin/pig_ears"},
+		{"predicate": {"custom_model_data":10039}, "model": "item/carved_pumpkin/racoon_tail_cap"}
 	]
 }

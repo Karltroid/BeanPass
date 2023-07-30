@@ -7,6 +7,7 @@ import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.data.Skin;
 import me.karltroid.beanpass.gui.Elements.*;
 import me.karltroid.beanpass.mounts.Mount;
+import me.karltroid.beanpass.other.Utils;
 import me.karltroid.beanpass.quests.Quests;
 import me.karltroid.beanpass.quests.Quests.Quest;
 import net.md_5.bungee.api.ChatColor;
@@ -17,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -83,7 +85,7 @@ public class BeanPassGUI implements Listener
 
                 Location firstElementLocation = allElements.get(0).location;
                 double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
-                if (distance > 5)
+                if (distance > 4)
                 {
                     closeEntireGUI();
                     return;
@@ -152,10 +154,10 @@ public class BeanPassGUI implements Listener
         this.currentMenu = GUIMenu.YesNoQuestion;
         closeElementList(allElements);
 
-        loadElement(new TextElement(this, true, 1.225, -18, -9.5, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
-        loadElement(new NoButton(this, true, 1.25, -18, -8.5, 0.4f), null);
-        loadElement(new TextElement(this, true, 1.225, 18, -9.5, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
-        loadElement(new YesButton(this, true, 1.25, 18, -8.5, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.225, -20, -1, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
+        loadElement(new NoButton(this, true, 1.25, -20, -10, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.225, 20, -1, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
+        loadElement(new YesButton(this, true, 1.25, 20, -10, 0.4f), null);
     }
 
     void loadBeanPassMenu()
@@ -178,7 +180,7 @@ public class BeanPassGUI implements Listener
         loadElement(new QuestsTitle(this, true, 3.1, 0, 21, 1f), null);
 
         int lineSpacing = 3;
-        int y = 8;
+        int y = 12;
         for (Quest quest : BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests())
         {
             loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.BOLD + quest.getQuestGiver().getTypeName() + ": " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
@@ -195,7 +197,7 @@ public class BeanPassGUI implements Listener
 
         loadElement(new RewardsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        loadElement(new TextElement(this, false, 3, 0, 15, 0.75f, ChatColor.GREEN + "Balance: $" + playerData.getBalance()), null);
+        loadElement(new TextElement(this, false, 3, 0, 15, 0.75f, ChatColor.GREEN + "Balance: $" + Utils.formatDouble(playerData.getBalance())), null);
         loadElement(new TextElement(this, false, 3, 0, 10, 0.75f, ChatColor.YELLOW + "Homes: " + playerData.getHomeAmount() + " / " + playerData.getMaxHomeAmount() + " used"), null);
 
 
@@ -213,7 +215,13 @@ public class BeanPassGUI implements Listener
 
         loadElement(new HatsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
+        List<Integer> ownedSkinIDs = playerData.getAllOwnedSkinIds();
+        List<Skin> ownedHatSkins = new ArrayList<>();
+        for (int ownedSkinID : ownedSkinIDs)
+        {
+            Skin skin = BeanPass.getInstance().skinManager.getSkinById(ownedSkinID);
+            if (skin.getSkinApplicant().equals(Material.CARVED_PUMPKIN)) ownedHatSkins.add(skin);
+        }
 
         double firstRowYPosition = 16.5;
         double firstColumnXPosition = -35.0;
@@ -221,7 +229,7 @@ public class BeanPassGUI implements Listener
         int skinsPerRow = 6;
         double columnSpacing = Math.abs((firstColumnXPosition * 2) / (skinsPerRow - 1));
         double rowSpacing = Math.abs((firstRowYPosition * 1.8) / skinsPerColumn);
-        int ownedSkinsAmount = ownedSkins.size();
+        int ownedSkinsAmount = ownedHatSkins.size();
 
         boolean predeterminedItemPlaced = false;
         int totalSkinsDisplayed = skinsPerRow * skinsPerColumn;
@@ -230,7 +238,6 @@ public class BeanPassGUI implements Listener
         // Loop through the items and display them
         for (int i = 0; i < totalSkinsDisplayed; i++)
         {
-
             if (i == 0 && !predeterminedItemPlaced)
             {
                 // Place the predetermined item at slot 0,0
@@ -251,8 +258,7 @@ public class BeanPassGUI implements Listener
             double yPos = firstRowYPosition - (row * rowSpacing);
 
             if (i < ownedSkinsAmount) {
-                int skinId = ownedSkins.get(i);
-                Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
+                Skin skin = ownedHatSkins.get(i);
                 if (skin != null) {
                     loadElement(new EquipSkin(this, false, 3, xPos, yPos, 0.3f, skin), null);
                 }
@@ -389,7 +395,8 @@ public class BeanPassGUI implements Listener
 
     void displayNavigationButtons()
     {
-        loadElement(new OpenBeanPassPage(this, true,3, -29, -27, 0.48f), null);
+        if (currentMenu == GUIMenu.BeanPass) loadElement(new GetBeanPassButton(this, true,3, -29, -27, 0.48f), null);
+        else loadElement(new OpenBeanPassPage(this, true,3, -29, -27, 0.48f), null);
         loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
         loadElement(new OpenRewardsPage(this, true,3, 29, -27, 0.48f), null);
     }
@@ -400,7 +407,7 @@ public class BeanPassGUI implements Listener
 
         HashMap<Integer, Level> beanpassLevels = BeanPass.getInstance().getSeason().getLevels();
 
-        //loadElement(new TextElement(this, true,1.5, 0, -45, 1f, ChatColor.GREEN + "" + playerData.getXpNeededForNextLevel() + "XP needed for LVL " + playerData.getLevel() + 1), allLevelRewardElements);
+        loadElement(new TextElement(this, true,2.6, 0, -37, 0.45f, ChatColor.YELLOW + "" + ChatColor.BOLD + Utils.formatDouble(playerData.getXpNeededForNextLevel()) + "XP " + ChatColor.GREEN + "" + ChatColor.BOLD + "NEEDED FOR LEVEL " + (playerData.getLevel() + 1)), allLevelRewardElements);
 
         int playerLevel = playerData.getLevel();
 
@@ -499,6 +506,15 @@ public class BeanPassGUI implements Listener
     void onPlayerLeave(PlayerQuitEvent event)
     {
         Player player = event.getPlayer();
+        if (player != this.player) return;
+
+        closeEntireGUI();
+    }
+
+    @EventHandler
+    void onPlayerDeath(PlayerDeathEvent event)
+    {
+        Player player = event.getEntity().getPlayer();
         if (player != this.player) return;
 
         closeEntireGUI();

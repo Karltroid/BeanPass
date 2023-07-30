@@ -26,6 +26,9 @@ public class ButtonElement extends VisualElement implements Button
         {
             ArmorStand armorStand = (ArmorStand) entity;
             armorStand.setGlowing(true);
+            Vector movingDirection = beanPassGUI.player.getEyeLocation().toVector().subtract(entity.getLocation().toVector()).normalize();
+            Location newLocation = location.clone().add(movingDirection.divide(new Vector(3, 3, 3)));
+            armorStand.teleport(newLocation);
         }
         else
         {
@@ -42,6 +45,7 @@ public class ButtonElement extends VisualElement implements Button
         {
             ArmorStand armorStand = (ArmorStand) entity;
             armorStand.setGlowing(false);
+            armorStand.teleport(location);
         }
         else
         {

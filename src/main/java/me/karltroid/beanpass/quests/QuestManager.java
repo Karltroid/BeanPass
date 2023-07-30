@@ -4,10 +4,7 @@ package me.karltroid.beanpass.quests;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests.*;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Smoker;
 import org.bukkit.block.data.Ageable;
@@ -17,7 +14,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.BrewEvent;
@@ -25,6 +24,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -48,10 +48,10 @@ public class QuestManager implements Listener
 
     void completeQuest(Player player, PlayerData playerData, Quest quest)
     {
-        playerData.addXp(quest.getXPReward());
         playerData.getQuests().remove(quest);
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-        BeanPass.sendMessage(player, BOLD_GREEN + "QUEST COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription() + " " + ITALIC_YELLOW + quest.getRewardDescription());
+        BeanPass.sendMessage(player, BOLD_GREEN + "QUEST COMPLETED: " + ChatColor.GREEN + quest.getGoalDescription());
+        playerData.addXp(quest.getXPReward());
     }
 
     @EventHandler
@@ -68,18 +68,18 @@ public class QuestManager implements Listener
         UUID playerUUID = event.getPlayer().getUniqueId();
         PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
 
-        MiningQuest miningQuest = null;
         Material blockMinedType = event.getBlock().getType();
-        for (Quest quest : playerData.getQuests())
+
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
         {
             if (!(quest instanceof MiningQuest)) continue;
-            if (blockMinedType != ((MiningQuest) quest).getGoalBlockType()) continue;
-            miningQuest = (MiningQuest) quest;
-        }
-        if (miningQuest == null) return;
+            if (!(blockMinedType.name().contains(((MiningQuest) quest).getGoalBlockType().name()))) continue;
 
-        miningQuest.incrementPlayerCount(1);
-        if (miningQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, miningQuest);
+            MiningQuest miningQuest = (MiningQuest) quest;
+            miningQuest.incrementPlayerCount(1);
+            if (miningQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, miningQuest);
+        }
     }
 
     @EventHandler
@@ -96,17 +96,16 @@ public class QuestManager implements Listener
 
         Material caughtMaterial = ((Item)event.getCaught()).getItemStack().getType();
 
-        FishingQuest fishingQuest = null;
-        for (Quest quest : playerData.getQuests())
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
         {
             if (!(quest instanceof FishingQuest)) continue;
             if (caughtMaterial != ((FishingQuest) quest).getGoalItemType()) continue;
-            fishingQuest = (FishingQuest) quest;
-        }
-        if (fishingQuest == null) return;
 
-        fishingQuest.incrementPlayerCount(1);
-        if (fishingQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, fishingQuest);
+            FishingQuest fishingQuest = (FishingQuest) quest;
+            fishingQuest.incrementPlayerCount(1);
+            if (fishingQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, fishingQuest);
+        }
     }
 
     @EventHandler
@@ -158,18 +157,13 @@ public class QuestManager implements Listener
             if (maxCraftedItemThatFitsInv < amount) amount = maxCraftedItemThatFitsInv;
         }
 
-        List<CraftingQuest> craftingQuests = new ArrayList<>();
-        for (Quest quest : playerData.getQuests())
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
         {
-            if (quest instanceof CraftingQuest) craftingQuests.add((CraftingQuest) quest);
-        }
+            if (!(quest instanceof CraftingQuest)) continue;
+            CraftingQuest craftingQuest = (CraftingQuest) quest;
 
-        if (craftingQuests.size() == 0) return;
-
-        for(CraftingQuest craftingQuest : craftingQuests)
-        {
             if (!(itemCraftedType.equals(craftingQuest.getGoalItemType()))) continue;
-
             craftingQuest.incrementPlayerCount(amount);
             if (craftingQuest.isCompleted()) completeQuest(player, playerData, craftingQuest);
         }
@@ -185,18 +179,13 @@ public class QuestManager implements Listener
         Material itemSmeltedType = event.getItemType();
         int amountSmelted = event.getItemAmount();
 
-        List<CraftingQuest> craftingQuests = new ArrayList<>();
-        for (Quest quest : playerData.getQuests())
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
         {
-            if (quest instanceof CraftingQuest) craftingQuests.add((CraftingQuest) quest);
-        }
+            if (!(quest instanceof CraftingQuest)) continue;
+            CraftingQuest craftingQuest = (CraftingQuest) quest;
 
-        if (craftingQuests.size() == 0) return;
-
-        for(CraftingQuest craftingQuest : craftingQuests)
-        {
             if (!(itemSmeltedType.equals(craftingQuest.getGoalItemType()))) continue;
-
             craftingQuest.incrementPlayerCount(amountSmelted);
             if (craftingQuest.isCompleted()) completeQuest(player, playerData, craftingQuest);
         }
@@ -225,18 +214,13 @@ public class QuestManager implements Listener
 
         PotionType potionType = (potionMeta).getBasePotionData().getType();
 
-        List<BrewingQuest> brewingQuests = new ArrayList<>();
-        for (Quest quest : playerData.getQuests())
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
         {
-            if (quest instanceof BrewingQuest) brewingQuests.add((BrewingQuest) quest);
-        }
+            if (!(quest instanceof BrewingQuest)) continue;
+            BrewingQuest brewingQuest = (BrewingQuest) quest;
 
-        if (brewingQuests.size() == 0) return;
-
-        for(BrewingQuest brewingQuest : brewingQuests)
-        {
             if (!(potionType.equals(brewingQuest.getGoalItemType()))) continue;
-
             brewingQuest.incrementPlayerCount(1);
             if (brewingQuest.isCompleted()) completeQuest(player, playerData, brewingQuest);
         }
@@ -251,16 +235,15 @@ public class QuestManager implements Listener
         UUID playerUUID = player.getUniqueId();
         PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
 
-        KillingQuest killingQuest = null;
-        for (Quest quest : playerData.getQuests())
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
         {
             if (!(quest instanceof KillingQuest)) continue;
-            if (entityTypeKilled != ((KillingQuest) quest).getGoalEntityType()) continue;
-            killingQuest = (KillingQuest) quest;
-        }
-        if (killingQuest == null) return;
+            KillingQuest killingQuest = (KillingQuest) quest;
 
-        killingQuest.incrementPlayerCount(1);
-        if (killingQuest.isCompleted()) completeQuest(player, playerData, killingQuest);
+            if (entityTypeKilled != ((KillingQuest) quest).getGoalEntityType()) continue;
+            killingQuest.incrementPlayerCount(1);
+            if (killingQuest.isCompleted()) completeQuest(player, playerData, killingQuest);
+        }
     }
 }

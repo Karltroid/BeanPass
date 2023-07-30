@@ -18,7 +18,7 @@ public class TextElement extends Element
 
     public TextElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double angleOffsetX, double angleOffsetY, float displayScale, String text)
     {
-        super(beanPassGUI, spherePlacement, distance, angleOffsetX, angleOffsetY);
+        super(beanPassGUI, spherePlacement, beanPassGUI.playerData.isBedrockAccount() ? distance * 1.7 : distance, beanPassGUI.playerData.isBedrockAccount() ? angleOffsetX * 1.7 : angleOffsetX, beanPassGUI.playerData.isBedrockAccount() ? angleOffsetY * 1.7 - 7 : angleOffsetY);
 
         this.textDisplay = (TextDisplay) beanPassGUI.world.spawnEntity(this.location, EntityType.TEXT_DISPLAY);
 
@@ -30,7 +30,7 @@ public class TextElement extends Element
         this.textDisplay.setTransformation(new Transformation(transformation.getTranslation(), transformation.getLeftRotation(),new Vector3f(displayScale), transformation.getRightRotation()));
         this.originalTransformation = this.textDisplay.getTransformation();
         this.textDisplay.setRotation(location.getYaw(), location.getPitch());
-        this.textDisplay.setLineWidth(300);
+        this.textDisplay.setLineWidth(400);
 
         this.textDisplay.setText(text);
     }

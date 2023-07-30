@@ -55,6 +55,10 @@
 		}
 	],
 	"display": {
+		"thirdperson_righthand": {
+			"rotation": [90, 0, 0],
+			"translation": [-6, -2, 16.5]
+		},
 		"ground": {
 			"translation": [0, 3.75, 0]
 		},

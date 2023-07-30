@@ -6,6 +6,7 @@ import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.mounts.Mount;
+import me.karltroid.beanpass.other.Utils;
 import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -35,6 +36,7 @@ public class PlayerData
 
     // persistent player data
     int maxHomes;
+    int maxWarps;
     List<Integer> ownedSkins;
     List<Integer> ownedMounts;
     List<Skin> equippedSkins = new ArrayList<>();
@@ -52,7 +54,25 @@ public class PlayerData
         this.bedrockAccount = player.getName().startsWith(".");
     }
 
-    public void setPremiumPass(boolean hasPass) { this.premium = hasPass; }
+    public void givePremiumPass(Player passGiver, boolean alert)
+    {
+        this.premium = true;
+
+        for (int lvl = 2; lvl <= BeanPass.getInstance().getPlayerData(player.getUniqueId()).getLevel(); lvl++)
+        {
+            Level level = BeanPass.getInstance().getSeason().getLevel(lvl);
+            Reward levelPremiumReward = level.getPremiumReward();
+
+            if (levelPremiumReward == null) continue;
+            levelPremiumReward.giveReward(player.getUniqueId());
+        }
+
+        if (!alert) return;
+
+        if (passGiver.getUniqueId() == getUUID()) BeanPass.BroadcastMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + " purchased this season's BeanPass premium, enjoy!");
+        else BeanPass.BroadcastMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + passGiver.getName() + ChatColor.LIGHT_PURPLE + " gifted BeanPass premium to " + ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + ", enjoy!");
+    }
+    public boolean isPremium() { return this.premium; }
     public void giveSkin(Skin skin, boolean alert)
     {
         if (ownedSkins.contains(skin.getId()))
@@ -170,6 +190,7 @@ public class PlayerData
         int beforeLevel = getLevel();
 
         this.xp += xp;
+        BeanPass.sendMessage(player, ChatColor.YELLOW + "" + ChatColor.ITALIC + "+" + Utils.formatDouble(xp) + "XP" + ChatColor.GREEN + " has been added to your BeanPass! " + ChatColor.ITALIC + Utils.formatDouble(getXpNeededForNextLevel()) + "XP needed for level " + (getLevel() + 1) + "!");
         int afterLevel = getLevel();
 
         Player p = (player.getPlayer());
@@ -187,6 +208,14 @@ public class PlayerData
     public void increaseMaxHomes(int increment)
     {
         maxHomes += increment;
+        OfflinePlayer player = Bukkit.getOfflinePlayer(getUUID());
+        User essentialsPlayer = BeanPass.getInstance().getEssentials().getUser(getUUID());
+        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "homes" : "home") + "! " + essentialsPlayer.getHomes().size() + "/" + maxHomes + " used.");
+    }
+
+    public void increaseMaxWarps(int increment)
+    {
+        maxWarps += increment;
         OfflinePlayer player = Bukkit.getOfflinePlayer(getUUID());
         User essentialsPlayer = BeanPass.getInstance().getEssentials().getUser(getUUID());
         BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "homes" : "home") + "! " + essentialsPlayer.getHomes().size() + "/" + maxHomes + " used.");
@@ -229,7 +258,7 @@ public class PlayerData
                 BeanPass.sendMessage(p, ChatColor.GREEN + player.getDisplayName() + " leveled up to" + ChatColor.YELLOW + " " + "LVL " + l);
             }
 
-            Location location = player.getLocation();
+            Location location = player.getLocation().add(0, 2.5, 0);
             world.playSound(location, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
             Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
             FireworkMeta fireworkMeta = firework.getFireworkMeta();
@@ -252,9 +281,11 @@ public class PlayerData
             Reward freeReward = BeanPass.getInstance().getSeason().getLevel(l).getFreeReward();
             if (freeReward != null) freeReward.giveReward(getUUID());
 
-            // in the future check if they have premium !!!!!!!!
-            Reward premiumReward = BeanPass.getInstance().getSeason().getLevel(l).getPremiumReward();
-            if (premiumReward != null) premiumReward.giveReward(getUUID());
+            if (isPremium())
+            {
+                Reward premiumReward = BeanPass.getInstance().getSeason().getLevel(l).getPremiumReward();
+                if (premiumReward != null) premiumReward.giveReward(getUUID());
+            }
         }
 
         if (BeanPass.getInstance().activeGUIs.containsKey(player))

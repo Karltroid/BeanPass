@@ -1,0 +1,80 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "item/netherite_sword/bldbat",
+		"particle": "item/netherite_sword/bldbat"
+	},
+	"elements": [
+		{
+			"from": [6.6, 0, 6.2],
+			"to": [9.6, 1, 9.2],
+			"faces": {
+				"north": {"uv": [14, 15, 16, 16], "texture": "#0"},
+				"east": {"uv": [14, 15, 16, 16], "texture": "#0"},
+				"south": {"uv": [14, 15, 16, 16], "texture": "#0"},
+				"west": {"uv": [14, 15, 16, 16], "texture": "#0"},
+				"up": {"uv": [14, 15, 16, 16], "texture": "#0"},
+				"down": {"uv": [14, 15, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [7.1, 0, 6.7],
+			"to": [9.1, 7, 8.7],
+			"faces": {
+				"north": {"uv": [1, 13, 8, 15], "texture": "#0"},
+				"east": {"uv": [1, 13, 8, 15], "texture": "#0"},
+				"south": {"uv": [1, 13, 8, 15], "texture": "#0"},
+				"west": {"uv": [1, 13, 8, 15], "texture": "#0"},
+				"up": {"uv": [1, 13, 8, 15], "texture": "#0"},
+				"down": {"uv": [1, 13, 8, 15], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.6, 3.9, 6.2],
+			"to": [9.6, 16.9, 9.2],
+			"faces": {
+				"north": {"uv": [1, 2, 4, 15], "texture": "#0"},
+				"east": {"uv": [13, 2, 16, 15], "texture": "#0"},
+				"south": {"uv": [9, 2, 12, 15], "texture": "#0"},
+				"west": {"uv": [5, 2, 8, 15], "texture": "#0"},
+				"up": {"uv": [13, 11, 16, 13], "texture": "#0"},
+				"down": {"uv": [5, 13, 8, 15], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"translation": [0, 7, 2.25],
+			"scale": [1, 1.6, 1]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 7, 2.25],
+			"scale": [1, 1.6, 1]
+		},
+		"firstperson_righthand": {
+			"rotation": [12, -90, 25],
+			"translation": [1.13, 6.45, 1.88],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"firstperson_lefthand": {
+			"rotation": [12, -90, 25],
+			"translation": [1.13, 6.45, 1.88],
+			"scale": [0.68, 0.68, 0.68]
+		},
+		"ground": {
+			"rotation": [0, 0, -95],
+			"translation": [0, -1.75, 0]
+		},
+		"gui": {
+			"rotation": [0, 0, 46]
+		},
+		"head": {
+			"rotation": [0, 0, 45],
+			"translation": [0, -5.25, 0],
+			"scale": [1.2, 1.2, 1.2]
+		},
+		"fixed": {
+			"rotation": [0, 0, 39]
+		}
+	}
+}

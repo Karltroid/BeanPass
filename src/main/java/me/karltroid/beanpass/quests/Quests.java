@@ -3,6 +3,7 @@ package me.karltroid.beanpass.quests;
 import me.karltroid.beanpass.BeanPass;
 
 import me.karltroid.beanpass.npcs.NPC;
+import me.karltroid.beanpass.other.Utils;
 import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
@@ -40,8 +41,7 @@ public class Quests
 
         public String getRewardDescription()
         {
-            DecimalFormat tenths = new DecimalFormat("0.00");
-            return "+" + tenths.format(xpReward) + "XP";
+            return "+" + Utils.formatDouble(xpReward) + "XP";
         }
         public String getGoalDescription()
         {
