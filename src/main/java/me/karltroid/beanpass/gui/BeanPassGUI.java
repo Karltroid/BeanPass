@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -491,14 +492,27 @@ public class BeanPassGUI implements Listener
     }
 
     @EventHandler
+    public void onPlayerInteract(EntityDamageByEntityEvent event)
+    {
+        if (!(event.getDamager() instanceof Player)) return;
+        Player player = (Player) event.getDamager();
+        if (player != this.player) return;
+
+        if (selectedButtonElement == null) return;
+        Button button = selectedButtonElement;
+
+        button.click();
+    }
+
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
-        if (selectedButtonElement == null) return;
-
         Player player = event.getPlayer();
         if (player != this.player) return;
 
+        if (selectedButtonElement == null) return;
         Button button = selectedButtonElement;
+
         button.click();
     }
 

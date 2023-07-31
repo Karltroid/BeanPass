@@ -1,10 +1,18 @@
 package me.karltroid.beanpass.quests;
 
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests.*;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Smoker;
 import org.bukkit.block.data.Ageable;
@@ -31,6 +39,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
@@ -55,15 +64,18 @@ public class QuestManager implements Listener
     }
 
     @EventHandler
-    void onMiningQuestProgressed(BlockBreakEvent event)
+    void onMiningAndFarmingQuestProgressed(BlockBreakEvent event)
     {
         // if the block goal is something that grows, only count it if its fully grown
-        BlockData blockData = event.getBlock().getState().getBlockData();
+        Block block = event.getBlock();
+        BlockData blockData = block.getState().getBlockData();
         if (blockData instanceof Ageable)
         {
             Ageable ageable = (Ageable) blockData;
             if (ageable.getAge() != ageable.getMaximumAge()) return;
         }
+
+        if (isBlockProtected(block)) return;
 
         UUID playerUUID = event.getPlayer().getUniqueId();
         PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
@@ -245,5 +257,13 @@ public class QuestManager implements Listener
             killingQuest.incrementPlayerCount(1);
             if (killingQuest.isCompleted()) completeQuest(player, playerData, killingQuest);
         }
+    }
+
+    public boolean isBlockProtected(Block block)
+    {
+        com.sk89q.worldedit.util.Location worldEditLocation = BukkitAdapter.adapt(block.getLocation());
+        ApplicableRegionSet regions = BeanPass.getInstance().getWorldGuard().getPlatform().getRegionContainer().createQuery().getApplicableRegions(worldEditLocation);
+
+        return !regions.getRegions().isEmpty();
     }
 }

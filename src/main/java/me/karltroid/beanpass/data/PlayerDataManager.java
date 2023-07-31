@@ -31,6 +31,9 @@ public class PlayerDataManager implements Listener
     public PlayerDataManager()
     {
         createTables();
+
+        // save everyone's data every 5 minutes
+        Bukkit.getServer().getScheduler().runTaskTimer(BeanPass.getInstance(), this::saveAllPlayerData, 6000, 6000);
     }
 
     private Connection getConnection(Plugin plugin) throws SQLException {
@@ -260,5 +263,12 @@ public class PlayerDataManager implements Listener
         UUID playerUUID = event.getPlayer().getUniqueId();
         savePlayerData(playerUUID);
         BeanPass.getInstance().unloadPlayerData(playerUUID);
+    }
+
+    void saveAllPlayerData()
+    {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            savePlayerData(player.getUniqueId());
+        }
     }
 }

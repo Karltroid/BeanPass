@@ -3,6 +3,8 @@ package me.karltroid.beanpass;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.karltroid.beanpass.Rewards.*;
 import me.karltroid.beanpass.command.*;
 import me.karltroid.beanpass.data.*;
@@ -51,6 +53,7 @@ public final class BeanPass extends JavaPlugin implements Listener
     private Economy econ = null;
     private Essentials ess;
     private ProtocolManager protocolManager;
+    private WorldGuard worldGuard;
 
     public SkinManager skinManager;
     public MountManager mountManager;
@@ -80,6 +83,13 @@ public final class BeanPass extends JavaPlugin implements Listener
         }
         if (!setupEconomy() ) {
             Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        worldGuard = WorldGuard.getInstance();
+        if (worldGuard == null)
+        {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no WorldGuard dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -284,6 +294,7 @@ public final class BeanPass extends JavaPlugin implements Listener
     {
         return ess;
     }
+    public WorldGuard getWorldGuard() { return worldGuard; }
 
     public static void sendMessage(OfflinePlayer p, String message)
     {
