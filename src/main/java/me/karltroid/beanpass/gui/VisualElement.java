@@ -73,7 +73,13 @@ public class VisualElement extends Element
                 armorStand.getEquipment().setHelmet(itemStack);
                 armorStand.setHeadPose(new EulerAngle(Math.toRadians(location.getPitch()), 0 ,0));
             }
-            else armorStand.getEquipment().setItemInMainHand(itemStack);
+            else
+            {
+                armorStand.setArms(true);
+                armorStand.setLeftArmPose(EulerAngle.ZERO);
+                armorStand.setRightArmPose(EulerAngle.ZERO);
+                armorStand.getEquipment().setItemInMainHand(itemStack);
+            }
 
             this.entity = armorStand;
         }

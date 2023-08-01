@@ -63,6 +63,39 @@ public class QuestManager implements Listener
         playerData.addXp(quest.getXPReward());
     }
 
+
+    /*@EventHandler (priority = EventPriority.HIGHEST)
+    public void onFarmingQuestProgressed(PlayerInteractEvent event)
+    {
+        System.out.println("a");
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        System.out.println("b");
+
+        Block b = event.getClickedBlock();
+        if (b == null) return;
+        System.out.println("c");
+
+        Ageable ageable = (Ageable) b.getBlockData();
+        int age = ageable.getAge();
+        System.out.println(age);
+        System.out.println(ageable.getMaximumAge());
+        if (age != ageable.getMaximumAge()) return;
+        System.out.println("d");
+
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(event.getPlayer().getUniqueId());
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
+        {
+            System.out.println("e");
+            if (!(quest instanceof MiningQuest)) continue;
+            if (!(b.getType().name().contains(((MiningQuest) quest).getGoalBlockType().name()))) continue;
+
+            MiningQuest miningQuest = (MiningQuest) quest;
+            miningQuest.incrementPlayerCount(1);
+            if (miningQuest.isCompleted()) completeQuest(event.getPlayer(), playerData, miningQuest);
+        }
+    }*/
+
     @EventHandler
     void onMiningAndFarmingQuestProgressed(BlockBreakEvent event)
     {
@@ -128,6 +161,7 @@ public class QuestManager implements Listener
 
         // Check if the click resulted in a potion being taken out
         ItemStack itemCrafted = event.getCurrentItem();
+        if (itemCrafted == null) return;
         Material itemCraftedType = itemCrafted.getType();
         int amount = itemCrafted.getAmount();
 
@@ -168,6 +202,7 @@ public class QuestManager implements Listener
             int maxCraftedItemThatFitsInv = playerInvSlotsOpen * itemCraftedMaxStackSize + playerInvAmountOfCraftedTypeFillable;
             if (maxCraftedItemThatFitsInv < amount) amount = maxCraftedItemThatFitsInv;
         }
+        else if (event.getCursor() != null || event.getCursor().getType() != Material.AIR) return;
 
         List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
         for (Quest quest : playerQuests)
