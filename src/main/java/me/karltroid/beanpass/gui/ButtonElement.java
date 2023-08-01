@@ -27,7 +27,7 @@ public class ButtonElement extends VisualElement implements Button
             ArmorStand armorStand = (ArmorStand) entity;
             armorStand.setGlowing(true);
             Vector movingDirection = beanPassGUI.player.getEyeLocation().clone().toVector().subtract(entity.getLocation().toVector()).normalize();
-            Location newLocation = location.clone().add(movingDirection.multiply(new Vector(0.025, 0.025, 0.025)));
+            Location newLocation = location.clone().add(movingDirection.multiply(new Vector(0.025, 0.25, 0.25)));
             armorStand.teleport(newLocation);
         }
         else
@@ -65,8 +65,8 @@ public class ButtonElement extends VisualElement implements Button
         if (beanPassGUI.playerData.isBedrockAccount())
         {
             ArmorStand armorStand = (ArmorStand) entity;
-            if (armorStand.isSmall()) eye.setPitch((float) (eye.getPitch() + 11.0f + (distance - 3) * 0.5f));
-            else eye.setPitch((float) (eye.getPitch() + 21.0f + (distance - 3) * 0.5f));
+            if (armorStand.isSmall()) eye.setPitch((float) (eye.getPitch() + 11.0f + distance * 6f));
+            else eye.setPitch((float) (eye.getPitch() + 21.0f + distance * 6f));
         }
 
         Vector toEntity = location.toVector().subtract(eye.toVector());

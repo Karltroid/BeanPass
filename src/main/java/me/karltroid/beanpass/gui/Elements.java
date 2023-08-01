@@ -242,7 +242,7 @@ public class Elements
     {
         public YesButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 2, 0.98D, Material.LIME_DYE, 1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.98D, Material.LIME_DYE, 1);
         }
 
         @Override
@@ -257,7 +257,7 @@ public class Elements
     {
         public NoButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 2, 0.98D, Material.RED_DYE, 2);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.98D, Material.RED_DYE, 2);
         }
 
         @Override
