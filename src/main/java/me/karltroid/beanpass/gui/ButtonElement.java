@@ -26,8 +26,8 @@ public class ButtonElement extends VisualElement implements Button
         {
             ArmorStand armorStand = (ArmorStand) entity;
             armorStand.setGlowing(true);
-            Vector movingDirection = beanPassGUI.player.getEyeLocation().toVector().subtract(entity.getLocation().toVector()).normalize();
-            Location newLocation = location.clone().add(movingDirection.multiply(new Vector(0.01, 0.01, 0.01)));
+            Vector movingDirection = beanPassGUI.player.getEyeLocation().clone().toVector().subtract(entity.getLocation().toVector()).normalize();
+            Location newLocation = location.clone().add(movingDirection.multiply(new Vector(0.025, 0.025, 0.025)));
             armorStand.teleport(newLocation);
         }
         else
@@ -58,15 +58,16 @@ public class ButtonElement extends VisualElement implements Button
     public boolean isPlayerLooking(Player player)
     {
         Location eye = player.getEyeLocation();
-        if (beanPassGUI.playerData.isBedrockAccount())
-        {
-            ArmorStand armorStand = (ArmorStand) entity;
-            if (armorStand.isSmall()) eye.setPitch(eye.getPitch() + 11.0f);
-            else eye.setPitch(eye.getPitch() + 21.0f);
-        }
 
         double distance = Math.sqrt(Math.pow(location.getX() - eye.getX(), 2) + Math.pow(location.getY() - eye.getY(), 2) + Math.pow(location.getZ() - eye.getZ(), 2));
         if (distance > 10) return false;
+
+        if (beanPassGUI.playerData.isBedrockAccount())
+        {
+            ArmorStand armorStand = (ArmorStand) entity;
+            if (armorStand.isSmall()) eye.setPitch((float) (eye.getPitch() + 11.0f + (distance - 3) * 0.5f));
+            else eye.setPitch((float) (eye.getPitch() + 21.0f + (distance - 3) * 0.5f));
+        }
 
         Vector toEntity = location.toVector().subtract(eye.toVector());
         double dot = toEntity.normalize().dot(eye.getDirection());
