@@ -164,6 +164,7 @@ public class QuestManager implements Listener
         if (itemCrafted == null) return;
         Material itemCraftedType = itemCrafted.getType();
         int amount = itemCrafted.getAmount();
+        ItemStack cursorItem = event.getCursor();
 
         if (event.isShiftClick())
         {
@@ -202,7 +203,12 @@ public class QuestManager implements Listener
             int maxCraftedItemThatFitsInv = playerInvSlotsOpen * itemCraftedMaxStackSize + playerInvAmountOfCraftedTypeFillable;
             if (maxCraftedItemThatFitsInv < amount) amount = maxCraftedItemThatFitsInv;
         }
-        else if (event.getCursor() != null || event.getCursor().getType() != Material.AIR) return;
+        else if (cursorItem != null && !(cursorItem.getType().equals(Material.AIR)))
+        {
+            // item in user's cursor, make sure item crafted can stack into it, else return
+            if (cursorItem.getType() != itemCraftedType) return;
+            if (cursorItem.getAmount() >= itemCrafted.getMaxStackSize()) return;
+        }
 
         List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
         for (Quest quest : playerQuests)

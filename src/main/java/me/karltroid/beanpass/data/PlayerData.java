@@ -42,7 +42,7 @@ public class PlayerData
     List<Skin> equippedSkins = new ArrayList<>();
     List<Mount> equippedMounts = new ArrayList<>();
 
-    public PlayerData(UUID UUID, boolean premium, List<Integer> ownedSkins, List<Integer> ownedMounts, double xp, int lastKnownLevel, int maxHomes)
+    public PlayerData(UUID UUID, boolean premium, List<Integer> ownedSkins, List<Integer> ownedMounts, double xp, int lastKnownLevel, int maxHomes, int maxWarps)
     {
         this.player = Bukkit.getOfflinePlayer(UUID);
         this.premium = premium;
@@ -51,6 +51,7 @@ public class PlayerData
         this.xp = xp;
         this.lastKnownLevel = lastKnownLevel;
         this.maxHomes = maxHomes;
+        this.maxWarps = maxWarps;
         this.bedrockAccount = player.getName().startsWith(".");
     }
 
@@ -72,6 +73,15 @@ public class PlayerData
         if (passGiver.getUniqueId() == getUUID()) BeanPass.BroadcastMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + " purchased this season's BeanPass premium, enjoy!");
         else BeanPass.BroadcastMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + passGiver.getName() + ChatColor.LIGHT_PURPLE + " gifted BeanPass premium to " + ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + ", enjoy!");
     }
+
+    public void removePremiumPass(Player player, boolean alert)
+    {
+        this.premium = false;
+
+        if (!alert) return;
+        BeanPass.sendMessage(player, ChatColor.RED + "BeanPass Premium for season " + BeanPass.getInstance().getSeason().getId() + " has been removed from your account.");
+    }
+
     public boolean isPremium() { return this.premium; }
     public void giveSkin(Skin skin, boolean alert)
     {
@@ -226,6 +236,11 @@ public class PlayerData
         return maxHomes;
     }
 
+    public int getMaxWarpAmount()
+    {
+        return maxWarps;
+    }
+
     public List<Mount> getEquippedMounts() { return equippedMounts; }
 
     public double getXpNeededForNextLevel()
@@ -324,5 +339,10 @@ public class PlayerData
     public int getHomeAmount()
     {
         return BeanPass.getInstance().getEssentials().getUser(getUUID()).getHomes().size();
+    }
+
+    public int getWarpAmount()
+    {
+        return 0;
     }
 }

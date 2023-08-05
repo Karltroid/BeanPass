@@ -152,6 +152,27 @@ public class BeanPassCommand implements CommandExecutor
 
             return true;
         }
+        else if (args[0].equalsIgnoreCase("remove"))
+        {
+            if (!sender.hasPermission("beanpass.admin"))
+            {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
+                return false;
+            }
+
+            Player requestedPlayer = Bukkit.getPlayer(args[1]);
+
+            PlayerData playerData = BeanPass.getInstance().getPlayerData(requestedPlayer.getUniqueId());
+            if (!playerData.isPremium())
+            {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "This player does not have premium already.");
+                return false;
+            }
+
+            playerData.removePremiumPass(requestedPlayer, true);
+
+            return true;
+        }
 
         return false;
     }
