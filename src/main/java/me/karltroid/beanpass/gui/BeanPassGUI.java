@@ -198,13 +198,13 @@ public class BeanPassGUI implements Listener
 
         loadElement(new RewardsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        loadElement(new TextElement(this, false, 3, 0, 18, 0.75f, ChatColor.GREEN + "Balance: $" + Utils.formatDouble(playerData.getBalance())), null);
-        loadElement(new TextElement(this, false, 3, 0, 14, 0.75f, ChatColor.YELLOW + "Homes: " + playerData.getHomeAmount() + " / " + playerData.getMaxHomeAmount() + " used"), null);
-        loadElement(new TextElement(this, false, 3, 0, 10, 0.75f, ChatColor.YELLOW + "PWarps: " + playerData.getWarpAmount() + " / " + playerData.getMaxWarpAmount() + " used"), null);
+        loadElement(new TextElement(this, false, 3, 0, 14, 0.80f, ChatColor.GREEN + "" + ChatColor.BOLD + "Balance: $" + Utils.formatDouble(playerData.getBalance())), null);
+        loadElement(new TextElement(this, false, 3, -22, -10, 0.75f, ChatColor.YELLOW + "Homes: " + playerData.getHomeAmount() + " / " + playerData.getMaxHomeAmount() + " used"), null);
+        loadElement(new TextElement(this, false, 3, 22, -10, 0.75f, ChatColor.YELLOW + "Warps: " + playerData.getWarpAmount() + " / " + playerData.getMaxWarpAmount() + " used"), null);
 
-        loadElement(new OpenMountsPage(this, false,3, -25, 0, 0.50f), null);
-        loadElement(new OpenHatsPage(this, false,3, 0, 0, 0.50f), null);
-        loadElement(new OpenToolsPage(this, false,3, 25, 0, 0.50f), null);
+        loadElement(new OpenMountsPage(this, false,3, -25, 2, 0.50f), null);
+        loadElement(new OpenHatsPage(this, false,3, 0, 2, 0.50f), null);
+        loadElement(new OpenToolsPage(this, false,3, 25, 2, 0.50f), null);
 
         displayNavigationButtons();
     }

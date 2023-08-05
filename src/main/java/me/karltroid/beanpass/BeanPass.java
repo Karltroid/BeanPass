@@ -147,6 +147,10 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     int homeAmount = freeSection.getInt("Amount");
                                     freeReward = new SetHomeReward(homeAmount);
                                     break;
+                                case "SET_PWARP":
+                                    int pwarpAmount = freeSection.getInt("Amount");
+                                    freeReward = new SetPWarpReward(pwarpAmount);
+                                    break;
                                 case "SKIN":
                                     String skinName = freeSection.getString("Skin");
                                     freeReward = new SkinReward(skinManager.getSkinByName(skinName.toLowerCase()));
@@ -174,6 +178,10 @@ public final class BeanPass extends JavaPlugin implements Listener
                                 case "SET_HOME":
                                     int homeAmount = paidSection.getInt("Amount");
                                     premiumReward = new SetHomeReward(homeAmount);
+                                    break;
+                                case "SET_PWARP":
+                                    int pwarpAmount = freeSection.getInt("Amount");
+                                    freeReward = new SetPWarpReward(pwarpAmount);
                                     break;
                                 case "SKIN":
                                     String skinName = paidSection.getString("Skin");
