@@ -62,7 +62,7 @@ SeasonLevels:
         Amount: 60
       Paid:
         Type: SKIN
-        Skin: santa_hat
+        Skin: pitchfork
   '10':
     XP: 128
     Reward:
@@ -88,7 +88,7 @@ SeasonLevels:
     XP: 180
     Reward:
       Free:
-        Type: SET_HOME
+        Type: SET_WARP
         Amount: 1
   '14':
     XP: 188
@@ -162,7 +162,7 @@ SeasonLevels:
     Reward:
       Free:
         Type: SET_HOME
-        Amount: 2
+        Amount: 1
   '24':
     XP: 385
     Reward:
@@ -197,8 +197,8 @@ SeasonLevels:
     XP: 461
     Reward:
       Free:
-        Type: SET_HOME
-        Amount: 2
+        Type: SET_WARP
+        Amount: 1
   '29':
     XP: 464
     Reward:
@@ -305,7 +305,7 @@ SeasonLevels:
     XP: 808
     Reward:
       Free:
-        Type: SET_HOME
+        Type: SET_WARP
         Amount: 2
   '44':
     XP: 813
@@ -315,7 +315,7 @@ SeasonLevels:
         Amount: 950
       Paid:
         Type: SKIN
-        Skin: smul_birthday_hat
+        Skin: bat
   '45':
     XP: 839
     Reward:
@@ -413,7 +413,7 @@ SeasonLevels:
     XP: 1355
     Reward:
       Free:
-        Type: SET_HOME
+        Type: SET_WARP
         Amount: 2
   '59':
     XP: 1391
@@ -450,16 +450,13 @@ SeasonLevels:
     Reward:
       Free:
         Type: SET_HOME
-        Amount: 2
+        Amount: 3
   '64':
     XP: 1715
     Reward:
       Free:
         Type: MONEY
         Amount: 3000
-      Paid:
-        Type: SKIN
-        Skin: bat
   '65':
     XP: 1792
     Reward:
@@ -478,15 +475,12 @@ SeasonLevels:
       Free:
         Type: MONEY
         Amount: 3600
-      Paid:
-        Type: SKIN
-        Skin: pitchfork
   '68':
     XP: 1951
     Reward:
       Free:
         Type: SET_HOME
-        Amount: 2
+        Amount: 3
   '69':
     XP: 1963
     Reward:

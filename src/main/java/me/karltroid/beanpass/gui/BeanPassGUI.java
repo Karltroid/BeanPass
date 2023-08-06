@@ -378,13 +378,6 @@ public class BeanPassGUI implements Listener
         displayNavigationButtons();
     }
 
-    public void reloadLevelElements()
-    {
-        if (allLevelRewardElements.isEmpty()) return;
-        this.rewardPage = playerData.getLevel()/LEVELS_PER_PAGE;
-        changeLevelsPage(0);
-    }
-
     public void changeLevelsPage(int pageChange)
     {
         int newPage = this.rewardPage + pageChange;
@@ -489,6 +482,12 @@ public class BeanPassGUI implements Listener
         BeanPass.getInstance().activeGUIs.remove(player);
 
         endQuestionResponse();
+    }
+
+    public void reloadGUI()
+    {
+        closeElementList(allElements);
+        loadMenu(getCurrentGUIMenu());
     }
 
     @EventHandler

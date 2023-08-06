@@ -6,11 +6,11 @@ import me.karltroid.beanpass.gui.TextElement;
 
 import java.util.UUID;
 
-public class SetPWarpReward implements Reward
+public class SetWarpReward implements Reward
 {
     private int amount;
 
-    public SetPWarpReward(int amount)
+    public SetWarpReward(int amount)
     {
         this.amount = amount;
     }
@@ -18,7 +18,7 @@ public class SetPWarpReward implements Reward
     @Override
     public void giveReward(UUID uuid)
     {
-        BeanPass.getInstance().getPlayerData(uuid).increaseMaxHomes(amount);
+        BeanPass.getInstance().getPlayerData(uuid).increaseMaxWarps(amount);
     }
 
     public int getAmount()

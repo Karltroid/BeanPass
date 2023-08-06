@@ -72,6 +72,12 @@ public final class BeanPass extends JavaPlugin implements Listener
             return;
         }
 
+        if (Bukkit.getServer().getPluginManager().getPlugin("PlayerWarps") == null) {
+            getLogger().severe("PlayerWarps not found. Disabling the plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         // Initialize ProtocolManager
         protocolManager = ProtocolLibrary.getProtocolManager();
 
@@ -93,6 +99,12 @@ public final class BeanPass extends JavaPlugin implements Listener
             Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no WorldGuard dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
+        }
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null)
+        {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no PlaceholderAPI dependency found!", getDescription().getName()));
+            Bukkit.getPluginManager().disablePlugin(this);
         }
 
         // load configs
@@ -147,9 +159,9 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     int homeAmount = freeSection.getInt("Amount");
                                     freeReward = new SetHomeReward(homeAmount);
                                     break;
-                                case "SET_PWARP":
-                                    int pwarpAmount = freeSection.getInt("Amount");
-                                    freeReward = new SetPWarpReward(pwarpAmount);
+                                case "SET_WARP":
+                                    int warpAmount = freeSection.getInt("Amount");
+                                    freeReward = new SetWarpReward(warpAmount);
                                     break;
                                 case "SKIN":
                                     String skinName = freeSection.getString("Skin");
@@ -179,9 +191,9 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     int homeAmount = paidSection.getInt("Amount");
                                     premiumReward = new SetHomeReward(homeAmount);
                                     break;
-                                case "SET_PWARP":
-                                    int pwarpAmount = freeSection.getInt("Amount");
-                                    freeReward = new SetPWarpReward(pwarpAmount);
+                                case "SET_WARP":
+                                    int warpAmount = freeSection.getInt("Amount");
+                                    freeReward = new SetWarpReward(warpAmount);
                                     break;
                                 case "SKIN":
                                     String skinName = paidSection.getString("Skin");
@@ -224,6 +236,7 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("sethome").setExecutor(new SetHome());
         main.getCommand("givequest").setExecutor(new GiveQuest());
         main.getCommand("requestteleport").setExecutor(new RequestTeleport());
+        main.getCommand("pw").setExecutor(new SetWarp());
     }
 
     public void unloadPlayerData(UUID uuid) { playerData.remove(uuid); }

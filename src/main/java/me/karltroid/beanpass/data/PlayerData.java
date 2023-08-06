@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.data;
 
 import com.earth2me.essentials.User;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
@@ -207,7 +208,7 @@ public class PlayerData
         if (BeanPass.getInstance().activeGUIs.containsKey(p))
         {
             BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(p);
-            beanPassGUI.reloadLevelElements();
+            beanPassGUI.reloadGUI();
         }
 
         if (beforeLevel == afterLevel) return;
@@ -220,15 +221,13 @@ public class PlayerData
         maxHomes += increment;
         OfflinePlayer player = Bukkit.getOfflinePlayer(getUUID());
         User essentialsPlayer = BeanPass.getInstance().getEssentials().getUser(getUUID());
-        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "homes" : "home") + "! " + essentialsPlayer.getHomes().size() + "/" + maxHomes + " used.");
+        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "homes" : "home") + "! " + getHomeAmount() + "/" + maxHomes + " used. Do \"/sethome <name>\" to create a home only can use!");
     }
 
     public void increaseMaxWarps(int increment)
     {
         maxWarps += increment;
-        OfflinePlayer player = Bukkit.getOfflinePlayer(getUUID());
-        User essentialsPlayer = BeanPass.getInstance().getEssentials().getUser(getUUID());
-        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "homes" : "home") + "! " + essentialsPlayer.getHomes().size() + "/" + maxHomes + " used.");
+        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "warps" : "warp") + "! " + getWarpAmount() + "/" + maxWarps + " used. Do \"/pwarp set <name>\" to create a warp everyone can use!");
     }
 
     public int getMaxHomeAmount()
@@ -306,7 +305,7 @@ public class PlayerData
         if (BeanPass.getInstance().activeGUIs.containsKey(player))
         {
             BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(player);
-            if (beanPassGUI.getCurrentGUIMenu() == GUIMenu.BeanPass) beanPassGUI.reloadLevelElements();
+            if (beanPassGUI.getCurrentGUIMenu() == GUIMenu.BeanPass) beanPassGUI.reloadGUI();
         }
 
         lastKnownLevel = newLevel;
@@ -343,6 +342,6 @@ public class PlayerData
 
     public int getWarpAmount()
     {
-        return 0;
+        return Integer.parseInt(PlaceholderAPI.setPlaceholders(player, "%pw_player_warps%"));
     }
 }

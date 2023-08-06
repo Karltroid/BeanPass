@@ -1,5 +1,6 @@
 package me.karltroid.beanpass.data;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.npcs.NPC;
@@ -19,6 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getLogger;
+import static org.bukkit.Bukkit.getPlayer;
 
 
 public class PlayerDataManager implements Listener
@@ -78,8 +80,17 @@ public class PlayerDataManager implements Listener
                             + "PRIMARY KEY (uuid, quest_giver, goal_type, goal_count)"
                             + ")"
             );
+
+            checkTableColumn(stmt, PLAYER_SEASON_DATA_TABLE_NAME, "max_warps", "INT", "0");
         } catch (SQLException e) {
             getLogger().severe("Failed to create database table: " + e.getMessage());
+        }
+    }
+
+    private void checkTableColumn(Statement stmt, String tableName, String columnName, String dataType, String defaultValue) throws SQLException {
+        ResultSetMetaData playerSeasonDataMetaData = stmt.executeQuery("SELECT * FROM " + tableName + " LIMIT 0").getMetaData();
+        if (!hasColumn((ResultSet) playerSeasonDataMetaData, columnName)) {
+            stmt.executeUpdate("ALTER TABLE " + tableName + " ADD COLUMN " + columnName + " " + dataType + " NOT NULL DEFAULT " + defaultValue);
         }
     }
 

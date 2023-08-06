@@ -120,7 +120,7 @@ MinerQuests:
     difficulty: HARD
   REDSTONE_ORE:
     difficulty: HARD
-  GOLD_ORE: # NETHER_GOLD_ORE, DEEPSLATE_GOLD_ORE
+  GOLD_ORE:
     difficulty: HARD
   EMERALD_ORE:
     difficulty: VERY_HARD
@@ -167,37 +167,37 @@ FisherQuests:
 
 WitchQuests:
   FIRE_RESISTANCE:
-    difficulty: NORMAL
+    difficulty: HARD
   INSTANT_DAMAGE:
-    difficulty: NORMAL
+    difficulty: HARD
   INVISIBILITY:
-    difficulty: NORMAL
+    difficulty: HARD
   NIGHT_VISION:
-    difficulty: NORMAL
+    difficulty: HARD
   POISON:
-    difficulty: NORMAL
+    difficulty: HARD
   SLOW_FALLING:
     difficulty: HARD
   SLOWNESS:
-    difficulty: NORMAL
+    difficulty: HARD
   WEAKNESS:
-    difficulty: NORMAL
+    difficulty: HARD
   WATER_BREATHING:
-    difficulty: NORMAL
+    difficulty: HARD
 
 BartenderQuests:
   POISON:
-    difficulty: NORMAL
+    difficulty: HARD
   STRENGTH:
-    difficulty: NORMAL
+    difficulty: HARD
   INSTANT_HEAL:
-    difficulty: NORMAL
+    difficulty: HARD
   REGEN:
-    difficulty: NORMAL
+    difficulty: HARD
   NIGHT_VISION:
-    difficulty: NORMAL
+    difficulty: HARD
   FIRE_RESISTANCE:
-    difficulty: NORMAL
+    difficulty: HARD
 
 # All Possible Lumber Quests And Its Respective Difficulty
 LumberjackQuests:
@@ -222,7 +222,7 @@ LumberjackQuests:
 
 ButcherQuests:
   CHICKEN:
-    difficulty: EASY
+    difficulty: NORMAL
   COD:
     difficulty: NORMAL
   COW:
@@ -236,7 +236,7 @@ ButcherQuests:
   POLAR_BEAR:
     difficulty: HARD
   RABBIT:
-    difficulty: EASY
+    difficulty: NORMAL
   SALMON:
     difficulty: NORMAL
   SHEEP:
@@ -248,17 +248,17 @@ BakerQuests:
   PUMPKIN_PIE:
     difficulty: NORMAL
   CAKE:
-    difficulty: HARD
+    difficulty: VERY_HARD
   COOKIE:
-    difficulty: EASY
+    difficulty: VERY_EASY
   BREAD:
-    difficulty: NORMAL
+    difficulty: EASY
   BAKED_POTATO:
     difficulty: NORMAL
   RABBIT_STEW:
     difficulty: HARD
   SUGAR:
-    difficulty: VERY_EASY
+    difficulty: SUPER_EASY
 
 FarmerQuests:
   WHEAT:
@@ -284,33 +284,33 @@ BlacksmithQuests:
   BUCKET:
     difficulty: NORMAL
   CHAIN:
-    difficulty: VERY_EASY
+    difficulty: EASY
   IRON_BARS:
     difficulty: NORMAL
   IRON_BLOCK:
-    difficulty: HARD
+    difficulty: VERY_HARD
   IRON_DOOR:
-    difficulty: NORMAL
+    difficulty: HARD
   IRON_HELMET:
-    difficulty: NORMAL
+    difficulty: HARD
   IRON_CHESTPLATE:
-    difficulty: HARD
+    difficulty: VERY_HARD
   IRON_LEGGINGS:
-    difficulty: HARD
+    difficulty: VERY_HARD
   IRON_BOOTS:
-    difficulty: NORMAL
+    difficulty: HARD
   IRON_SWORD:
-    difficulty: EASY
+    difficulty: NORMAL
   IRON_PICKAXE:
     difficulty: NORMAL
   IRON_AXE:
     difficulty: NORMAL
   IRON_SHOVEL:
-    difficulty: EASY
+    difficulty: NORMAL
   IRON_HOE:
-    difficulty: EASY
+    difficulty: NORMAL
   SHIELD:
-    difficulty: EASY
+    difficulty: NORMAL
   GOLD_NUGGET:
     difficulty: VERY_EASY
   GOLD_INGOT:
@@ -318,7 +318,7 @@ BlacksmithQuests:
   GOLD_BLOCK:
     difficulty: VERY_HARD
   GOLDEN_HELMET:
-    difficulty: HARD
+    difficulty: VERY_HARD
   GOLDEN_CHESTPLATE:
     difficulty: VERY_HARD
   GOLDEN_LEGGINGS:
@@ -326,23 +326,23 @@ BlacksmithQuests:
   GOLDEN_BOOTS:
     difficulty: HARD
   GOLDEN_SWORD:
-    difficulty: NORMAL
+    difficulty: HARD
   GOLDEN_PICKAXE:
     difficulty: HARD
   GOLDEN_AXE:
     difficulty: HARD
   GOLDEN_SHOVEL:
-    difficulty: NORMAL
+    difficulty: HARD
   GOLDEN_HOE:
-    difficulty: NORMAL
+    difficulty: HARD
 
 ArtistQuests:
   WHITE_DYE:
     difficulty: VERY_EASY
   LIGHT_GRAY_DYE:
-    difficulty: EASY
+    difficulty: HARD
   GRAY_DYE:
-    difficulty: EASY
+    difficulty: NORMAL
   BLACK_DYE:
     difficulty: EASY
   BROWN_DYE:
@@ -358,15 +358,15 @@ ArtistQuests:
   GREEN_DYE:
     difficulty: NORMAL
   CYAN_DYE:
-    difficulty: NORMAL
+    difficulty: HARD
   LIGHT_BLUE_DYE:
-    difficulty: NORMAL
+    difficulty: HARD
   BLUE_DYE:
-    difficulty: EASY
+    difficulty: NORMAL
   PURPLE_DYE:
-    difficulty: NORMAL
+    difficulty: HARD
   MAGENTA_DYE:
-    difficulty: NORMAL
+    difficulty: VERY_HARD
   PINK_DYE:
     difficulty: NORMAL
 
