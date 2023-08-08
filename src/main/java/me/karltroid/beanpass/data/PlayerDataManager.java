@@ -57,8 +57,7 @@ public class PlayerDataManager implements Listener
                             + "premium BOOLEAN NOT NULL,"
                             + "xp DOUBLE NOT NULL,"
                             + "last_known_level INT NOT NULL,"
-                            + "max_homes INT NOT NULL,"
-                            + "max_warps INT NOT NULL"
+                            + "max_homes INT NOT NULL"
                             + ")"
             );
             stmt.executeUpdate(
@@ -81,7 +80,7 @@ public class PlayerDataManager implements Listener
                             + ")"
             );
 
-            checkTableColumn(stmt, PLAYER_SEASON_DATA_TABLE_NAME, "max_warps", "INT", "0");
+            //checkTableColumn(stmt, PLAYER_SEASON_DATA_TABLE_NAME, "max_warps", "INT", "0");
         } catch (SQLException e) {
             getLogger().severe("Failed to create database table: " + e.getMessage());
         }
@@ -115,7 +114,6 @@ public class PlayerDataManager implements Listener
             double xp = 0.0;
             int lastKnownLevel = 1;
             int maxHomes = 0;
-            int maxWarps = 0;
 
             try (PreparedStatement playerSeasonDataStatement = conn.prepareStatement("SELECT * FROM " + PLAYER_SEASON_DATA_TABLE_NAME + " WHERE uuid = ?"))
             {
@@ -136,14 +134,11 @@ public class PlayerDataManager implements Listener
 
                         if (hasColumn(playerSeasonDataResult, "max_homes"))
                             maxHomes = playerSeasonDataResult.getInt("max_homes");
-
-                        if (hasColumn(playerSeasonDataResult, "max_warps"))
-                            maxWarps = playerSeasonDataResult.getInt("max_warps");
                     }
                 }
             }
 
-            PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), new ArrayList<>(), xp, lastKnownLevel, maxHomes, maxWarps);
+            PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), new ArrayList<>(), xp, lastKnownLevel, maxHomes);
             BeanPass.getInstance().addPlayerData(uuid, playerData);
             if (Bukkit.getOfflinePlayer(uuid).isOnline() && lastKnownLevel < playerData.getLevel()) playerData.leveledUp(); // level up player if they got xp while offline
 
@@ -215,8 +210,8 @@ public class PlayerDataManager implements Listener
 
         try (Connection conn = getConnection(BeanPass.getInstance());
              PreparedStatement playerSeasonDataStatement = conn.prepareStatement(
-                     "INSERT INTO " + PLAYER_SEASON_DATA_TABLE_NAME + " (uuid, xp, premium, last_known_level, max_homes, max_warps) VALUES (?, ?, ?, ?, ?, ?) " +
-                             "ON CONFLICT(uuid) DO UPDATE SET xp = excluded.xp, premium = excluded.premium, last_known_level = excluded.last_known_level, max_homes = excluded.max_homes, max_warps = excluded.max_warps"
+                     "INSERT INTO " + PLAYER_SEASON_DATA_TABLE_NAME + " (uuid, xp, premium, last_known_level, max_homes) VALUES (?, ?, ?, ?, ?) " +
+                             "ON CONFLICT(uuid) DO UPDATE SET xp = excluded.xp, premium = excluded.premium, last_known_level = excluded.last_known_level, max_homes = excluded.max_homes"
              );
              PreparedStatement deletePlayerRewardsStatement = conn.prepareStatement(
                      "DELETE FROM " + PLAYER_REWARDS_TABLE_NAME + " WHERE uuid = ?"
@@ -239,7 +234,6 @@ public class PlayerDataManager implements Listener
             playerSeasonDataStatement.setBoolean(3, playerData.premium);
             playerSeasonDataStatement.setInt(4, playerData.lastKnownLevel);
             playerSeasonDataStatement.setInt(5, playerData.maxHomes);
-            playerSeasonDataStatement.setInt(6, playerData.maxWarps);
             playerSeasonDataStatement.executeUpdate();
 
             // Delete all player_skins and player_mounts for the player

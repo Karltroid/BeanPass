@@ -23,7 +23,7 @@ public class RequestTeleport implements CommandExecutor
         Player senderPlayer = null;
         if (sender instanceof Player) senderPlayer = (Player) sender;
 
-        if (senderPlayer != null && !senderPlayer.hasPermission("beanpass.admin"))
+        if (senderPlayer != null && !senderPlayer.hasPermission("beanpass.owner"))
         {
             BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
             return false;

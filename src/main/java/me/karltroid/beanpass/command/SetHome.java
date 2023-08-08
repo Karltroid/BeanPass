@@ -36,7 +36,7 @@ public class SetHome implements CommandExecutor
         User essentialsUser = BeanPass.getInstance().getEssentials().getUser(senderPlayer);
         int playerMaxHomes = BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getMaxHomeAmount();
         int playerHomesAmount = essentialsUser.getHomes().size();
-        if (playerHomesAmount >= playerMaxHomes)
+        if (playerMaxHomes != -1 && playerHomesAmount >= playerMaxHomes)
         {
             if (playerMaxHomes == 0) BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You don't have any available sethomes, level up in /beanpass to earn more!");
             else BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You have used all " + playerHomesAmount + "/" + playerMaxHomes + " of your available sethomes, delete one or level up in /beanpass to earn more!");

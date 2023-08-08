@@ -45,7 +45,43 @@ public class BeanPassCommand implements CommandExecutor
         }
         else if (args[0].equalsIgnoreCase("addxp"))
         {
-            if (!sender.hasPermission("beanpass.admin")) {
+            if (!sender.hasPermission("beanpass.owner")) {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
+                return false;
+            }
+
+            if (args.length < 3) {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "Usage: /beanpass addxp <player> <amount>");
+                return false;
+            }
+
+            OfflinePlayer targetPlayer = BeanPass.getInstance().getServer().getOfflinePlayer(args[1]);
+            UUID targetPlayerUUID = targetPlayer.getUniqueId();
+
+            if (!BeanPass.getInstance().playerDataExists(targetPlayerUUID))
+            {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "Player data for this season does not exist.");
+                return false;
+            }
+
+            double xpChange;
+            try {
+                xpChange = Double.parseDouble(args[2]);
+            } catch (NumberFormatException e) {
+                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "Invalid amount specified. Please provide a valid number.");
+                return false;
+            }
+
+            PlayerData playerData = BeanPass.getInstance().getPlayerData(targetPlayerUUID);
+            double oldXP = playerData.getXp();
+
+            playerData.addXp(xpChange);
+            BeanPass.sendMessage(senderPlayer, ((xpChange > 0) ? "Increased " : "Decreased ") + targetPlayer.getName() + "'s xp by " + Math.abs(xpChange) + " (" + oldXP + " -> " + playerData.getXp() + ")");
+            return true;
+        }
+        else if (args[0].equalsIgnoreCase("addxp"))
+        {
+            if (!sender.hasPermission("beanpass.owner")) {
                 BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
                 return false;
             }
@@ -81,7 +117,7 @@ public class BeanPassCommand implements CommandExecutor
         }
         else if (args[0].equalsIgnoreCase("bedrock"))
         {
-            if (!sender.hasPermission("beanpass.admin")) {
+            if (!sender.hasPermission("beanpass.owner")) {
                 BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
                 return false;
             }
@@ -104,7 +140,7 @@ public class BeanPassCommand implements CommandExecutor
         }
         else if (args[0].equalsIgnoreCase("premium"))
         {
-            if (!sender.hasPermission("beanpass.admin")) {
+            if (!sender.hasPermission("beanpass.owner")) {
                 BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
                 return false;
             }
@@ -154,7 +190,7 @@ public class BeanPassCommand implements CommandExecutor
         }
         else if (args[0].equalsIgnoreCase("remove"))
         {
-            if (!sender.hasPermission("beanpass.admin"))
+            if (!sender.hasPermission("beanpass.owner"))
             {
                 BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
                 return false;

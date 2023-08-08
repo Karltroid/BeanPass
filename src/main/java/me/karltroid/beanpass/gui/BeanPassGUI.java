@@ -199,8 +199,8 @@ public class BeanPassGUI implements Listener
         loadElement(new RewardsTitle(this, true, 3.1, 0, 25, 1f), null);
 
         loadElement(new TextElement(this, false, 3, 0, 14, 0.80f, ChatColor.GREEN + "" + ChatColor.BOLD + "Balance: $" + Utils.formatDouble(playerData.getBalance())), null);
-        loadElement(new TextElement(this, false, 3, -22, -10, 0.75f, ChatColor.YELLOW + "Homes: " + playerData.getHomeAmount() + " / " + playerData.getMaxHomeAmount() + " used"), null);
-        loadElement(new TextElement(this, false, 3, 22, -10, 0.75f, ChatColor.YELLOW + "Warps: " + playerData.getWarpAmount() + " / " + playerData.getMaxWarpAmount() + " used"), null);
+        loadElement(new TextElement(this, false, 3, -22, -10, 0.75f, ChatColor.YELLOW + "Homes: " + playerData.getHomeAmount() + " / " + (playerData.getMaxHomeAmount() == -1 ? "∞" : playerData.getMaxHomeAmount()) + " used"), null);
+        loadElement(new TextElement(this, false, 3, 22, -10, 0.75f, ChatColor.YELLOW + "Warps: " + playerData.getWarpAmount() + " / " + (playerData.getMaxWarpAmount() == -1 ? "∞" : playerData.getMaxWarpAmount()) + " used"), null);
 
         loadElement(new OpenMountsPage(this, false,3, -25, 2, 0.50f), null);
         loadElement(new OpenHatsPage(this, false,3, 0, 2, 0.50f), null);
@@ -487,6 +487,7 @@ public class BeanPassGUI implements Listener
     public void reloadGUI()
     {
         closeElementList(allElements);
+        this.rewardPage = playerData.getLevel()/LEVELS_PER_PAGE;
         loadMenu(getCurrentGUIMenu());
     }
 

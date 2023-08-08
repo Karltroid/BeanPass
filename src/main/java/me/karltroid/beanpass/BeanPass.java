@@ -58,6 +58,7 @@ public final class BeanPass extends JavaPlugin implements Listener
 
     public SkinManager skinManager;
     public MountManager mountManager;
+    private Plugin playerWarpsPlugin;
 
     static String beanPassChatSymbol = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[BeanPass] ";
 
@@ -105,6 +106,15 @@ public final class BeanPass extends JavaPlugin implements Listener
         {
             Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no PlaceholderAPI dependency found!", getDescription().getName()));
             Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        playerWarpsPlugin = Bukkit.getServer().getPluginManager().getPlugin("PlayerWarps");
+        if (playerWarpsPlugin == null)
+        {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no PlaceholderAPI dependency found!", getDescription().getName()));
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
 
         // load configs
@@ -236,7 +246,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("sethome").setExecutor(new SetHome());
         main.getCommand("givequest").setExecutor(new GiveQuest());
         main.getCommand("requestteleport").setExecutor(new RequestTeleport());
-        main.getCommand("pw").setExecutor(new SetWarp());
     }
 
     public void unloadPlayerData(UUID uuid) { playerData.remove(uuid); }
@@ -342,4 +351,5 @@ public final class BeanPass extends JavaPlugin implements Listener
         return mountManager;
     }
     public NPCManager getNpcManager() { return npcManager; }
+    public Plugin getPlayerWarpsPlugin() { return playerWarpsPlugin; }
 }

@@ -14,6 +14,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +38,12 @@ public class PlayerData
 
     // persistent player data
     int maxHomes;
-    int maxWarps;
     List<Integer> ownedSkins;
     List<Integer> ownedMounts;
     List<Skin> equippedSkins = new ArrayList<>();
     List<Mount> equippedMounts = new ArrayList<>();
 
-    public PlayerData(UUID UUID, boolean premium, List<Integer> ownedSkins, List<Integer> ownedMounts, double xp, int lastKnownLevel, int maxHomes, int maxWarps)
+    public PlayerData(UUID UUID, boolean premium, List<Integer> ownedSkins, List<Integer> ownedMounts, double xp, int lastKnownLevel, int maxHomes)
     {
         this.player = Bukkit.getOfflinePlayer(UUID);
         this.premium = premium;
@@ -52,7 +52,6 @@ public class PlayerData
         this.xp = xp;
         this.lastKnownLevel = lastKnownLevel;
         this.maxHomes = maxHomes;
-        this.maxWarps = maxWarps;
         this.bedrockAccount = player.getName().startsWith(".");
     }
 
@@ -198,10 +197,11 @@ public class PlayerData
     public double getXp() { return this.xp; }
     public void addXp(double xp)
     {
+        if (xp == 0) return;
         int beforeLevel = getLevel();
 
         this.xp += xp;
-        BeanPass.sendMessage(player, ChatColor.YELLOW + "" + ChatColor.ITALIC + "+" + Utils.formatDouble(xp) + "XP" + ChatColor.GREEN + " has been added to your BeanPass! " + ChatColor.ITALIC + Utils.formatDouble(getXpNeededForNextLevel()) + "XP needed for level " + (getLevel() + 1) + "!");
+        BeanPass.sendMessage(player, ChatColor.YELLOW + "" + ChatColor.ITALIC + (xp >= 0 ? "+" : "") + Utils.formatDouble(xp) + "XP" + ChatColor.GREEN + " has been " + (xp >= 0 ? "added to" : "removed from") + " your BeanPass! " + ChatColor.ITALIC + Utils.formatDouble(getXpNeededForNextLevel()) + "XP needed for level " + (getLevel() + 1) + "!");
         int afterLevel = getLevel();
 
         Player p = (player.getPlayer());
@@ -226,18 +226,23 @@ public class PlayerData
 
     public void increaseMaxWarps(int increment)
     {
-        maxWarps += increment;
-        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "warps" : "warp") + "! " + getWarpAmount() + "/" + maxWarps + " used. Do \"/pwarp set <name>\" to create a warp everyone can use!");
+        BeanPass.getInstance().getPlayerWarpsPlugin().getServer().dispatchCommand(Bukkit.getConsoleSender(), "pwarp addwarps " + player.getName() + " " + increment);
+        BeanPass.sendMessage(player, "You can now set " + increment + " more " + ((increment > 1) ? "warps" : "warp") + "! " + getWarpAmount() + "/" + (getMaxWarpAmount() + 1) + " used. Do \"/pwarp set <name>\" to create a warp everyone can use!");
     }
 
     public int getMaxHomeAmount()
     {
-        return maxHomes;
+        Player onlinePlayer = player.getPlayer();
+        if (onlinePlayer != null && (player.getPlayer().hasPermission("beanpass.admin") || player.getPlayer().hasPermission("beanpass.owner")))
+            return -1;
+        else
+            return maxHomes;
     }
 
     public int getMaxWarpAmount()
     {
-        return maxWarps;
+        try { return Integer.parseInt(PlaceholderAPI.setPlaceholders(player, "%pw_player_maxwarps%")); }
+        catch (NumberFormatException e) { return -1; }
     }
 
     public List<Mount> getEquippedMounts() { return equippedMounts; }
