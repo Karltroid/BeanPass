@@ -146,6 +146,50 @@ public class Quests
         public EntityType getGoalEntityType() { return goalEntityType; }
     }
 
+    public static class BreedingQuest extends Quest
+    {
+        EntityType goalEntityType;
+
+        public BreedingQuest(String playerUUID, NPC questGiver, EntityType goalEntityType, int goalBreedCount, int playerBreedCount, double xpReward)
+        {
+            super(playerUUID, questGiver, goalBreedCount, playerBreedCount, xpReward);
+            HashMap<EntityType, String> killingQuestDifficulties = (HashMap<EntityType, String>) questGiver.getQuestTypes();
+            String questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            while (!killingQuestDifficulties.containsValue(questDifficultyKey)) questDifficultyKey = BeanPass.getInstance().questDifficulties.getRandom();
+            QuestDifficulty questDifficulty = BeanPass.getInstance().questDifficulties.get(questDifficultyKey);
+
+            this.goalCount = (goalBreedCount <= 0 ? questDifficulty.generateUnitAmount() : goalBreedCount);
+            this.xpReward = (xpReward <= 0 ? questDifficulty.generateXPAmount(this.goalCount) : xpReward);
+
+
+            if (goalEntityType != null)
+            {
+                this.goalEntityType = goalEntityType;
+            }
+            else
+            {
+                List<Map.Entry<EntityType, String>> matchingDifficultyEntity = new ArrayList<>();
+
+                for (Map.Entry<EntityType, String> entry : killingQuestDifficulties.entrySet()) {
+                    if (entry.getValue().equals(questDifficultyKey)) {
+                        matchingDifficultyEntity.add(entry);
+                    }
+                }
+
+                Random random = new Random();
+                int randomIndex = random.nextInt(matchingDifficultyEntity.size());
+
+                Map.Entry<EntityType, String> randomEntry = matchingDifficultyEntity.get(randomIndex);
+
+                this.goalEntityType = randomEntry.getKey();
+            }
+
+            setGoalName(this.goalEntityType.name());
+        }
+
+        public EntityType getGoalEntityType() { return goalEntityType; }
+    }
+
     /*public static class ExplorationQuest extends Quest
     {
         final Structure GOAL_STRUCTURE_TYPE;

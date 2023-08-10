@@ -26,6 +26,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -219,6 +220,30 @@ public class QuestManager implements Listener
             if (!(itemCraftedType.equals(craftingQuest.getGoalItemType()))) continue;
             craftingQuest.incrementPlayerCount(amount);
             if (craftingQuest.isCompleted()) completeQuest(player, playerData, craftingQuest);
+        }
+    }
+
+    @EventHandler
+    public void onAnimalBreedingQuestProgressed(EntityBreedEvent event)
+    {
+        if (!(event.getBreeder() instanceof Player)) return;
+        Player player = (Player)event.getBreeder();
+        if (player == null) return;
+
+        EntityType entityTypeBred = event.getEntityType();
+
+        UUID playerUUID = player.getUniqueId();
+        PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
+
+        List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
+        for (Quest quest : playerQuests)
+        {
+            if (!(quest instanceof BreedingQuest)) continue;
+            BreedingQuest breedingQuest = (BreedingQuest) quest;
+
+            if (entityTypeBred != ((BreedingQuest) quest).getGoalEntityType()) continue;
+            breedingQuest.incrementPlayerCount(1);
+            if (breedingQuest.isCompleted()) completeQuest(player, playerData, breedingQuest);
         }
     }
 

@@ -27,6 +27,7 @@ public class NPCManager
         npcs.put("blacksmith", new BlacksmithNPC());
         npcs.put("farmer", new FarmerNPC());
         npcs.put("builder", new BuilderNPC());
+        npcs.put("animalbreeder", new AnimalBreederNPC());
     }
 
     public NPC getNPCByTypeName(String name)
