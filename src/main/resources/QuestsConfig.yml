@@ -13,15 +13,15 @@ Difficulties:
     xp_per_unit: 0.2
   VERY_EASY:
     base_units: 6
-    max_unit_multiplier: 12
+    max_unit_multiplier: 8
     xp_per_unit: 0.4
   EASY:
     base_units: 4
-    max_unit_multiplier: 8
+    max_unit_multiplier: 4
     xp_per_unit: 1
   NORMAL:
-    base_units: 4
-    max_unit_multiplier: 4
+    base_units: 2
+    max_unit_multiplier: 5
     xp_per_unit: 2
   HARD:
     base_units: 2
@@ -274,7 +274,7 @@ AnimalBreederQuests:
   MULE:
     difficulty: VERY_HARD
   FOX:
-    difficulty: NORMAL
+    difficulty: HARD
   FROG:
     difficulty: HARD
   GOAT:
