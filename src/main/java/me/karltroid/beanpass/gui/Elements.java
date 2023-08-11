@@ -220,6 +220,24 @@ public class Elements
         }
     }
 
+    static class UnequipSkin extends ButtonElement implements Button
+    {
+        Material skinApplicant;
+
+        public UnequipSkin(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale, Material skinApplicant)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.9875D, skinApplicant, -1);
+            this.skinApplicant = skinApplicant;
+        }
+
+        @Override
+        public void click()
+        {
+            beanPassGUI.playerData.unequipSkinViaApplicant(skinApplicant, true);
+            BeanPass.getInstance().skinManager.updateInventorySkins(beanPassGUI.player, beanPassGUI.player.getInventory());
+        }
+    }
+
     static class EquipMount extends ButtonElement implements Button
     {
         Mount mount;

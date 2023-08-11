@@ -163,6 +163,24 @@ public class PlayerData
     {
         equippedSkins.remove(skin);
     }
+    public void unequipSkinViaApplicant(Material skinApplicant, boolean alert)
+    {
+        Skin skinToRemove = null;
+        for (Skin skin : equippedSkins)
+        {
+            if (!(skin.getSkinApplicant().equals(skinApplicant))) continue;
+
+            skinToRemove = skin;
+            break;
+        }
+
+        if (skinToRemove != null)
+        {
+            equippedSkins.remove(skinToRemove);
+            if (alert) BeanPass.sendMessage(player, "Unequpped all " + skinApplicant.name().toLowerCase().replace("_", " ") + " skins.");
+        }
+    }
+
     public void unequipMount(Mount mount)
     {
         equippedMounts.remove(mount);

@@ -242,7 +242,7 @@ public class BeanPassGUI implements Listener
             if (i == 0 && !predeterminedItemPlaced)
             {
                 // Place the predetermined item at slot 0,0
-                loadElement(new VisualElement(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, 3, Material.CARVED_PUMPKIN, 0), null);
+                loadElement(new UnequipSkin(this, false, 3f, firstColumnXPosition, firstRowYPosition, 0.3f, Material.CARVED_PUMPKIN), null);
                 predeterminedItemPlaced = true;
             }
 
@@ -335,7 +335,7 @@ public class BeanPassGUI implements Listener
 
         loadElement(new ToolsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        Material[] categories = new Material[] { Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE, Material.BOW, Material.CROSSBOW, Material.SHIELD };
+        Material[] categories = new Material[] { Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE, Material.BOW, Material.CROSSBOW, Material.TRIDENT };
         List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
 
         double firstRowYPosition = 10.0;
@@ -346,7 +346,7 @@ public class BeanPassGUI implements Listener
         for(int x = 0; x < categories.length; x++)
         {
             double columnXPosition = firstColumnXPosition + (x * columnSpacing);
-            loadElement(new VisualElement(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, 3, categories[x], 0), null);
+            loadElement(new UnequipSkin(this, false, 3, columnXPosition, firstRowYPosition + 7, 0.375f, categories[x]), null);
             List<Skin> ownedSkinsInCategory = new ArrayList<>();
             for (Integer skinId : ownedSkins)
             {
