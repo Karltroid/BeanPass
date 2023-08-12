@@ -335,7 +335,7 @@ public class BeanPassGUI implements Listener
 
         loadElement(new ToolsTitle(this, true, 3.1, 0, 25, 1f), null);
 
-        Material[] categories = new Material[] { Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE, Material.BOW, Material.CROSSBOW, Material.TRIDENT };
+        Material[] categories = new Material[] { Material.NETHERITE_SWORD, Material.NETHERITE_PICKAXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_AXE, Material.NETHERITE_HOE, Material.BOW, Material.CROSSBOW };
         List<Integer> ownedSkins = playerData.getAllOwnedSkinIds();
 
         double firstRowYPosition = 10.0;
