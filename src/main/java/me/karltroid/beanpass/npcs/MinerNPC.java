@@ -63,6 +63,6 @@ public class MinerNPC extends NPC
     {
         Material goalMaterial = null;
         if (goalType != null) goalMaterial = Material.valueOf(goalType);
-        playerData.giveQuest(new Quests.MiningQuest(playerData.getUUID().toString(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
+        playerData.giveQuest(new Quests.MiningQuest(playerData.getUUID(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
     }
 }

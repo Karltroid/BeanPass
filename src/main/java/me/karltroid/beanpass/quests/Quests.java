@@ -1,12 +1,14 @@
 package me.karltroid.beanpass.quests;
 
+import de.ancash.actionbar.ActionBarAPI;
 import me.karltroid.beanpass.BeanPass;
 
 import me.karltroid.beanpass.npcs.NPC;
 import me.karltroid.beanpass.other.Utils;
 import me.karltroid.beanpass.quests.QuestDifficulties.QuestDifficulty;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.generator.structure.Structure;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionType;
@@ -18,16 +20,18 @@ public class Quests
 {
     public static abstract class Quest
     {
-        public String playerUUID;
+        public OfflinePlayer player;
+        public UUID playerUUID;
         NPC questGiver;
         String goalName = "";
         public int goalCount;
         public int playerCount;
         public double xpReward;
 
-        Quest(String playerUUID, NPC questGiver, int goalCount, int playerCount, double xpReward)
+        Quest(UUID playerUUID, NPC questGiver, int goalCount, int playerCount, double xpReward)
         {
             this.playerUUID = playerUUID;
+            this.player = Bukkit.getOfflinePlayer(playerUUID);
             this.questGiver = questGiver;
             this.goalCount = goalCount;
             this.playerCount = playerCount;
@@ -53,7 +57,14 @@ public class Quests
         }
 
         public boolean isCompleted() { return playerCount >= goalCount; }
-        public void incrementPlayerCount(int amount) { playerCount += amount; }
+        public void incrementPlayerCount(int amount)
+        {
+            playerCount += amount;
+            Player p = player.getPlayer();
+            if (p == null) return;
+            ActionBarAPI.sendActionBar(p, ChatColor.YELLOW + "+" + amount + ChatColor.RESET + " | " + ChatColor.GREEN + "" + ChatColor.BOLD + getGoalDescription());
+            p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 0.2f, 1.0f);
+        }
         public double getXPReward() { return xpReward; }
         public NPC getQuestGiver() { return questGiver; }
     }
@@ -62,7 +73,7 @@ public class Quests
     {
         private final Material goalBlockType;
 
-        public MiningQuest(String playerUUID, NPC questGiver, Material goalBlockType, int goalBlockCount, int playerBlockCount, double xpReward)
+        public MiningQuest(UUID playerUUID, NPC questGiver, Material goalBlockType, int goalBlockCount, int playerBlockCount, double xpReward)
         {
             super(playerUUID, questGiver, goalBlockCount, playerBlockCount, xpReward);
             HashMap<Material, String> miningQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
@@ -106,7 +117,7 @@ public class Quests
     {
         EntityType goalEntityType;
 
-        public KillingQuest(String playerUUID, NPC questGiver, EntityType goalEntityType, int goalKillCount, int playerKillCount, double xpReward)
+        public KillingQuest(UUID playerUUID, NPC questGiver, EntityType goalEntityType, int goalKillCount, int playerKillCount, double xpReward)
         {
             super(playerUUID, questGiver, goalKillCount, playerKillCount, xpReward);
             HashMap<EntityType, String> killingQuestDifficulties = (HashMap<EntityType, String>) questGiver.getQuestTypes();
@@ -150,7 +161,7 @@ public class Quests
     {
         EntityType goalEntityType;
 
-        public BreedingQuest(String playerUUID, NPC questGiver, EntityType goalEntityType, int goalBreedCount, int playerBreedCount, double xpReward)
+        public BreedingQuest(UUID playerUUID, NPC questGiver, EntityType goalEntityType, int goalBreedCount, int playerBreedCount, double xpReward)
         {
             super(playerUUID, questGiver, goalBreedCount, playerBreedCount, xpReward);
             HashMap<EntityType, String> killingQuestDifficulties = (HashMap<EntityType, String>) questGiver.getQuestTypes();
@@ -214,7 +225,7 @@ public class Quests
     {
         private final Material goalItemType;
 
-        public FishingQuest(String playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
+        public FishingQuest(UUID playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
         {
             super(playerUUID, questGiver, goalItemCount, playerItemCount, xpReward);
             HashMap<Material, String> fishingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();
@@ -259,7 +270,7 @@ public class Quests
     {
         private final PotionType goalPotionType;
 
-        public BrewingQuest(String playerUUID, NPC questGiver, PotionType goalPotionType, int goalItemCount, int playerItemCount, double xpReward)
+        public BrewingQuest(UUID playerUUID, NPC questGiver, PotionType goalPotionType, int goalItemCount, int playerItemCount, double xpReward)
         {
             super(playerUUID, questGiver, goalItemCount, playerItemCount, xpReward);
             HashMap<PotionType, String> brewingQuestDifficulties = (HashMap<PotionType, String>) questGiver.getQuestTypes();
@@ -303,7 +314,7 @@ public class Quests
     {
         private final Material goalItemType;
 
-        public CraftingQuest(String playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
+        public CraftingQuest(UUID playerUUID, NPC questGiver, Material goalItemType, int goalItemCount, int playerItemCount, double xpReward)
         {
             super(playerUUID, questGiver, goalItemCount, playerItemCount, xpReward);
             HashMap<Material, String> craftingQuestDifficulties = (HashMap<Material, String>) questGiver.getQuestTypes();

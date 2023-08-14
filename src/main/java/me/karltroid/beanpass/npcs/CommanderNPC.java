@@ -72,6 +72,6 @@ public class CommanderNPC extends NPC
             }
         }
 
-        playerData.giveQuest(new Quests.KillingQuest(playerData.getUUID().toString(), this, goalEntityType, goalCount, playerCount, xpReward), alert);
+        playerData.giveQuest(new Quests.KillingQuest(playerData.getUUID(), this, goalEntityType, goalCount, playerCount, xpReward), alert);
     }
 }

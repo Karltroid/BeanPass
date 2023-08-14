@@ -62,6 +62,6 @@ public class FisherNPC extends NPC
     {
         Material goalMaterial = null;
         if (goalType != null) goalMaterial = Material.valueOf(goalType);
-        playerData.giveQuest(new Quests.FishingQuest(playerData.getUUID().toString(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
+        playerData.giveQuest(new Quests.FishingQuest(playerData.getUUID(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
     }
 }

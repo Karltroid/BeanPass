@@ -267,7 +267,7 @@ public class PlayerDataManager implements Listener
             for (Quest quest : playerData.getQuests())
             {
                 NPC questGiver = quest.getQuestGiver();
-                insertPlayerQuestsStatement.setString(1, quest.playerUUID);
+                insertPlayerQuestsStatement.setString(1, quest.playerUUID.toString());
                 insertPlayerQuestsStatement.setString(2, BeanPass.getInstance().getNpcManager().getNPCTypeNameFromObject(questGiver));
                 insertPlayerQuestsStatement.setString(3, questGiver.getQuestGoalType(quest));
                 insertPlayerQuestsStatement.setInt(4, quest.goalCount);

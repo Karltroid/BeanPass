@@ -3,7 +3,7 @@ version: '${project.version}'
 main: me.karltroid.beanpass.BeanPass
 api-version: 1.19
 
-depend: [PlaceholderAPI]
+depend: [PlaceholderAPI, ActionBarAPI]
 
 commands:
   beanpass:

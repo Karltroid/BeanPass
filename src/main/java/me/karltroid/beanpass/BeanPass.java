@@ -14,6 +14,8 @@ import me.karltroid.beanpass.mounts.MountManager;
 import me.karltroid.beanpass.npcs.NPCManager;
 import me.karltroid.beanpass.quests.QuestDifficulties;
 import me.karltroid.beanpass.quests.QuestManager;
+import net.coreprotect.CoreProtect;
+import net.coreprotect.CoreProtectAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -55,6 +57,7 @@ public final class BeanPass extends JavaPlugin implements Listener
     private Essentials ess;
     private ProtocolManager protocolManager;
     private WorldGuard worldGuard;
+    private CoreProtectAPI coreProtectAPI;
 
     public SkinManager skinManager;
     public MountManager mountManager;
@@ -116,6 +119,15 @@ public final class BeanPass extends JavaPlugin implements Listener
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
+        Plugin coreProtectPlugin = Bukkit.getServer().getPluginManager().getPlugin("CoreProtect");
+        if (!(coreProtectPlugin instanceof CoreProtect))
+        {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no CoreProect dependency found!", getDescription().getName()));
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        coreProtectAPI = ((CoreProtect) coreProtectPlugin).getAPI();
 
         // load configs
         generalConfig = loadConfigFile("GeneralConfig.yml");
@@ -352,4 +364,5 @@ public final class BeanPass extends JavaPlugin implements Listener
     }
     public NPCManager getNpcManager() { return npcManager; }
     public Plugin getPlayerWarpsPlugin() { return playerWarpsPlugin; }
+    public CoreProtectAPI getCoreProtectAPI() { return coreProtectAPI; }
 }

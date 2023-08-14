@@ -1,53 +1,38 @@
 package me.karltroid.beanpass.quests;
 
-
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
-import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
-import com.sk89q.worldguard.protection.regions.RegionContainer;
+import de.ancash.actionbar.ActionBarAPI;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests.*;
+import net.coreprotect.CoreProtectAPI;
+import net.coreprotect.CoreProtectAPI.ParseResult;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Smoker;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Furnace;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.BrewerInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class QuestManager implements Listener
 {
@@ -97,7 +82,7 @@ public class QuestManager implements Listener
         }
     }*/
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     void onMiningAndFarmingQuestProgressed(BlockBreakEvent event)
     {
         // if the block goal is something that grows, only count it if its fully grown
@@ -109,8 +94,6 @@ public class QuestManager implements Listener
             if (ageable.getAge() != ageable.getMaximumAge()) return;
         }
 
-        if (isBlockProtected(block)) return;
-
         UUID playerUUID = event.getPlayer().getUniqueId();
         PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
 
@@ -121,6 +104,11 @@ public class QuestManager implements Listener
         {
             if (!(quest instanceof MiningQuest)) continue;
             if (!(blockMinedType.name().contains(((MiningQuest) quest).getGoalBlockType().name()))) continue;
+            if (isBlockProtected(block) || isBlockManMade(block))
+            {
+                ActionBarAPI.sendActionBar(event.getPlayer(), ChatColor.RED + "Blocks placed by players don't count for quests");
+                continue;
+            }
 
             MiningQuest miningQuest = (MiningQuest) quest;
             miningQuest.incrementPlayerCount(1);
@@ -331,5 +319,31 @@ public class QuestManager implements Listener
         ApplicableRegionSet regions = BeanPass.getInstance().getWorldGuard().getPlatform().getRegionContainer().createQuery().getApplicableRegions(worldEditLocation);
 
         return !regions.getRegions().isEmpty();
+    }
+
+    public boolean isBlockManMade(Block block)
+    {
+        BlockData blockData = block.getState().getBlockData();
+        if (blockData instanceof Ageable) return false;
+
+        CoreProtectAPI coreProtectAPI = BeanPass.getInstance().getCoreProtectAPI();
+        List<String[]> lookupResult = coreProtectAPI.blockLookup(block, 0).stream()
+                .filter(result -> coreProtectAPI.parseResult(result).getBlockData().getMaterial().equals(block.getType()))
+                .collect(Collectors.toList());
+        if (lookupResult.isEmpty()) return false;
+
+
+        int blockState = 0;
+        for (String[] strings : lookupResult)
+        {
+            ParseResult result = coreProtectAPI.parseResult(strings);
+
+            if (result.getActionId() == 1) blockState++;
+            else if (result.getActionId() == 0) blockState--;
+        }
+
+        // >=0, block was placed by player
+        // <0, block was not placed by player
+        return blockState >= 0;
     }
 }

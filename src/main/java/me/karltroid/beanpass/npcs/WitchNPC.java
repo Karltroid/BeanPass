@@ -62,6 +62,6 @@ public class WitchNPC extends NPC
     {
         PotionType goalPotionType = null;
         if (goalType != null) goalPotionType = PotionType.valueOf(goalType);
-        playerData.giveQuest(new BrewingQuest(playerData.getUUID().toString(), this, goalPotionType, goalCount, playerCount, xpReward), alert);
+        playerData.giveQuest(new BrewingQuest(playerData.getUUID(), this, goalPotionType, goalCount, playerCount, xpReward), alert);
     }
 }

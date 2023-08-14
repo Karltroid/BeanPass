@@ -141,22 +141,24 @@ BuilderQuests:
   DIRT:
     difficulty: SUPER_EASY
   DEEPSLATE:
-    difficulty: SUPER_EASY
-  ANDESITE:
-    difficulty: VERY_EASY
-  DIORITE:
-    difficulty: VERY_EASY
-  GRANITE:
-    difficulty: VERY_EASY
-  TUFF:
     difficulty: VERY_EASY
   GRAVEL:
     difficulty: VERY_EASY
+  ANDESITE:
+    difficulty: EASY
+  DIORITE:
+    difficulty: EASY
+  GRANITE:
+    difficulty: EASY
+  TUFF:
+    difficulty: EASY
   CLAY:
     difficulty: EASY
   DRIPSTONE_BLOCK:
     difficulty: NORMAL
   MOSSY_COBBLESTONE:
+    difficulty: HARD
+  OBSIDIAN:
     difficulty: HARD
 
 FisherQuests:
@@ -323,10 +325,6 @@ FarmerQuests:
     difficulty: HARD
 
 BlacksmithQuests:
-  IRON_NUGGET:
-    difficulty: SUPER_EASY
-  IRON_INGOT:
-    difficulty: VERY_EASY
   ANVIL:
     difficulty: VERY_HARD
   BUCKET:
@@ -335,8 +333,6 @@ BlacksmithQuests:
     difficulty: EASY
   IRON_BARS:
     difficulty: NORMAL
-  IRON_BLOCK:
-    difficulty: VERY_HARD
   IRON_DOOR:
     difficulty: HARD
   IRON_HELMET:
@@ -359,12 +355,6 @@ BlacksmithQuests:
     difficulty: NORMAL
   SHIELD:
     difficulty: NORMAL
-  GOLD_NUGGET:
-    difficulty: VERY_EASY
-  GOLD_INGOT:
-    difficulty: EASY
-  GOLD_BLOCK:
-    difficulty: VERY_HARD
   GOLDEN_HELMET:
     difficulty: VERY_HARD
   GOLDEN_CHESTPLATE:

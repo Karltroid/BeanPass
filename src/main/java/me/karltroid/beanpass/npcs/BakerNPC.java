@@ -50,6 +50,6 @@ public class BakerNPC extends FisherNPC
     {
         Material goalMaterial = null;
         if (goalType != null) goalMaterial = Material.valueOf(goalType);
-        playerData.giveQuest(new CraftingQuest(playerData.getUUID().toString(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
+        playerData.giveQuest(new CraftingQuest(playerData.getUUID(), this, goalMaterial, goalCount, playerCount, xpReward), alert);
     }
 }
