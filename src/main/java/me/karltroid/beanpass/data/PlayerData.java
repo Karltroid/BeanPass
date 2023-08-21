@@ -1,11 +1,13 @@
 package me.karltroid.beanpass.data;
 
 import com.earth2me.essentials.User;
+import github.scarsz.discordsrv.util.DiscordUtil;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.GUIMenu;
+import me.karltroid.beanpass.hooks.DiscordSRVHook;
 import me.karltroid.beanpass.mounts.Mount;
 import me.karltroid.beanpass.other.Utils;
 import me.karltroid.beanpass.quests.Quests.Quest;
@@ -70,8 +72,12 @@ public class PlayerData
 
         if (!alert) return;
 
-        if (passGiver.getUniqueId() == getUUID()) BeanPass.BroadcastMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + " purchased this season's BeanPass premium, enjoy!");
-        else BeanPass.BroadcastMessage(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + passGiver.getName() + ChatColor.LIGHT_PURPLE + " gifted BeanPass premium to " + ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + ", enjoy!");
+        String alertMessage;
+        if (passGiver.getUniqueId() == getUUID()) alertMessage = ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + " purchased this season's BeanPass premium, enjoy!";
+        else alertMessage = ChatColor.BOLD + passGiver.getName() + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + " gifted BeanPass premium to " + ChatColor.WHITE + "" + ChatColor.BOLD + player.getName() + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + ", enjoy!";
+
+        BeanPass.BroadcastMessage(alertMessage);
+        DiscordSRVHook.sendMessage(alertMessage + " :tada:");
     }
 
     public void removePremiumPass(Player player, boolean alert)

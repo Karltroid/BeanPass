@@ -4,12 +4,12 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.earth2me.essentials.Essentials;
 import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import me.karltroid.beanpass.Rewards.*;
 import me.karltroid.beanpass.command.*;
 import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.GUIMenu;
+import me.karltroid.beanpass.hooks.DiscordSRVHook;
 import me.karltroid.beanpass.mounts.MountManager;
 import me.karltroid.beanpass.npcs.NPCManager;
 import me.karltroid.beanpass.quests.QuestDifficulties;
@@ -50,25 +50,29 @@ public final class BeanPass extends JavaPlugin implements Listener
     private NPCManager npcManager;
     public QuestManager questManager;
     PlayerDataManager dataManager;
-    public static BeanPass getInstance(){ return main; }
-    public Season getSeason() { return season; }
     public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
     private Economy econ = null;
     private Essentials ess;
     private ProtocolManager protocolManager;
     private WorldGuard worldGuard;
     private CoreProtectAPI coreProtectAPI;
-
     public SkinManager skinManager;
     public MountManager mountManager;
     private Plugin playerWarpsPlugin;
-
     static String beanPassChatSymbol = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[BeanPass] ";
+
 
     @Override
     public void onEnable()
     {
         main = this; // set singleton instance of the plugin
+
+        if (Bukkit.getServer().getPluginManager().getPlugin("DiscordSRV") == null) {
+            getLogger().severe("ProtocolLib not found. Disabling the plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+        DiscordSRVHook.register();
 
         if (Bukkit.getServer().getPluginManager().getPlugin("ProtocolLib") == null) {
             getLogger().severe("ProtocolLib not found. Disabling the plugin.");
@@ -260,12 +264,28 @@ public final class BeanPass extends JavaPlugin implements Listener
         main.getCommand("requestteleport").setExecutor(new RequestTeleport());
     }
 
-    public void unloadPlayerData(UUID uuid) { playerData.remove(uuid); }
+    @Override
+    public void onDisable()
+    {
+        // Plugin shutdown logic
+        for (Player player : Bukkit.getOnlinePlayers())
+        {
+            dataManager.savePlayerData(player.getUniqueId());
+            if (activeGUIs.containsKey(player)) activeGUIs.get(player).closeEntireGUI();
+            mountManager.destroyMountInstance(player);
+        }
 
-    public FileConfiguration getGeneralConfig() { return generalConfig; }
-    public FileConfiguration getCosmeticsConfig() { return cosmeticsConfig; }
-    public FileConfiguration getQuestsConfig() { return questsConfig; }
-    public FileConfiguration getSeasonConfig() { return seasonConfig; }
+        DiscordSRVHook.unregister();
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event)
+    {
+        Player player = event.getPlayer();
+        if (!activeGUIs.containsKey(player)) return;
+
+        activeGUIs.get(player).closeEntireGUI();
+    }
 
     private FileConfiguration loadConfigFile(String fileName) {
         File configFile = new File(getDataFolder(), fileName);
@@ -277,42 +297,16 @@ public final class BeanPass extends JavaPlugin implements Listener
         return YamlConfiguration.loadConfiguration(configFile);
     }
 
-    @Override
-    public void onDisable()
-    {
-        // Plugin shutdown logic
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
-            dataManager.savePlayerData(player.getUniqueId());
-            if (activeGUIs.containsKey(player)) activeGUIs.get(player).closeEntireGUI();
-            mountManager.destroyMountInstance(player);
-        }
-    }
-
-    public PluginManager getPluginManager(){ return pluginManager; }
-
-
-    public PlayerDataManager getDataManager() { return dataManager; }
-
+    public boolean playerDataExists(UUID playerUUID) { return playerData.containsKey(playerUUID); }
     public void addPlayerData(UUID uuid, PlayerData playerData) {
         this.playerData.put(uuid, playerData);
     }
+    public void unloadPlayerData(UUID uuid) { playerData.remove(uuid); }
     public PlayerData getPlayerData(UUID uuid) {
         PlayerData p = playerData.get(uuid);
         if (p == null) dataManager.loadPlayerData(uuid);
         p = playerData.get(uuid);
         return p;
-    }
-
-    public boolean playerDataExists(UUID playerUUID) { return playerData.containsKey(playerUUID); }
-
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event)
-    {
-        Player player = event.getPlayer();
-        if (!activeGUIs.containsKey(player)) return;
-
-        activeGUIs.get(player).closeEntireGUI();
     }
 
     private boolean setupEconomy()
@@ -327,17 +321,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         econ = rsp.getProvider();
         return true;
     }
-
-    public Economy getEconomy()
-    {
-        return econ;
-    }
-
-    public Essentials getEssentials()
-    {
-        return ess;
-    }
-    public WorldGuard getWorldGuard() { return worldGuard; }
 
     public static void sendMessage(OfflinePlayer p, String message)
     {
@@ -355,14 +338,30 @@ public final class BeanPass extends JavaPlugin implements Listener
         }
     }
 
+    public static BeanPass getInstance(){ return main; }
+    public Season getSeason() { return season; }
+    public PluginManager getPluginManager(){ return pluginManager; }
+    public PlayerDataManager getDataManager() { return dataManager; }
+    public FileConfiguration getGeneralConfig() { return generalConfig; }
+    public FileConfiguration getCosmeticsConfig() { return cosmeticsConfig; }
+    public FileConfiguration getQuestsConfig() { return questsConfig; }
+    public FileConfiguration getSeasonConfig() { return seasonConfig; }
     public ProtocolManager getProtocolManager() {
         return protocolManager;
     }
-
     public MountManager getMountManager() {
         return mountManager;
     }
     public NPCManager getNpcManager() { return npcManager; }
     public Plugin getPlayerWarpsPlugin() { return playerWarpsPlugin; }
     public CoreProtectAPI getCoreProtectAPI() { return coreProtectAPI; }
+    public Economy getEconomy()
+    {
+        return econ;
+    }
+    public Essentials getEssentials()
+    {
+        return ess;
+    }
+    public WorldGuard getWorldGuard() { return worldGuard; }
 }

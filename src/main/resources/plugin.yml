@@ -2,8 +2,7 @@ name: BeanPass
 version: '${project.version}'
 main: me.karltroid.beanpass.BeanPass
 api-version: 1.19
-
-depend: [PlaceholderAPI, ActionBarAPI]
+depend: [Essentials, Vault, ProtocolLib, PlaceholderAPI, ActionBarAPI, CoreProtect, WorldGuard, DiscordSRV]
 
 commands:
   beanpass:

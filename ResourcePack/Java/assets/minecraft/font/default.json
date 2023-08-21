@@ -2,6 +2,13 @@
     "providers": [
         {
             "type": "bitmap",
+            "file": "minecraft:icons/builderbean.png",
+            "ascent": 7,
+            "height": 7,
+            "chars": ["\uE040"]
+        },
+        {
+            "type": "bitmap",
             "file": "minecraft:icons/npc.png",
             "ascent": 7,
             "height": 7,
