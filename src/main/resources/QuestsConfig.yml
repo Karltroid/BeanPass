@@ -9,36 +9,36 @@
 Difficulties:
   SUPER_EASY:
     base_units: 6
-    max_unit_multiplier: 16
-    xp_per_unit: 0.2
+    max_unit_multiplier: 12
+    xp_per_unit: 0.28
   VERY_EASY:
-    base_units: 6
+    base_units: 5
     max_unit_multiplier: 8
-    xp_per_unit: 0.4
+    xp_per_unit: 0.88
   EASY:
     base_units: 4
     max_unit_multiplier: 4
-    xp_per_unit: 1
+    xp_per_unit: 3.1
   NORMAL:
     base_units: 2
     max_unit_multiplier: 5
-    xp_per_unit: 2
+    xp_per_unit: 7.5
   HARD:
     base_units: 2
-    max_unit_multiplier: 2
-    xp_per_unit: 12
+    max_unit_multiplier: 3
+    xp_per_unit: 16.66
   VERY_HARD:
     base_units: 2
-    max_unit_multiplier: 1
-    xp_per_unit: 24
+    max_unit_multiplier: 2
+    xp_per_unit: 37.5
   SUPER_HARD:
     base_units: 1
-    max_unit_multiplier: 1
-    xp_per_unit: 100
+    max_unit_multiplier: 2
+    xp_per_unit: 150
   SUPER_DUPER_HARD:
     base_units: 1
     max_unit_multiplier: 1
-    xp_per_unit: 600
+    xp_per_unit: 500
 
 CommanderQuests:
   BLAZE:

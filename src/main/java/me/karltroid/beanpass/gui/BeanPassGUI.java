@@ -180,12 +180,22 @@ public class BeanPassGUI implements Listener
 
         loadElement(new QuestsTitle(this, true, 3.1, 0, 21, 1f), null);
 
-        int lineSpacing = 3;
-        int y = 12;
-        for (Quest quest : BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests())
+        List<Quest> playerQuests = BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests();
+        if (playerQuests.isEmpty())
         {
-            loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.BOLD + quest.getQuestGiver().getTypeName() + ": " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
-            y -= lineSpacing;
+            loadElement(new TextElement(this, false, 3, 0, 6, 0.8f, ChatColor.RED + "" + ChatColor.BOLD + "You Have No Quests"), null);
+            loadElement(new TextElement(this, false, 3, 0, -3, 0.8f, ChatColor.RED + "Talk to NPCs in BeanTown to get some"), null);
+            loadElement(new TextElement(this, false, 3, 0, -6, 0.8f, ChatColor.RED + "or warp to them directly (ex: /warp commander)"), null);
+        }
+        else
+        {
+            int lineSpacing = 3;
+            int y = 12;
+            for (Quest quest : playerQuests)
+            {
+                loadElement(new TextElement(this, false, 3, 0, y, 0.75f, ChatColor.BOLD + quest.getQuestGiver().getTypeName() + ": " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.BOLD + quest.getRewardDescription()), null);
+                y -= lineSpacing;
+            }
         }
 
         displayNavigationButtons();

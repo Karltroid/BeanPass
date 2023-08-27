@@ -15,6 +15,7 @@ import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
 
@@ -347,6 +348,29 @@ public class PlayerData
         quests.add(quest);
         if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "" + ChatColor.BOLD + "NEW QUEST: " + ChatColor.GREEN + quest.getGoalDescription() + ChatColor.YELLOW + " " + ChatColor.ITALIC + quest.getRewardDescription());
         return quest;
+    }
+
+    public int getArmorRating()
+    {
+        Player player = Bukkit.getPlayer(getUUID());
+        if (player == null) return -1;
+
+        int armorRating = 0;
+        ItemStack[] playerArmor = player.getEquipment().getArmorContents();
+        if (playerArmor != null)
+        {
+            for (int i = 0; i < playerArmor.length; i++)
+            {
+                String armorType = playerArmor[i].getType().name().toLowerCase();
+                if (armorType.contains("leather")) armorRating += 1;
+                else if (armorType.contains("chain") || armorType.contains("gold") || armorType.contains("turtle")) armorRating += 2;
+                else if (armorType.contains("iron")) armorRating += 3;
+                else if (armorType.contains("diamond")) armorRating += 4;
+                else if (armorType.contains("netherite")) armorRating += 5;
+            }
+        }
+
+        return armorRating;
     }
 
     public void removeQuest(Quest quest, boolean alert)

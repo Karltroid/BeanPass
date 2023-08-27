@@ -1,13 +1,10 @@
 package me.karltroid.beanpass.npcs;
 
-import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
 import me.karltroid.beanpass.quests.Quests;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
-import java.util.concurrent.CompletableFuture;
 
 public class CommanderNPC extends NPC
 {

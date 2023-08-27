@@ -82,6 +82,9 @@ Skins:
   racoon_tail_cap:
     Material: CARVED_PUMPKIN
     ID: 10039
+  treasure_hunt_hat:
+    Material: CARVED_PUMPKIN
+    ID: 10040
 
 Mounts:
   lamborghini_jalpa:

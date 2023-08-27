@@ -23,6 +23,7 @@
 		{"predicate": {"custom_model_data":10036}, "model": "item/carved_pumpkin/smile_mask"},
 		{"predicate": {"custom_model_data":10037}, "model": "item/carved_pumpkin/headphones"},
 		{"predicate": {"custom_model_data":10038}, "model": "item/carved_pumpkin/pig_ears"},
-		{"predicate": {"custom_model_data":10039}, "model": "item/carved_pumpkin/racoon_tail_cap"}
+		{"predicate": {"custom_model_data":10039}, "model": "item/carved_pumpkin/racoon_tail_cap"},
+		{"predicate": {"custom_model_data":10040}, "model": "item/carved_pumpkin/treasure_hunt_hat"}
 	]
 }
