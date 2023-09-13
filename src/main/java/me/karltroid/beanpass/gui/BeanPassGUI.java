@@ -13,6 +13,7 @@ import me.karltroid.beanpass.quests.Quests.Quest;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Interaction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -21,7 +22,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.checkerframework.checker.units.qual.A;
@@ -37,6 +41,7 @@ public class BeanPassGUI implements Listener
     Location playerLocation;
     GameMode originalGamemode;
     PlayerData playerData;
+    Interaction interactionEntity;
     private List<Element> allElements = new ArrayList<>();
     private List<ButtonElement> allButtonElements = new ArrayList<>();
     public List<Element> allLevelRewardElements = new ArrayList<>();
@@ -66,6 +71,11 @@ public class BeanPassGUI implements Listener
         this.originalGamemode = player.getGameMode();
         this.currentMenu = guiMenu;
 
+        this.interactionEntity = (Interaction) world.spawnEntity(playerLocation, EntityType.INTERACTION);
+        this.interactionEntity.setInteractionHeight(6);
+        this.interactionEntity.setInteractionWidth(6);
+        this.interactionEntity.setResponsive(true);
+
         player.setGameMode(GameMode.ADVENTURE);
         loadMenu(guiMenu);
 
@@ -82,11 +92,10 @@ public class BeanPassGUI implements Listener
                     return;
                 }
 
-                Location playerLocation = player.getEyeLocation();
+                Location currentPlayerLocation = player.getEyeLocation();
 
-                Location firstElementLocation = allElements.get(0).location;
-                double distance = Math.sqrt(Math.pow(firstElementLocation.getX() - playerLocation.getX(), 2) + Math.pow(firstElementLocation.getY() - playerLocation.getY(), 2) + Math.pow(firstElementLocation.getZ() - playerLocation.getZ(), 2));
-                if (distance > 4)
+                double distance = Math.sqrt(Math.pow(playerLocation.getX() - currentPlayerLocation.getX(), 2) + Math.pow(playerLocation.getY() - currentPlayerLocation.getY(), 2) + Math.pow(playerLocation.getZ() - currentPlayerLocation.getZ(), 2));
+                if (distance > 0.5)
                 {
                     closeEntireGUI();
                     return;
@@ -124,24 +133,31 @@ public class BeanPassGUI implements Listener
         {
             case BeanPass:
                 loadBeanPassMenu();
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
                 break;
             case Quests:
                 loadQuestsMenu();
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
                 break;
             case Rewards:
                 loadRewardsMenu();
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
                 break;
             case Mounts:
                 loadMountsMenu();
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
                 break;
             case Hats:
                 loadHatsMenu();
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
                 break;
             case Tools:
                 loadToolsMenu();
+                player.removePotionEffect(PotionEffectType.BLINDNESS);
                 break;
             case YesNoQuestion:
                 loadYesNoQuestionMenu();
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, Integer.MAX_VALUE, 0, false,false));
                 break;
             default:
                 Bukkit.getLogger().warning("gui menu does not exist, loading BeanPass menu.");
@@ -155,10 +171,10 @@ public class BeanPassGUI implements Listener
         this.currentMenu = GUIMenu.YesNoQuestion;
         closeElementList(allElements);
 
-        loadElement(new TextElement(this, true, 1.225, -20, -1, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
-        loadElement(new NoButton(this, true, 1.25, -20, -10, 0.4f), null);
-        loadElement(new TextElement(this, true, 1.225, 20, -1, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
-        loadElement(new YesButton(this, true, 1.25, 20, -10, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.325, -25, -1, 0.5f, ChatColor.RED + "" + ChatColor.BOLD + "no"), null);
+        loadElement(new NoButton(this, true, 1.35, -25, -10, 0.4f), null);
+        loadElement(new TextElement(this, true, 1.325, 25, -1, 0.5f, ChatColor.GREEN + "" + ChatColor.BOLD + "yes"), null);
+        loadElement(new YesButton(this, true, 1.35, 25, -10, 0.4f), null);
     }
 
     void loadBeanPassMenu()
@@ -403,6 +419,7 @@ public class BeanPassGUI implements Listener
         else loadElement(new OpenBeanPassPage(this, true,3, -29, -27, 0.48f), null);
         loadElement(new OpenQuestsPage(this, true,3, 0, -27, 0.48f), null);
         loadElement(new OpenRewardsPage(this, true,3, 29, -27, 0.48f), null);
+        loadElement(new CloseBeanPassButton(this, true, 2, 0, -50, 0.4f), null);
     }
 
     void displayLevelData()
@@ -480,7 +497,10 @@ public class BeanPassGUI implements Listener
     {
         player.setGameMode(originalGamemode);
 
+        player.removePotionEffect(PotionEffectType.BLINDNESS);
+
         closeElementList(allElements);
+        this.interactionEntity.remove();
 
         if (interactionLoop != null)
         {
@@ -491,7 +511,7 @@ public class BeanPassGUI implements Listener
         HandlerList.unregisterAll(this);
         BeanPass.getInstance().activeGUIs.remove(player);
 
-        endQuestionResponse();
+        if (playerData.responseFuture != null && !playerData.responseFuture.isDone()) endQuestionResponse();
     }
 
     public void reloadGUI()

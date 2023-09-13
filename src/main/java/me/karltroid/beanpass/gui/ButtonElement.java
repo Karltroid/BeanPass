@@ -3,9 +3,12 @@ package me.karltroid.beanpass.gui;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.joml.Vector3f;
@@ -25,9 +28,31 @@ public class ButtonElement extends VisualElement implements Button
         if (beanPassGUI.playerData.isBedrockAccount())
         {
             ArmorStand armorStand = (ArmorStand) entity;
+
+            if (armorStand.getEquipment() == null) return;
+            ItemStack displayItem;
+            if (legacySize == 1 || legacySize == 2)
+            {
+                displayItem = armorStand.getEquipment().getItemInMainHand();
+                ItemMeta displayItemMeta = displayItem.getItemMeta();
+                displayItemMeta.addEnchant(Enchantment.MENDING, 1, true);
+                displayItem.setItemMeta(displayItemMeta);
+                armorStand.getEquipment().setItemInMainHand(displayItem);
+            }
+            else if (legacySize == 3 || legacySize == 4)
+            {
+                displayItem = armorStand.getEquipment().getHelmet();
+                ItemMeta displayItemMeta = displayItem.getItemMeta();
+                displayItemMeta.addEnchant(Enchantment.MENDING, 1, true);
+                displayItem.setItemMeta(displayItemMeta);
+                armorStand.getEquipment().setHelmet(displayItem);
+            }
+            else return;
+
             armorStand.setGlowing(true);
-            Vector movingDirection = beanPassGUI.player.getEyeLocation().clone().toVector().subtract(entity.getLocation().toVector()).normalize();
-            Location newLocation = location.clone().add(movingDirection.multiply(new Vector(0.025, 0.25, 0.25)));
+            armorStand.setFireTicks(0);
+            Vector movingDirection = beanPassGUI.player.getEyeLocation().clone().toVector().subtract(armorStand.getEyeLocation().toVector()).normalize();
+            Location newLocation = location.clone().add(movingDirection.multiply(new Vector(0.02, 0, 0.02)));
             armorStand.teleport(newLocation);
         }
         else
@@ -44,6 +69,28 @@ public class ButtonElement extends VisualElement implements Button
         if (beanPassGUI.playerData.isBedrockAccount())
         {
             ArmorStand armorStand = (ArmorStand) entity;
+
+            if (armorStand.getEquipment() == null) return;
+            ItemStack displayItem;
+            if (legacySize == 1 || legacySize == 2)
+            {
+                displayItem = armorStand.getEquipment().getItemInMainHand();
+                ItemMeta displayItemMeta = displayItem.getItemMeta();
+                displayItemMeta.removeEnchant(Enchantment.MENDING);
+                displayItem.setItemMeta(displayItemMeta);
+                armorStand.getEquipment().setItemInMainHand(displayItem);
+            }
+            else if (legacySize == 3 || legacySize == 4)
+            {
+                displayItem = armorStand.getEquipment().getHelmet();
+                ItemMeta displayItemMeta = displayItem.getItemMeta();
+                displayItemMeta.removeEnchant(Enchantment.MENDING);
+                displayItem.setItemMeta(displayItemMeta);
+                armorStand.getEquipment().setHelmet(displayItem);
+            }
+            else return;
+
+            armorStand.setFireTicks(72000);
             armorStand.setGlowing(false);
             armorStand.teleport(location);
         }
@@ -65,8 +112,8 @@ public class ButtonElement extends VisualElement implements Button
         if (beanPassGUI.playerData.isBedrockAccount())
         {
             ArmorStand armorStand = (ArmorStand) entity;
-            if (armorStand.isSmall()) eye.setPitch((float) (eye.getPitch() + 11.0f + distance * 6f));
-            else eye.setPitch((float) (eye.getPitch() + 21.0f + distance * 6f));
+            if (armorStand.isSmall()) eye.setPitch((eye.getPitch() + 12.0f));
+            else eye.setPitch((eye.getPitch() + 22.0f));
         }
 
         Vector toEntity = location.toVector().subtract(eye.toVector());

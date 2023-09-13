@@ -16,10 +16,12 @@ public class VisualElement extends Element
     Entity entity;
     Transformation originalTransformation;
     float displayScale;
+    int legacySize;
 
     public VisualElement(BeanPassGUI beanPassGUI, boolean spherePlacement, double distance, double angleOffsetX, double angleOffsetY, float displayScale, int legacySize, Material material, int customModelData)
     {
         super(beanPassGUI, spherePlacement, distance, angleOffsetX, angleOffsetY);
+        this.legacySize = legacySize;
 
         ItemStack itemStack = new ItemStack(material);
         ItemMeta itemMeta = itemStack.getItemMeta();

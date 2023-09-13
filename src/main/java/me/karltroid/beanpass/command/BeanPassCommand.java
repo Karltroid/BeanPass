@@ -23,24 +23,35 @@ public class BeanPassCommand implements CommandExecutor
         Player senderPlayer = null;
         if (sender instanceof Player) senderPlayer = (Player) sender;
 
+        if (!senderPlayer.hasPermission("beanpass.user"))
+        {
+            BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
+            return false;
+        }
+
         if (args.length == 0)
         {
-            if (!senderPlayer.hasPermission("beanpass.user"))
-            {
-                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You do not have permission to use this command.");
-                return false;
-            }
-
-            if (BeanPass.getInstance().activeGUIs.containsKey(senderPlayer))
-            {
-                BeanPass.sendMessage(senderPlayer, ChatColor.RED + "You already have a BeanPass menu open!");
-                return false;
-            }
-
             BeanPassGUI playerBeanPassGUI = BeanPass.getInstance().activeGUIs.get(senderPlayer);
-            if (playerBeanPassGUI != null) playerBeanPassGUI.loadMenu(GUIMenu.BeanPass);
-            else new BeanPassGUI(senderPlayer, GUIMenu.BeanPass);
+            if (playerBeanPassGUI != null)
+            {
+                if (!playerBeanPassGUI.getCurrentGUIMenu().equals(GUIMenu.BeanPass)) playerBeanPassGUI.loadMenu(GUIMenu.BeanPass);
+                else playerBeanPassGUI.closeEntireGUI();
+                return true;
+            }
 
+            new BeanPassGUI(senderPlayer, GUIMenu.BeanPass);
+            return true;
+        }
+        else if (args[0].equalsIgnoreCase("close"))
+        {
+            BeanPassGUI playerBeanPassGUI = BeanPass.getInstance().activeGUIs.get(senderPlayer);
+            if (playerBeanPassGUI == null)
+            {
+                BeanPass.sendMessage(senderPlayer, "You can't close what is not open.");
+                return false;
+            }
+
+            playerBeanPassGUI.closeEntireGUI();
             return true;
         }
         else if (args[0].equalsIgnoreCase("addxp"))

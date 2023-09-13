@@ -260,7 +260,7 @@ public class Elements
     {
         public YesButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.98D, Material.LIME_DYE, 1);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.94D, Material.LIME_DYE, 1);
         }
 
         @Override
@@ -275,13 +275,27 @@ public class Elements
     {
         public NoButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
         {
-            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.98D, Material.RED_DYE, 2);
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.95D, Material.RED_DYE, 2);
         }
 
         @Override
         public void click()
         {
             beanPassGUI.playerData.responseFuture.complete(false);
+            beanPassGUI.closeEntireGUI();
+        }
+    }
+
+    static class CloseBeanPassButton extends ButtonElement implements Button
+    {
+        public CloseBeanPassButton(BeanPassGUI beanPassGUI, boolean spherePlacement, double radiusOffset, double angleOffsetX, double angleOffsetY, float displayScale)
+        {
+            super(beanPassGUI, spherePlacement, radiusOffset, angleOffsetX, angleOffsetY, displayScale, 1, 0.95D, Material.RED_DYE, 2);
+        }
+
+        @Override
+        public void click()
+        {
             beanPassGUI.closeEntireGUI();
         }
     }
