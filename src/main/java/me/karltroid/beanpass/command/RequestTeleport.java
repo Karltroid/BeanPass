@@ -2,7 +2,9 @@ package me.karltroid.beanpass.command;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.data.PlayerDataManager;
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.GUIManager;
 import me.karltroid.beanpass.gui.GUIMenu;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -49,10 +51,13 @@ public class RequestTeleport implements CommandExecutor
         double z = Double.parseDouble(args[4]);
         Location teleportLocation = new Location(world, x, y, z, requestedPlayer.getLocation().getYaw(), requestedPlayer.getLocation().getPitch());
 
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(requestedPlayer.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getPlayerData(requestedPlayer.getUniqueId());
 
+        if (playerData == null) return false;
+
+        if (playerData.responseFuture != null) playerData.responseFuture.complete(false);
         playerData.responseFuture = new CompletableFuture<>();
-        BeanPassGUI beanPassGUI = new BeanPassGUI(requestedPlayer, GUIMenu.YesNoQuestion);
+        GUIManager.openGUI(requestedPlayer, GUIMenu.YesNoQuestion);
 
         StringBuilder yesResponse = new StringBuilder();
 
@@ -74,6 +79,7 @@ public class RequestTeleport implements CommandExecutor
         }
 
         playerData.responseFuture.thenAccept(accepted -> {
+            GUIManager.closeGUI(requestedPlayer);
             if (accepted)
             {
                 requestedPlayer.teleport(teleportLocation);
@@ -84,7 +90,7 @@ public class RequestTeleport implements CommandExecutor
                 if (String.valueOf(noResponse).startsWith("/kick"))
                 {
                     String kickReason = String.valueOf(noResponse).replace("/kick ", "");
-                    beanPassGUI.closeEntireGUI();
+                    GUIManager.closeGUI(requestedPlayer);
                     requestedPlayer.kickPlayer(kickReason);
                 }
                 else

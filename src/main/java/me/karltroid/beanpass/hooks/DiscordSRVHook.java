@@ -16,8 +16,9 @@ public class DiscordSRVHook
     @Subscribe
     public void discordReadyEvent(DiscordReadyEvent event)
     {
-        discordBroadcastTextChannel = DiscordSRV.getPlugin().getJda().getTextChannelById(BeanPass.getInstance().getGeneralConfig().getString("DiscordBroadcastTextChannelID", "1000319730630008833"));
-        BeanPass.getInstance().getLogger().info("Discord SRV Ready For BeanPass");
+        String channelID = BeanPass.getInstance().getGeneralConfig().getString("DiscordBroadcastTextChannelID", "1000319730630008833");
+        instance.discordBroadcastTextChannel = DiscordSRV.getPlugin().getJda().getTextChannelById(channelID);
+        BeanPass.getInstance().getLogger().info(instance.discordBroadcastTextChannel != null ? "Discord SRV Ready For BeanPass" : "Discord SRV could not find a channel with the ID: " + channelID);
     }
 
 

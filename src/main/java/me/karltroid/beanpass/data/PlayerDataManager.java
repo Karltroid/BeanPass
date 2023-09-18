@@ -2,10 +2,15 @@ package me.karltroid.beanpass.data;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.gui.GUIManager;
+import me.karltroid.beanpass.gui.GUIMenu;
+import me.karltroid.beanpass.hooks.DiscordSRVHook;
 import me.karltroid.beanpass.mounts.Mount;
+import me.karltroid.beanpass.mounts.MountManager;
 import me.karltroid.beanpass.npcs.NPC;
 import me.karltroid.beanpass.quests.Quests.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,6 +22,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static org.bukkit.Bukkit.getLogger;
@@ -25,20 +31,29 @@ import static org.bukkit.Bukkit.getPlayer;
 
 public class PlayerDataManager implements Listener
 {
-    private static final String DATABASE_NAME = "database.db";
-    private static final String PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.getInstance().getSeason().getId() + "_data";
-    private static final String PLAYER_REWARDS_TABLE_NAME = "player_rewards";
-    private static final String PLAYER_QUESTS_TABLE_NAME = "player_quests";
+    private static final PlayerDataManager instance = new PlayerDataManager();
+    private static HashMap<UUID, PlayerData> playerData;
+    private static String DATABASE_NAME;
+    private static String PLAYER_SEASON_DATA_TABLE_NAME;
+    private static String PLAYER_REWARDS_TABLE_NAME;
+    private static String PLAYER_QUESTS_TABLE_NAME;
 
     public PlayerDataManager()
     {
+        playerData = new HashMap<>();
+        DATABASE_NAME = "database.db";
+        PLAYER_SEASON_DATA_TABLE_NAME = "player_season_" + BeanPass.getInstance().getSeason().getId() + "_data";
+        PLAYER_REWARDS_TABLE_NAME = "player_rewards";
+        PLAYER_QUESTS_TABLE_NAME = "player_quests";
         createTables();
 
         // save everyone's data every 5 minutes
         Bukkit.getServer().getScheduler().runTaskTimer(BeanPass.getInstance(), this::saveAllPlayerData, 6000, 6000);
     }
 
-    private Connection getConnection(Plugin plugin) throws SQLException {
+    public static PlayerDataManager getInstance() { return instance; }
+
+    private static Connection getConnection(Plugin plugin) throws SQLException {
         File dataFolder = plugin.getDataFolder();
         if (!dataFolder.exists()) {
             dataFolder.mkdir();
@@ -48,7 +63,7 @@ public class PlayerDataManager implements Listener
         return DriverManager.getConnection(jdbcUrl);
     }
 
-    public void createTables() {
+    private static void createTables() {
         try (Connection conn = getConnection(BeanPass.getInstance());
              Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(
@@ -93,7 +108,7 @@ public class PlayerDataManager implements Listener
         }
     }
 
-    private boolean hasColumn(ResultSet rs, String columnName)
+    private static boolean hasColumn(ResultSet rs, String columnName)
     {
         try
         {
@@ -106,8 +121,10 @@ public class PlayerDataManager implements Listener
         }
     }
 
-    public void loadPlayerData(UUID uuid)
+    public static PlayerData getPlayerData(UUID uuid)
     {
+        if (playerDataLoaded(uuid)) return playerData.get(uuid);
+
         try (Connection conn = getConnection(BeanPass.getInstance()))
         {
             boolean premium = false;
@@ -139,8 +156,7 @@ public class PlayerDataManager implements Listener
             }
 
             PlayerData playerData = new PlayerData(uuid, premium, new ArrayList<>(), new ArrayList<>(), xp, lastKnownLevel, maxHomes);
-            BeanPass.getInstance().addPlayerData(uuid, playerData);
-            if (Bukkit.getOfflinePlayer(uuid).isOnline() && lastKnownLevel < playerData.getLevel()) playerData.leveledUp(); // level up player if they got xp while offline
+            addPlayerData(uuid, playerData);
 
             try (PreparedStatement playerRewardsStatement = conn.prepareStatement("SELECT * FROM player_rewards WHERE uuid = ?"))
             {
@@ -158,12 +174,12 @@ public class PlayerDataManager implements Listener
                         {
                             case "SKIN":
 
-                                Skin skin = BeanPass.getInstance().skinManager.getSkinById(rewardID);
+                                Skin skin = SkinManager.getSkinById(rewardID);
                                 playerData.giveSkin(skin, false);
                                 if (equipped) playerData.equipSkin(skin, false);
                                 break;
                             case "MOUNT":
-                                Mount mount = BeanPass.getInstance().mountManager.getMountById(rewardID);
+                                Mount mount = MountManager.getMountById(rewardID);
                                 playerData.giveMount(mount, false);
                                 if (equipped) playerData.equipMount(mount, false);
                                 break;
@@ -196,17 +212,32 @@ public class PlayerDataManager implements Listener
             {
                 getLogger().severe(e.getMessage());
             }
+
+            return playerData;
         }
         catch (SQLException e)
         {
             getLogger().severe("Failed to load data from database: " + e.getMessage());
         }
+
+        return null;
     }
 
-    public void savePlayerData(UUID uuid)
+    public static void unloadPlayerData(UUID uuid)
     {
-        if (!BeanPass.getInstance().playerDataExists(uuid)) return;
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(uuid);
+        savePlayerData(uuid);
+        playerData.remove(uuid);
+    }
+
+    public static void unloadAllPlayerData()
+    {
+        for(Map.Entry<UUID, PlayerData> player : playerData.entrySet()) unloadPlayerData(player.getKey());
+    }
+
+    public static void savePlayerData(UUID uuid)
+    {
+        if (!playerDataLoaded(uuid)) return;
+        PlayerData playerData = getPlayerData(uuid);
 
         try (Connection conn = getConnection(BeanPass.getInstance());
              PreparedStatement playerSeasonDataStatement = conn.prepareStatement(
@@ -246,7 +277,7 @@ public class PlayerDataManager implements Listener
                 insertPlayerRewardsStatement.setString(1, uuid.toString());
                 insertPlayerRewardsStatement.setString(2, "SKIN");
                 insertPlayerRewardsStatement.setString(3, skinID.toString());
-                insertPlayerRewardsStatement.setBoolean(4, playerData.equippedSkins.contains(BeanPass.getInstance().skinManager.getSkinById(skinID)));
+                insertPlayerRewardsStatement.setBoolean(4, playerData.equippedSkins.contains(SkinManager.getSkinById(skinID)));
                 insertPlayerRewardsStatement.addBatch();
             }
             insertPlayerRewardsStatement.executeBatch();
@@ -257,7 +288,7 @@ public class PlayerDataManager implements Listener
                 insertPlayerRewardsStatement.setString(1, uuid.toString());
                 insertPlayerRewardsStatement.setString(2, "MOUNT");
                 insertPlayerRewardsStatement.setString(3, mountID.toString());
-                insertPlayerRewardsStatement.setBoolean(4, playerData.equippedMounts.contains(BeanPass.getInstance().mountManager.getMountById(mountID)));
+                insertPlayerRewardsStatement.setBoolean(4, playerData.equippedMounts.contains(MountManager.getMountById(mountID)));
                 insertPlayerRewardsStatement.addBatch();
             }
             insertPlayerRewardsStatement.executeBatch();
@@ -287,15 +318,15 @@ public class PlayerDataManager implements Listener
     void onPlayerJoin(PlayerJoinEvent event)
     {
         Player player = event.getPlayer();
-        loadPlayerData(player.getUniqueId());
+        PlayerData playerData = getPlayerData(player.getUniqueId());
+        if (playerData.lastKnownLevel < playerData.getLevel()) playerData.leveledUp(); // level up player if they got xp while offline
     }
 
     @EventHandler
     void onPlayerLeave(PlayerQuitEvent event)
     {
         UUID playerUUID = event.getPlayer().getUniqueId();
-        savePlayerData(playerUUID);
-        BeanPass.getInstance().unloadPlayerData(playerUUID);
+        unloadPlayerData(playerUUID);
     }
 
     void saveAllPlayerData()
@@ -303,5 +334,10 @@ public class PlayerDataManager implements Listener
         for (Player player : Bukkit.getOnlinePlayers()) {
             savePlayerData(player.getUniqueId());
         }
+    }
+
+    public static boolean playerDataLoaded(UUID playerUUID) { return playerData.containsKey(playerUUID); }
+    private static void addPlayerData(UUID uuid, PlayerData playerData) {
+        PlayerDataManager.playerData.put(uuid, playerData);
     }
 }

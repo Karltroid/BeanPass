@@ -2,8 +2,12 @@ package me.karltroid.beanpass.npcs;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.data.PlayerDataManager;
+import me.karltroid.beanpass.gui.GUIManager;
+import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.quests.Quests;
 import me.karltroid.beanpass.quests.Quests.Quest;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -53,7 +57,7 @@ public abstract class NPC implements INPC
     @Override
     public void Interact(Player player)
     {
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getPlayerData(player.getUniqueId());
 
         MessagePlayer(player, getRandomMessage(greetings));
 
@@ -69,10 +73,13 @@ public abstract class NPC implements INPC
             return;
         }
 
+        if (playerData.responseFuture != null) playerData.responseFuture.complete(false);
         playerData.responseFuture = new CompletableFuture<>();
         AskPlayer(player);
 
         playerData.responseFuture.thenAccept(wantNewQuest -> {
+            GUIManager.closeGUI(player);
+
             if (wantNewQuest)
             {
                 if (previousQuest != null) playerData.removeQuest(previousQuest, true);

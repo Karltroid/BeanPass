@@ -2,7 +2,9 @@ package me.karltroid.beanpass.gui;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.Skin;
+import me.karltroid.beanpass.data.SkinManager;
 import me.karltroid.beanpass.mounts.Mount;
+import me.karltroid.beanpass.mounts.MountManager;
 import org.bukkit.Material;
 
 public class Elements
@@ -216,7 +218,7 @@ public class Elements
         public void click()
         {
             beanPassGUI.playerData.equipSkin(skin, true);
-            BeanPass.getInstance().skinManager.updateInventorySkins(beanPassGUI.player, beanPassGUI.player.getInventory());
+            SkinManager.updateInventorySkins(beanPassGUI.player, beanPassGUI.player.getInventory());
         }
     }
 
@@ -234,7 +236,7 @@ public class Elements
         public void click()
         {
             beanPassGUI.playerData.unequipSkinViaApplicant(skinApplicant, true);
-            BeanPass.getInstance().skinManager.updateInventorySkins(beanPassGUI.player, beanPassGUI.player.getInventory());
+            SkinManager.updateInventorySkins(beanPassGUI.player, beanPassGUI.player.getInventory());
         }
     }
 
@@ -252,7 +254,7 @@ public class Elements
         public void click()
         {
             beanPassGUI.playerData.equipMount(mount, true);
-            BeanPass.getInstance().mountManager.changeActiveMount(beanPassGUI.player, mount);
+            MountManager.changeActiveMount(beanPassGUI.player, mount);
         }
     }
 
@@ -267,7 +269,6 @@ public class Elements
         public void click()
         {
             beanPassGUI.playerData.responseFuture.complete(true);
-            beanPassGUI.closeEntireGUI();
         }
     }
 
@@ -282,7 +283,6 @@ public class Elements
         public void click()
         {
             beanPassGUI.playerData.responseFuture.complete(false);
-            beanPassGUI.closeEntireGUI();
         }
     }
 
@@ -296,7 +296,7 @@ public class Elements
         @Override
         public void click()
         {
-            beanPassGUI.closeEntireGUI();
+            GUIManager.closeGUI(beanPassGUI.player);
         }
     }
 }

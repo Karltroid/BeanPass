@@ -2,6 +2,7 @@ package me.karltroid.beanpass.command;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.GUIManager;
 import me.karltroid.beanpass.gui.GUIMenu;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -35,7 +36,7 @@ public class OpenBeanPassPage implements CommandExecutor
             return false;
         }
 
-        new BeanPassGUI(senderPlayer, menu);
+        GUIManager.openGUI(senderPlayer, menu);
 
         return true;
     }

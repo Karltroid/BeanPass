@@ -2,11 +2,10 @@ package me.karltroid.beanpass.gui;
 
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.*;
-import me.karltroid.beanpass.data.Level;
-import me.karltroid.beanpass.data.PlayerData;
-import me.karltroid.beanpass.data.Skin;
+import me.karltroid.beanpass.data.*;
 import me.karltroid.beanpass.gui.Elements.*;
 import me.karltroid.beanpass.mounts.Mount;
+import me.karltroid.beanpass.mounts.MountManager;
 import me.karltroid.beanpass.other.Utils;
 import me.karltroid.beanpass.quests.Quests;
 import me.karltroid.beanpass.quests.Quests.Quest;
@@ -56,17 +55,10 @@ public class BeanPassGUI implements Listener
 
     public BeanPassGUI(Player player, GUIMenu guiMenu)
     {
-        BeanPassGUI alreadyOpenGUI = BeanPass.getInstance().activeGUIs.get(player);
-        if (alreadyOpenGUI != null)
-        {
-            endQuestionResponse();
-            alreadyOpenGUI.closeEntireGUI();
-        }
-
         this.player = player;
         this.world = player.getWorld();
         this.playerLocation = player.getEyeLocation();
-        this.playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+        this.playerData = PlayerDataManager.getPlayerData(player.getUniqueId());
         this.rewardPage = playerData.getLevel()/LEVELS_PER_PAGE;
         this.originalGamemode = player.getGameMode();
         this.currentMenu = guiMenu;
@@ -80,7 +72,6 @@ public class BeanPassGUI implements Listener
         loadMenu(guiMenu);
 
         BeanPass.getInstance().getPluginManager().registerEvents(this, BeanPass.getInstance());
-        BeanPass.getInstance().activeGUIs.put(player, this);
 
         this.interactionLoop = new BukkitRunnable()
         {
@@ -88,7 +79,7 @@ public class BeanPassGUI implements Listener
             {
                 if (allElements.size() == 0 || BeanPass.getInstance().getEssentials().getUser(player).isAfk())
                 {
-                    closeEntireGUI();
+                    GUIManager.closeGUI(player);
                     return;
                 }
 
@@ -97,7 +88,7 @@ public class BeanPassGUI implements Listener
                 double distance = Math.sqrt(Math.pow(playerLocation.getX() - currentPlayerLocation.getX(), 2) + Math.pow(playerLocation.getY() - currentPlayerLocation.getY(), 2) + Math.pow(playerLocation.getZ() - currentPlayerLocation.getZ(), 2));
                 if (distance > 0.5)
                 {
-                    closeEntireGUI();
+                    GUIManager.closeGUI(player);
                     return;
                 }
 
@@ -196,7 +187,7 @@ public class BeanPassGUI implements Listener
 
         loadElement(new QuestsTitle(this, true, 3.1, 0, 21, 1f), null);
 
-        List<Quest> playerQuests = BeanPass.getInstance().getPlayerData(player.getUniqueId()).getQuests();
+        List<Quest> playerQuests = PlayerDataManager.getPlayerData(player.getUniqueId()).getQuests();
         if (playerQuests.isEmpty())
         {
             loadElement(new TextElement(this, false, 3, 0, 6, 0.8f, ChatColor.RED + "" + ChatColor.BOLD + "You Have No Quests"), null);
@@ -246,7 +237,7 @@ public class BeanPassGUI implements Listener
         List<Skin> ownedHatSkins = new ArrayList<>();
         for (int ownedSkinID : ownedSkinIDs)
         {
-            Skin skin = BeanPass.getInstance().skinManager.getSkinById(ownedSkinID);
+            Skin skin = SkinManager.getSkinById(ownedSkinID);
             if (skin.getSkinApplicant().equals(Material.CARVED_PUMPKIN)) ownedHatSkins.add(skin);
         }
 
@@ -345,7 +336,7 @@ public class BeanPassGUI implements Listener
             if (i < ownedMountsAmount)
             {
                 int mountId = ownedMounts.get(i);
-                Mount mount = BeanPass.getInstance().getMountManager().getMountById(mountId);
+                Mount mount = MountManager.getMountById(mountId);
                 if (mount != null) loadElement(new EquipMount(this, false, 3, xPos, yPos, 0.3f, mount), null);
             }
             else loadElement(new VisualElement(this, false, 3, xPos, yPos, 0.25f, 3, Material.BARRIER, 0), null);
@@ -376,7 +367,7 @@ public class BeanPassGUI implements Listener
             List<Skin> ownedSkinsInCategory = new ArrayList<>();
             for (Integer skinId : ownedSkins)
             {
-                Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
+                Skin skin = SkinManager.getSkinById(skinId);
                 if (skin.getSkinApplicant() == categories[x])
                     ownedSkinsInCategory.add(skin);
             }
@@ -493,7 +484,7 @@ public class BeanPassGUI implements Listener
         }
     }
 
-    public void closeEntireGUI()
+    void closeEntireGUI()
     {
         player.setGameMode(originalGamemode);
 
@@ -509,7 +500,6 @@ public class BeanPassGUI implements Listener
         }
 
         HandlerList.unregisterAll(this);
-        BeanPass.getInstance().activeGUIs.remove(player);
 
         if (playerData.responseFuture != null && !playerData.responseFuture.isDone()) endQuestionResponse();
     }
@@ -544,24 +534,6 @@ public class BeanPassGUI implements Listener
         Button button = selectedButtonElement;
 
         button.click();
-    }
-
-    @EventHandler
-    void onPlayerLeave(PlayerQuitEvent event)
-    {
-        Player player = event.getPlayer();
-        if (player != this.player) return;
-
-        closeEntireGUI();
-    }
-
-    @EventHandler
-    void onPlayerDeath(PlayerDeathEvent event)
-    {
-        Player player = event.getEntity().getPlayer();
-        if (player != this.player) return;
-
-        closeEntireGUI();
     }
 
     void guiSphereTest(double angleIncrement, double radiusOffset)

@@ -1,6 +1,8 @@
 package me.karltroid.beanpass.mounts;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.PlayerDataManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
@@ -20,16 +22,20 @@ import java.util.*;
 
 public class MountManager implements Listener
 {
-    List<Mount> mounts = new ArrayList<>();
-    List<EntityType> mountTypes = new ArrayList<>();
-    Map<UUID, IMount> mountInstances = new HashMap<>();
-    DecimalFormat decimalFormat = new DecimalFormat("#.0");
+    private static final MountManager instance = new MountManager();
+    static List<Mount> mounts;
+    static List<EntityType> mountTypes;
+    static Map<UUID, IMount> mountInstances;
+    static final DecimalFormat decimalFormat = new DecimalFormat("#.0");
 
     public MountManager()
     {
         FileConfiguration config = BeanPass.getInstance().getCosmeticsConfig();
-
         ConfigurationSection mountsSection = config.getConfigurationSection("Mounts");
+
+        mounts = new ArrayList<>();
+        mountTypes = new ArrayList<>();
+        mountInstances = new HashMap<>();
 
         if (mountsSection != null)
         {
@@ -77,6 +83,8 @@ public class MountManager implements Listener
             }
         }.runTaskTimer(BeanPass.getInstance(), 0L, 0L);
     }
+
+    public static MountManager getInstance() { return instance; }
 
     @EventHandler
     void onPlayerUnmount(VehicleExitEvent event)
@@ -126,9 +134,9 @@ public class MountManager implements Listener
         destroyMountInstance(player);
     }
 
-    public void createMountInstance(Player player, Entity mountedEntity)
+    public static void createMountInstance(Player player, Entity mountedEntity)
     {
-        List<Mount> playerEquippedMounts = BeanPass.getInstance().getPlayerData(player.getUniqueId()).getEquippedMounts();
+        List<Mount> playerEquippedMounts = PlayerDataManager.getPlayerData(player.getUniqueId()).getEquippedMounts();
         if (playerEquippedMounts.size() == 0) return;
 
         for (Mount mount : playerEquippedMounts)
@@ -159,7 +167,9 @@ public class MountManager implements Listener
         }
     }
 
-    public void destroyMountInstance(Player player)
+    public static void destroyAllMountInstances() { for (Player player : Bukkit.getOnlinePlayers()) destroyMountInstance(player); }
+
+    public static void destroyMountInstance(Player player)
     {
         IMount mountInstance = mountInstances.get(player.getUniqueId());
         if (mountInstance == null) return;
@@ -169,7 +179,7 @@ public class MountManager implements Listener
         mountInstances.remove(player.getUniqueId());
     }
 
-    public void changeActiveMount(Player player, Mount mount)
+    public static void changeActiveMount(Player player, Mount mount)
     {
         Entity vehicle = player.getVehicle();
         if (vehicle == null || vehicle.getType() != mount.getMountApplicant()) return;
@@ -179,7 +189,7 @@ public class MountManager implements Listener
         else mountInstance.setMount(mount);
     }
 
-    public Mount getMountByName(String name)
+    public static Mount getMountByName(String name)
     {
         Mount foundMount = null;
         for(Mount mount : mounts)
@@ -191,7 +201,7 @@ public class MountManager implements Listener
         return foundMount;
     }
 
-    public Mount getMountById(int id)
+    public static Mount getMountById(int id)
     {
         Mount foundMount = null;
         for(Mount mount : mounts)

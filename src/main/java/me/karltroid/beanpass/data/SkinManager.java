@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.data;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.mounts.MountManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,54 +29,56 @@ import java.util.Map;
 
 public class SkinManager implements Listener
 {
-    List<Skin> skins = new ArrayList<>();
-    List<Material> skinTypes = new ArrayList<>();
+    private static final SkinManager instance = new SkinManager();
+    static List<Skin> skins;
+    static List<Material> skinTypes;
 
     public SkinManager()
     {
         FileConfiguration config = BeanPass.getInstance().getCosmeticsConfig();
-
         ConfigurationSection skinsSection = config.getConfigurationSection("Skins");
+        if (skinsSection == null) return;
 
-        if (skinsSection != null)
+        skins = new ArrayList<>();
+        skinTypes = new ArrayList<>();
+
+        // Loop through each key (skin name) in the "Skins" section
+        for (String skinName : skinsSection.getKeys(false))
         {
-            // Loop through each key (skin name) in the "Skins" section
-            for (String skinName : skinsSection.getKeys(false))
-            {
-                // Get the configuration section for the current skin
-                ConfigurationSection skinSection = skinsSection.getConfigurationSection(skinName);
-                if (skinSection != null)
-                {
-                    // Read the skin properties from the configuration
-                    String materialName = skinSection.getString("Material");
-                    int id = skinSection.getInt("ID");
+            // Get the configuration section for the current skin
+            ConfigurationSection skinSection = skinsSection.getConfigurationSection(skinName);
+            if (skinSection == null) continue;
 
-                    // Create a new Skin object and add it to the list
-                    if (materialName == null || Material.matchMaterial(materialName) == null)
-                    {
-                        BeanPass.getInstance().getLogger().warning("Material name does not exist, skipping skin #" + id);
-                        continue;
-                    }
-                    Material material = Material.matchMaterial(materialName);
-                    if (!skinTypes.contains(material)) skinTypes.add(material);
-                    Skin skin = new Skin(skinName.toLowerCase(), id, material);
-                    skins.add(skin);
-                }
+            // Read the skin properties from the configuration
+            String materialName = skinSection.getString("Material");
+            int id = skinSection.getInt("ID");
+
+            // Create a new Skin object and add it to the list
+            if (materialName == null || Material.matchMaterial(materialName) == null)
+            {
+                BeanPass.getInstance().getLogger().warning("Material name does not exist, skipping skin #" + id);
+                continue;
             }
+            Material material = Material.matchMaterial(materialName);
+            if (!skinTypes.contains(material)) skinTypes.add(material);
+            Skin skin = new Skin(skinName.toLowerCase(), id, material);
+            skins.add(skin);
         }
     }
 
-    public void updateInventorySkins(Player player, Inventory inventory)
+    public static SkinManager getInstance() { return instance; }
+
+    public static void updateInventorySkins(Player player, Inventory inventory)
     {
         ItemStack[] contents = inventory.getContents();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getPlayerData(player.getUniqueId());
         for (int i = 0; i < contents.length; i++)
         {
             updateItemSlotWithSkin(playerData, inventory, i);
         }
     }
 
-    void updateItemSlotWithSkin(PlayerData playerData, Inventory inventory, int slot)
+    static void updateItemSlotWithSkin(PlayerData playerData, Inventory inventory, int slot)
     {
         ItemStack item = inventory.getItem(slot);
         if (item == null || item.getType() == Material.AIR) return;
@@ -87,11 +90,10 @@ public class SkinManager implements Listener
         int skinId = -1;
         for (Skin skin : playerEquippedSkins)
         {
-            if (skin.getSkinApplicant() == item.getType())
-            {
-                skinId = skin.getId();
-                break;
-            }
+            if (skin.getSkinApplicant() != item.getType()) continue;
+
+            skinId = skin.getId();
+            break;
         }
 
         if (item.getType().equals(Material.CARVED_PUMPKIN) && slot != 39) skinId = -1;
@@ -127,7 +129,6 @@ public class SkinManager implements Listener
     {
         if (!(event.getEntity() instanceof Player)) return;
 
-
         Player player = (Player) event.getEntity();
         ItemStack pickedUpItem = event.getItem().getItemStack();
         if (!skinTypes.contains(pickedUpItem.getType())) return;
@@ -137,7 +138,7 @@ public class SkinManager implements Listener
         }, 1);
     }
 
-    private ItemStack applySkin(ItemStack item, int customModelData)
+    private static ItemStack applySkin(ItemStack item, int customModelData)
     {
         ItemMeta itemMeta = item.getItemMeta();
         if (itemMeta == null) {
@@ -164,7 +165,7 @@ public class SkinManager implements Listener
     }
 
 
-    public Skin getSkinByName(String name)
+    public static Skin getSkinByName(String name)
     {
         Skin foundSkin = null;
         for(Skin skin : skins)
@@ -176,7 +177,7 @@ public class SkinManager implements Listener
         return foundSkin;
     }
 
-    public Skin getSkinById(int id)
+    public static Skin getSkinById(int id)
     {
         Skin foundSkin = null;
         for(Skin skin : skins)

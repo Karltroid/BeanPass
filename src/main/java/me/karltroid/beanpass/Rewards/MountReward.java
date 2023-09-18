@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.Rewards;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.PlayerDataManager;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.VisualElement;
 import me.karltroid.beanpass.mounts.Mount;
@@ -24,7 +25,7 @@ public class MountReward implements Reward
     @Override
     public void giveReward(UUID uuid)
     {
-        BeanPass.getInstance().getPlayerData(uuid).giveMount(mount, true);
+        PlayerDataManager.getPlayerData(uuid).giveMount(mount, true);
     }
 
     @Override

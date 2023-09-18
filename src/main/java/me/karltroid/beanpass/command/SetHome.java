@@ -2,6 +2,7 @@ package me.karltroid.beanpass.command;
 
 import com.earth2me.essentials.User;
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.PlayerDataManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -34,7 +35,7 @@ public class SetHome implements CommandExecutor
         }
 
         User essentialsUser = BeanPass.getInstance().getEssentials().getUser(senderPlayer);
-        int playerMaxHomes = BeanPass.getInstance().getPlayerData(senderPlayer.getUniqueId()).getMaxHomeAmount();
+        int playerMaxHomes = PlayerDataManager.getPlayerData(senderPlayer.getUniqueId()).getMaxHomeAmount();
         int playerHomesAmount = essentialsUser.getHomes().size();
         if (playerMaxHomes != -1 && playerHomesAmount >= playerMaxHomes)
         {

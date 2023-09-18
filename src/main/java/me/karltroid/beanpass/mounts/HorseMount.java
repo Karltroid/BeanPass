@@ -27,7 +27,7 @@ public class HorseMount implements IMount
 
         if (!this.mountedEntity.isAdult() || this.mountedEntity.getInventory().getSaddle() == null)
         {
-            BeanPass.getInstance().mountManager.destroyMountInstance(player);
+            MountManager.destroyMountInstance(player);
             return;
         }
 

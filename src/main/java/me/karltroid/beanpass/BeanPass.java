@@ -7,7 +7,7 @@ import com.sk89q.worldguard.WorldGuard;
 import me.karltroid.beanpass.Rewards.*;
 import me.karltroid.beanpass.command.*;
 import me.karltroid.beanpass.data.*;
-import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.GUIManager;
 import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.hooks.DiscordSRVHook;
 import me.karltroid.beanpass.mounts.MountManager;
@@ -24,9 +24,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -34,7 +32,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.UUID;
 
 public final class BeanPass extends JavaPlugin implements Listener
 {
@@ -44,20 +41,15 @@ public final class BeanPass extends JavaPlugin implements Listener
     private FileConfiguration questsConfig;
     private FileConfiguration seasonConfig;
     PluginManager pluginManager = getServer().getPluginManager();
-    HashMap<UUID, PlayerData> playerData = new HashMap<>();
     Season season;
     public QuestDifficulties questDifficulties;
     private NPCManager npcManager;
     public QuestManager questManager;
-    PlayerDataManager dataManager;
-    public HashMap<Player, BeanPassGUI> activeGUIs = new HashMap<>();
     private Economy econ = null;
     private Essentials ess;
     private ProtocolManager protocolManager;
     private WorldGuard worldGuard;
     private CoreProtectAPI coreProtectAPI;
-    public SkinManager skinManager;
-    public MountManager mountManager;
     private Plugin playerWarpsPlugin;
     static String beanPassChatSymbol = ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "[BeanPass] ";
 
@@ -140,9 +132,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         questsConfig = loadConfigFile("QuestsConfig.yml");
         seasonConfig = loadConfigFile("Season"+ seasonNumber + "Config.yml");
 
-        skinManager = new SkinManager();
-        mountManager = new MountManager();
-
         // get season data
         HashMap<Integer, Level> seasonLevels = new HashMap<>();
         // Check if the SeasonLevels section exists
@@ -191,11 +180,11 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                                 case "SKIN":
                                     String skinName = freeSection.getString("Skin");
-                                    freeReward = new SkinReward(skinManager.getSkinByName(skinName.toLowerCase()));
+                                    freeReward = new SkinReward(SkinManager.getSkinByName(skinName.toLowerCase()));
                                     break;
                                 case "MOUNT":
                                     String mountName = freeSection.getString("Mount");
-                                    freeReward = new MountReward(mountManager.getMountByName(mountName.toLowerCase()));
+                                    freeReward = new MountReward(MountManager.getMountByName(mountName.toLowerCase()));
                                     break;
                             }
                         }
@@ -223,11 +212,11 @@ public final class BeanPass extends JavaPlugin implements Listener
                                     break;
                                 case "SKIN":
                                     String skinName = paidSection.getString("Skin");
-                                    premiumReward = new SkinReward(skinManager.getSkinByName(skinName.toLowerCase()));
+                                    premiumReward = new SkinReward(SkinManager.getSkinByName(skinName.toLowerCase()));
                                     break;
                                 case "MOUNT":
                                     String mountName = paidSection.getString("Mount");
-                                    premiumReward = new MountReward(mountManager.getMountByName(mountName.toLowerCase()));
+                                    premiumReward = new MountReward(MountManager.getMountByName(mountName.toLowerCase()));
                                     break;
                                 default:
                                     continue;
@@ -242,15 +231,14 @@ public final class BeanPass extends JavaPlugin implements Listener
         season = new Season(seasonNumber, seasonLevels);
 
         npcManager = new NPCManager();
-        dataManager = new PlayerDataManager();
         questDifficulties = new QuestDifficulties();
         questManager = new QuestManager();
 
         // register event listeners to the plugin instance
-        pluginManager.registerEvents(dataManager, this);
+        pluginManager.registerEvents(PlayerDataManager.getInstance(), this);
         pluginManager.registerEvents(questManager, this);
-        pluginManager.registerEvents(skinManager, this);
-        pluginManager.registerEvents(mountManager, this);
+        pluginManager.registerEvents(SkinManager.getInstance(), this);
+        pluginManager.registerEvents(MountManager.getInstance(), this);
 
         // register the commands for the plugin instance
         main.getCommand("beanpass").setExecutor(new BeanPassCommand());
@@ -268,23 +256,10 @@ public final class BeanPass extends JavaPlugin implements Listener
     public void onDisable()
     {
         // Plugin shutdown logic
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
-            dataManager.savePlayerData(player.getUniqueId());
-            if (activeGUIs.containsKey(player)) activeGUIs.get(player).closeEntireGUI();
-            mountManager.destroyMountInstance(player);
-        }
-
+        MountManager.destroyAllMountInstances();
+        GUIManager.closeAllGUIs();
+        PlayerDataManager.unloadAllPlayerData();
         DiscordSRVHook.unregister();
-    }
-
-    @EventHandler
-    public void onPlayerLeave(PlayerQuitEvent event)
-    {
-        Player player = event.getPlayer();
-        if (!activeGUIs.containsKey(player)) return;
-
-        activeGUIs.get(player).closeEntireGUI();
     }
 
     private FileConfiguration loadConfigFile(String fileName) {
@@ -295,18 +270,6 @@ public final class BeanPass extends JavaPlugin implements Listener
         }
 
         return YamlConfiguration.loadConfiguration(configFile);
-    }
-
-    public boolean playerDataExists(UUID playerUUID) { return playerData.containsKey(playerUUID); }
-    public void addPlayerData(UUID uuid, PlayerData playerData) {
-        this.playerData.put(uuid, playerData);
-    }
-    public void unloadPlayerData(UUID uuid) { playerData.remove(uuid); }
-    public PlayerData getPlayerData(UUID uuid) {
-        PlayerData p = playerData.get(uuid);
-        if (p == null) dataManager.loadPlayerData(uuid);
-        p = playerData.get(uuid);
-        return p;
     }
 
     private boolean setupEconomy()
@@ -341,16 +304,12 @@ public final class BeanPass extends JavaPlugin implements Listener
     public static BeanPass getInstance(){ return main; }
     public Season getSeason() { return season; }
     public PluginManager getPluginManager(){ return pluginManager; }
-    public PlayerDataManager getDataManager() { return dataManager; }
     public FileConfiguration getGeneralConfig() { return generalConfig; }
     public FileConfiguration getCosmeticsConfig() { return cosmeticsConfig; }
     public FileConfiguration getQuestsConfig() { return questsConfig; }
     public FileConfiguration getSeasonConfig() { return seasonConfig; }
     public ProtocolManager getProtocolManager() {
         return protocolManager;
-    }
-    public MountManager getMountManager() {
-        return mountManager;
     }
     public NPCManager getNpcManager() { return npcManager; }
     public Plugin getPlayerWarpsPlugin() { return playerWarpsPlugin; }

@@ -18,9 +18,21 @@ commands:
     description: Modify a player's BeanPass season XP
     usage: /beanpass addxp <player> <amount>
     permission: beanpass.owner
+  beanpass-givecosmetic:
+    description: Gives a targeted player a cosmetic item via its ID
+    usage: /beanpass givecosmetic <player> <cosmetic id>
+    permission: beanpass.owner
   beanpass-bedrock:
     description: Toggle whether the GUI thinks the player is bedrock for testing bedrock GUI
     usage: /beanpass bedrock <player>
+    permission: beanpass.owner
+  beanpass-premium:
+    description: Gives a player premium & randomly gives out premium to others if the user is already premium or they got more than 1
+    usage: /beanpass premium <player> <amount>
+    permission: beanpass.owner
+  beanpass-ispremium:
+    description: Tells you whether or not a player is premium
+    usage: /beanpass ispremium <player>
     permission: beanpass.owner
   quests:
     description: View your active quests to complete

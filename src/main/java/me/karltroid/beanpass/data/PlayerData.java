@@ -6,9 +6,11 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.Rewards.Reward;
 import me.karltroid.beanpass.gui.BeanPassGUI;
+import me.karltroid.beanpass.gui.GUIManager;
 import me.karltroid.beanpass.gui.GUIMenu;
 import me.karltroid.beanpass.hooks.DiscordSRVHook;
 import me.karltroid.beanpass.mounts.Mount;
+import me.karltroid.beanpass.mounts.MountManager;
 import me.karltroid.beanpass.other.Utils;
 import me.karltroid.beanpass.quests.Quests.Quest;
 import org.bukkit.*;
@@ -18,6 +20,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +59,14 @@ public class PlayerData
         this.lastKnownLevel = lastKnownLevel;
         this.maxHomes = maxHomes;
         this.bedrockAccount = player.getName().startsWith(".");
+        this.responseFuture = new CompletableFuture<>();
     }
 
-    public void givePremiumPass(Player passGiver, boolean alert)
+    public void givePremiumPass(OfflinePlayer passGiver, boolean alert)
     {
         this.premium = true;
 
-        for (int lvl = 2; lvl <= BeanPass.getInstance().getPlayerData(player.getUniqueId()).getLevel(); lvl++)
+        for (int lvl = 2; lvl <= PlayerDataManager.getPlayerData(player.getUniqueId()).getLevel(); lvl++)
         {
             Level level = BeanPass.getInstance().getSeason().getLevel(lvl);
             Reward levelPremiumReward = level.getPremiumReward();
@@ -97,9 +101,11 @@ public class PlayerData
             if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + skin.getName() + " but you already own this skin.");
             return;
         }
-        if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "You were given a " + skin.getName() + "! Equip it in the /skins menu!");
+        if (alert) BeanPass.sendMessage(player, ChatColor.GREEN + "You were given a " + skin.getName() + "! Equip it in the /rewards menu!");
         ownedSkins.add(skin.getId());
     }
+
+    public OfflinePlayer getPlayer() { return player; }
     public void giveMount(Mount mount, boolean alert)
     {
         if (ownedMounts.contains(mount.getId()))
@@ -112,7 +118,7 @@ public class PlayerData
     }
     public void giveSkinById(Integer skinId, boolean alert)
     {
-        Skin skin = BeanPass.getInstance().skinManager.getSkinById(skinId);
+        Skin skin = SkinManager.getSkinById(skinId);
         if (hasSkin(skinId))
         {
             if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + skin.getName() + " but you already own this skin.");
@@ -122,7 +128,7 @@ public class PlayerData
     }
     public void giveMountById(Integer mountId, boolean alert)
     {
-        Mount mount = BeanPass.getInstance().mountManager.getMountById(mountId);
+        Mount mount = MountManager.getMountById(mountId);
         if (hasMount(mountId))
         {
             if (alert) BeanPass.sendMessage(player, ChatColor.RED + "You were given a " + mount.getName() + " but you already own this mount.");
@@ -226,16 +232,14 @@ public class PlayerData
         int beforeLevel = getLevel();
 
         this.xp += xp;
+        if (!player.isOnline()) return;
         BeanPass.sendMessage(player, ChatColor.YELLOW + "" + ChatColor.ITALIC + (xp >= 0 ? "+" : "") + Utils.formatDouble(xp) + "XP" + ChatColor.GREEN + " has been " + (xp >= 0 ? "added to" : "removed from") + " your BeanPass! " + ChatColor.ITALIC + Utils.formatDouble(getXpNeededForNextLevel()) + "XP needed for level " + (getLevel() + 1) + "!");
-        int afterLevel = getLevel();
 
         Player p = (player.getPlayer());
-        if (BeanPass.getInstance().activeGUIs.containsKey(p))
-        {
-            BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(p);
-            beanPassGUI.reloadGUI();
-        }
+        BeanPassGUI beanPassGUI = GUIManager.getGUI(p);
+        if (beanPassGUI != null) { beanPassGUI.reloadGUI(); }
 
+        int afterLevel = getLevel();
         if (beforeLevel == afterLevel) return;
         // levelled up!
         leveledUp();
@@ -332,11 +336,8 @@ public class PlayerData
             }
         }
 
-        if (BeanPass.getInstance().activeGUIs.containsKey(player))
-        {
-            BeanPassGUI beanPassGUI = BeanPass.getInstance().activeGUIs.get(player);
-            if (beanPassGUI.getCurrentGUIMenu() == GUIMenu.BeanPass) beanPassGUI.reloadGUI();
-        }
+        BeanPassGUI beanPassGUI = GUIManager.getGUI(player);
+        if (beanPassGUI != null && beanPassGUI.getCurrentGUIMenu() == GUIMenu.BeanPass) beanPassGUI.reloadGUI();
 
         lastKnownLevel = newLevel;
     }

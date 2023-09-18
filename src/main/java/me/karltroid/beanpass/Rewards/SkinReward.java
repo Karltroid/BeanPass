@@ -1,6 +1,8 @@
 package me.karltroid.beanpass.Rewards;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.data.PlayerDataManager;
 import me.karltroid.beanpass.data.Skin;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.TextElement;
@@ -28,7 +30,9 @@ public class SkinReward implements Reward
     @Override
     public void giveReward(UUID uuid)
     {
-        BeanPass.getInstance().getPlayerData(uuid).giveSkin(skin, true);
+        PlayerData playerData = PlayerDataManager.getPlayerData(uuid);
+        if (playerData != null) playerData.giveSkin(skin, true);
+        else BeanPass.getInstance().getLogger().warning("Tried giving skin to " + uuid.toString() + " but their player data could not be found.");
     }
 
     @Override

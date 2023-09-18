@@ -1,6 +1,7 @@
 package me.karltroid.beanpass.Rewards;
 
 import me.karltroid.beanpass.BeanPass;
+import me.karltroid.beanpass.data.PlayerDataManager;
 import me.karltroid.beanpass.gui.BeanPassGUI;
 import me.karltroid.beanpass.gui.TextElement;
 
@@ -18,7 +19,7 @@ public class SetWarpReward implements Reward
     @Override
     public void giveReward(UUID uuid)
     {
-        BeanPass.getInstance().getPlayerData(uuid).increaseMaxWarps(amount);
+        PlayerDataManager.getPlayerData(uuid).increaseMaxWarps(amount);
     }
 
     public int getAmount()

@@ -5,6 +5,7 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import de.ancash.actionbar.ActionBarAPI;
 import me.karltroid.beanpass.BeanPass;
 import me.karltroid.beanpass.data.PlayerData;
+import me.karltroid.beanpass.data.PlayerDataManager;
 import me.karltroid.beanpass.quests.Quests.*;
 import net.coreprotect.CoreProtectAPI;
 import net.coreprotect.CoreProtectAPI.ParseResult;
@@ -95,7 +96,7 @@ public class QuestManager implements Listener
         }
 
         UUID playerUUID = event.getPlayer().getUniqueId();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
+        PlayerData playerData = PlayerDataManager.getPlayerData(playerUUID);
 
         Material blockMinedType = event.getBlock().getType();
 
@@ -122,7 +123,7 @@ public class QuestManager implements Listener
         if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH) return;
 
         UUID playerUUID = event.getPlayer().getUniqueId();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
+        PlayerData playerData = PlayerDataManager.getPlayerData(playerUUID);
 
         Entity caught = event.getCaught();
 
@@ -146,7 +147,7 @@ public class QuestManager implements Listener
     void onCraftingQuestProgressed(CraftItemEvent event)
     {
         Player player = (Player)event.getWhoClicked();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getPlayerData(player.getUniqueId());
 
         // Check if the click resulted in a potion being taken out
         ItemStack itemCrafted = event.getCurrentItem();
@@ -221,7 +222,7 @@ public class QuestManager implements Listener
         EntityType entityTypeBred = event.getEntityType();
 
         UUID playerUUID = player.getUniqueId();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
+        PlayerData playerData = PlayerDataManager.getPlayerData(playerUUID);
 
         List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
         for (Quest quest : playerQuests)
@@ -239,7 +240,7 @@ public class QuestManager implements Listener
     public void onCraftingQuestProgressed_Furnace(FurnaceExtractEvent event)
     {
         Player player = event.getPlayer();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getPlayerData(player.getUniqueId());
 
         // Check if the click resulted in a potion being taken out
         Material itemSmeltedType = event.getItemType();
@@ -263,7 +264,7 @@ public class QuestManager implements Listener
         if (!(event.getClickedInventory() instanceof BrewerInventory)) return;
 
         Player player = (Player)event.getWhoClicked();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getPlayerData(player.getUniqueId());
 
         // Check if the click resulted in a potion being taken out
         ItemStack currentItem = event.getCurrentItem();
@@ -299,7 +300,7 @@ public class QuestManager implements Listener
         Player player = event.getEntity().getKiller();
         if (player == null) return;
         UUID playerUUID = player.getUniqueId();
-        PlayerData playerData = BeanPass.getInstance().getPlayerData(playerUUID);
+        PlayerData playerData = PlayerDataManager.getPlayerData(playerUUID);
 
         List<Quest> playerQuests = new ArrayList<>(playerData.getQuests());
         for (Quest quest : playerQuests)
