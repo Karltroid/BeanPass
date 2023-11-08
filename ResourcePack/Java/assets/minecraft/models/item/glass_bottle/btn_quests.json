@@ -3,8 +3,8 @@
 	"ambientocclusion": false,
 	"texture_size": [103, 55],
 	"textures": {
-		"0": "item/glass_bottle/btn_quests",
-		"particle": "item/glass_bottle/btn_quests"
+		"0": "item/glass_bottle/beanpass_spooky/btn_quests",
+		"particle": "item/glass_bottle/beanpass_spooky/btn_quests"
 	},
 	"elements": [
 		{

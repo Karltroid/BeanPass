@@ -3,8 +3,8 @@
 	"ambientocclusion": false,
 	"texture_size": [105, 17],
 	"textures": {
-		"0": "item/glass_bottle/title_beanpass",
-		"particle": "item/glass_bottle/title_beanpass"
+		"0": "item/glass_bottle/beanpass_spooky/title_beanpass",
+		"particle": "item/glass_bottle/beanpass_spooky/title_beanpass"
 	},
 	"elements": [
 		{

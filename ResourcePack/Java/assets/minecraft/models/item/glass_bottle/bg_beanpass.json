@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [281, 112],
 	"textures": {
-		"0": "item/glass_bottle/bg_beanpass",
-		"particle": "item/glass_bottle/bg_beanpass"
+		"0": "item/glass_bottle/beanpass_spooky/bg_beanpass",
+		"particle": "item/glass_bottle/beanpass_spooky/bg_beanpass"
 	},
 	"elements": [
 		{

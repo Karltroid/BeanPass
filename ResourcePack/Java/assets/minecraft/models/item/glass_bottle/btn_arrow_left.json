@@ -3,9 +3,9 @@
 	"ambientocclusion": false,
 	"texture_size": [30, 30],
 	"textures": {
-		"0": "item/glass_bottle/btn_arrow",
-		"1": "item/glass_bottle/btn_blank",
-		"particle": "item/glass_bottle/btn_arrow"
+		"0": "item/glass_bottle/beanpass_spooky/btn_arrow",
+		"1": "item/glass_bottle/beanpass_spooky/btn_blank",
+		"particle": "item/glass_bottle/beanpass_spooky/btn_arrow"
 	},
 	"elements": [
 		{
